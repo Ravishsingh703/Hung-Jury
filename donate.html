@@ -42,10 +42,10 @@
     /* The rejection */
     .court {
       position: fixed; inset: 0; z-index: 50;
-      display: grid; place-items: center; text-align: center;
+      display: grid; justify-items: center; align-items: safe center; text-align: center;
       background:
         radial-gradient(70% 70% at 50% 40%, #f0414b, var(--verdict) 60%, #a81b25);
-      color: #fff; padding: 1.5rem;
+      color: #fff; padding: 1.5rem; overflow-y: auto;
       opacity: 0; visibility: hidden;
     }
     .court.on { visibility: visible; animation: flash .35s ease-out forwards; }
@@ -53,7 +53,7 @@
     .court .stamp-big {
       display: inline-block;
       font-weight: 900; font-stretch: 70%;
-      font-size: clamp(4rem, 15vw, 10rem); line-height: 1;
+      font-size: clamp(3.5rem, 13vw, 8rem); line-height: 1;
       color: #fff; border: .07em solid #fff; border-radius: .08em;
       padding: .04em .22em .08em;
       transform: rotate(-8deg);
@@ -75,8 +75,8 @@
     }
     .court p { font-family: var(--serif); font-size: clamp(1.2rem, 2.2vw, 1.5rem); margin: 0 auto; max-width: 30rem; }
     .court .kmm { font-weight: 800; font-family: var(--sans); font-stretch: 80%; font-size: clamp(1.6rem, 3.4vw, 2.3rem); margin-bottom: 1.25rem; }
-    .court .after { opacity: 0; }
     .court.on .after { animation: rise .7s var(--ease) both .9s; }
+    .court .cat { display: block; width: min(13rem, 55vw); height: auto; margin: 2.25rem auto -1.25rem; border-radius: 1rem; box-shadow: 0 18px 40px -16px rgba(0,0,0,.5); }
     .court .btn-light { margin-top: 2.5rem; font-size: 1.4rem; padding: 1.15rem 2.6rem; }
 
     @media (max-width: 40rem) {
@@ -85,7 +85,12 @@
       .impact li { padding-bottom: 1rem; border-bottom: 1px solid rgba(27,31,74,.2); }
       .amounts .btn { flex: 1 1 100%; }
     }
-    @media (prefers-reduced-motion: reduce) { .court.on { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .court.on { animation: fade .3s both; }
+      .court.on .stamp-big { animation: fade .3s both; }
+      .court.on .inner { animation: none; }
+      .court.on .after { animation: fade .5s both .4s; }
+    }
   </style>
 </head>
 <body>
@@ -121,6 +126,7 @@
     <div class="inner">
       <span class="stamp-big">Rejected</span>
       <div class="after">
+        <img class="cat" src="laughing-cat.gif" alt="A cat laughing" onerror="this.remove()">
         <h2 id="court-h">The host has motion.</h2>
         <p class="kmm">Keep your money.</p>
         <p id="court-d">Cash is inadmissible in this court. The only thing we accept is a better argument, and you can bring that to the table.</p>

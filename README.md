@@ -4,7 +4,7 @@ One page. This week's question, the brief, the night, and the reading list that 
 
 ## Weekly update (5 minutes)
 
-Edit **one file: `event.js`**. Change the topic, the headline question, the deck line, the brief, the details, the `unsealAt` time and the reading list. Commit. GitHub Pages republishes in about a minute.
+Edit **one file: `event.js`**. Change the topic, the headline question, the deck line, the two brief lines, the day/time/small print, the `unsealAt` time and the reading list. Commit. GitHub Pages republishes in about a minute.
 
 The headline is the hook: make it a question people can't stop chewing on all week.
 
@@ -24,3 +24,7 @@ Nothing else needs touching.
 - **Hidden from search engines** via a `noindex` tag on every page. People only find it if they're given the link.
 - **The seal is a soft lock.** The reading list unlocks by the clock, but it's in `event.js`, so anyone who views the page source can read it early. If you want it truly hidden, leave `reading` and `internetVerdict` empty until after the night and add them then.
 - **Fonts** (Archivo, Newsreader) are bundled in `/fonts` under the SIL Open Font License, so the site doesn't depend on Google.
+
+## The laughing cat
+
+The rejection screen on the donate page shows `laughing-cat.gif` if it exists in the repo root. Upload any GIF with that exact name and it appears; delete it and the screen works without it.

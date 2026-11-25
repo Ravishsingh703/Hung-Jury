@@ -17,71 +17,86 @@
     </div>
   </nav>
 
-  <header class="hero">
-    <svg class="fan" viewBox="-100 -100 200 200" aria-hidden="true">
-      <g fill="#fff">
-        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z"/>
-        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(90)"/>
-        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(180)"/>
-        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(270)"/>
-        <circle r="13"/>
-      </g>
-    </svg>
-    <div class="wrap">
-      <h1>Hung Jury<sup><a href="#footnote" aria-label="Footnote 1">1</a></sup></h1>
-      <p class="lede">A dinner where people argue properly and try to change each other&rsquo;s minds.</p>
-      <div class="when">
-        <span class="session-tag" id="session"></span>
-        <span class="date" id="hero-date"></span>
-      </div>
-    </div>
-  </header>
-
   <main>
-    <article class="brief" aria-labelledby="headline">
+    <!-- 0. Who we are -->
+    <header class="chapter hero">
+      <svg class="fan" viewBox="-100 -100 200 200" aria-hidden="true">
+        <g fill="#fff">
+          <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z"/>
+          <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(90)"/>
+          <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(180)"/>
+          <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(270)"/>
+          <circle r="13"/>
+        </g>
+      </svg>
       <div class="wrap">
-        <div class="paper-head">
-          <span class="title">The Brief</span>
-          <span class="dateline" id="dateline"></span>
-        </div>
-
-        <figure class="plate">
-          <div class="art"><svg id="table" viewBox="0 0 840 360" role="img" aria-label="Twelve chairs around a jury table"></svg></div>
-          <figcaption>Twelve chairs. Red sits for respected, amber for liked. Watch them move.</figcaption>
-        </figure>
-
-        <div class="story">
-          <p class="kicker" id="topic"></p>
-          <h2 id="headline"></h2>
-          <p class="deck" id="deck"></p>
-          <div class="columns" id="brief"></div>
-        </div>
+        <h1 class="reveal">Hung Jury<sup><a href="#footnote" aria-label="Footnote 1">1</a></sup></h1>
+        <p class="say reveal">One table. One question. Everyone trying to change someone&rsquo;s mind.</p>
+        <a class="cue reveal" href="#question"><i></i>Here&rsquo;s this week&rsquo;s</a>
       </div>
-    </article>
+    </header>
 
-    <section class="night" aria-labelledby="night-h">
+    <!-- 1. The question -->
+    <section class="chapter question" id="question" aria-labelledby="headline">
       <div class="wrap">
-        <h2 id="night-h">The night</h2>
-        <dl class="facts" id="facts"></dl>
+        <p class="tag reveal" id="topic"></p>
+        <h2 class="reveal" id="headline"></h2>
+        <p class="say reveal" id="deck"></p>
       </div>
     </section>
 
-    <section class="sealed" aria-labelledby="sealed-h" id="sealed">
-      <div class="wrap" id="sealed-body"></div>
+    <!-- 2. The table -->
+    <section class="chapter table" aria-label="How it works">
+      <div class="wrap">
+        <svg class="reveal" id="table" viewBox="0 0 840 360" role="img" aria-label="A table of people arguing"></svg>
+        <div class="lines" id="brief"></div>
+      </div>
     </section>
 
-    <section class="give" aria-labelledby="give-h">
+    <!-- 3. The night -->
+    <section class="chapter night" aria-labelledby="day">
       <div class="wrap">
-        <h2 id="give-h">Keep the jury in session</h2>
-        <p>Every night costs something. See what a dollar does.</p>
-        <a class="btn btn-big" href="donate.html">Donate</a>
+        <h2 class="big reveal" id="day"></h2>
+        <p class="say reveal" id="time"></p>
+        <ul class="small-print reveal" id="small"></ul>
+      </div>
+    </section>
+
+    <!-- 4. The verdict -->
+    <section class="chapter verdict" aria-labelledby="sealed-h">
+      <div class="wrap">
+        <h2 class="big reveal" id="sealed-h">Sealed until the last word.</h2>
+        <p class="say reveal" id="sealed-say"></p>
+        <div class="env-wrap reveal">
+          <div class="env" id="env">
+            <div class="letter"><b>The verdict is in.</b>Reading list and what the internet thinks, just below.</div>
+            <div class="flap"></div>
+            <div class="seal-wax" aria-hidden="true"><span>HJ</span></div>
+            <span class="addr" id="addr"></span>
+          </div>
+        </div>
+        <div class="clock reveal" id="clock" hidden>
+          <div class="unit"><span class="digits" id="u-d"><span>00</span></span><small>days</small></div>
+          <div class="unit"><span class="digits" id="u-h"><span>00</span></span><small>hours</small></div>
+          <div class="unit"><span class="digits" id="u-m"><span>00</span></span><small>minutes</small></div>
+        </div>
+        <div class="opened" id="opened" hidden></div>
+      </div>
+    </section>
+
+    <!-- 5. The ask -->
+    <section class="chapter give" aria-labelledby="give-h">
+      <div class="wrap">
+        <h2 class="big reveal" id="give-h">Keep the jury in session.</h2>
+        <p class="say reveal">Every night costs something. See what a dollar does.</p>
+        <a class="btn reveal" href="donate.html">Donate</a>
       </div>
     </section>
   </main>
 
   <footer class="foot">
     <div class="wrap">
-      <p class="note" id="footnote"><sup>1</sup>The name, the awards and most of the attitude come from <i>12 Angry Men</i> (1957). If you haven&rsquo;t seen it, that&rsquo;s your homework.</p>
+      <p id="footnote"><sup>1</sup>The name, the awards and most of the attitude come from <i>12 Angry Men</i> (1957). If you haven&rsquo;t seen it, that&rsquo;s your homework.</p>
     </div>
   </footer>
 
@@ -96,95 +111,101 @@
       if (text != null) n.textContent = text;
       return n;
     };
-    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     document.title = "Hung Jury: " + E.topic;
-    $("session").textContent = "Session " + String(E.session).padStart(2, "0");
-    $("hero-date").textContent = E.details[0].value;
-    $("dateline").textContent = E.dateline;
-    $("topic").textContent = E.topic;
+    $("topic").textContent = "Session " + String(E.session).padStart(2, "0") + ": " + E.topic;
     $("headline").textContent = E.headline;
     $("deck").textContent = E.deck;
-    E.brief.forEach(function (p) { $("brief").appendChild(el("p", null, p)); });
-    E.details.forEach(function (d) {
-      var w = el("div");
-      w.appendChild(el("dt", null, d.label));
-      w.appendChild(el("dd", null, d.value));
-      $("facts").appendChild(w);
-    });
+    E.brief.forEach(function (p) { $("brief").appendChild(el("p", "say reveal", p)); });
+    $("day").textContent = E.day + ".";
+    $("time").textContent = E.time;
+    E.smallPrint.forEach(function (t) { $("small").appendChild(el("li", null, t)); });
 
-    /* ---- The jury table: twelve chairs that keep changing their minds ---- */
+    /* ---- Chapters reveal as you reach them ---- */
+    var chapters = document.querySelectorAll(".chapter");
+    if ("IntersectionObserver" in window) {
+      var cio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); cio.unobserve(e.target); } });
+      }, { threshold: 0.25 });
+      chapters.forEach(function (c) { cio.observe(c); });
+    } else { chapters.forEach(function (c) { c.classList.add("in"); }); }
+
+    /* ---- The table: people arguing ---- */
     var NS = "http://www.w3.org/2000/svg";
     var svg = $("table");
-    function shape(tag, attrs) {
+    function mk(tag, attrs, parent) {
       var n = document.createElementNS(NS, tag);
       for (var k in attrs) n.setAttribute(k, attrs[k]);
-      svg.appendChild(n); return n;
+      (parent || svg).appendChild(n); return n;
     }
-    shape("rect", { x: 165, y: 125, width: 510, height: 110, rx: 22, fill: "#3b2a2a" });
-    shape("rect", { x: 175, y: 135, width: 490, height: 90, rx: 16, fill: "#5a3f37" });
-    var seats = [];
-    [210, 315, 420, 525, 630].forEach(function (x) {
-      seats.push({ x: x - 34, y: 58, w: 68, h: 50 });
-      seats.push({ x: x - 34, y: 252, w: 68, h: 50 });
+    var bodies = ["#e0313c", "#ffb238", "#8b90d6", "#f4f5f8", "#ffb238", "#e0313c"];
+    var skins  = ["#f1c9a5", "#8d5a3b", "#e0ac7e", "#c68a5e", "#f5d5b8", "#6e4630"];
+    var hair   = ["#2b1d16", "#1a1a1a", "#7a4a2a", "#2b1d16", "#c8a36a", "#1a1a1a"];
+    var xs = [140, 252, 364, 476, 588, 700];
+    var people = xs.map(function (cx, i) {
+      var g = mk("g", { "class": "person" });
+      var right = i % 2 === 0;
+      mk("rect", { x: right ? cx + 26 : cx - 42, y: 200, width: 16, height: 62, rx: 8, fill: bodies[i], "class": "arm " + (right ? "arm-r" : "arm-l") }, g);
+      mk("rect", { x: cx - 40, y: 190, width: 80, height: 110, rx: 34, fill: bodies[i] }, g);
+      mk("circle", { cx: cx, cy: 156, r: 27, fill: skins[i] }, g);
+      mk("path", { d: "M" + (cx - 27) + " 152 a27 27 0 0 1 54 0 q-27 -14 -54 0z", fill: hair[i] }, g);
+      return { g: g, cx: cx };
     });
-    seats.push({ x: 92, y: 146, w: 50, h: 68 });
-    seats.push({ x: 698, y: 146, w: 50, h: 68 });
-    var RED = "#e0313c", AMBER = "#ffb238", IDLE = "#3a3f7a";
-    var chairs = seats.map(function (s) {
-      return shape("rect", { x: s.x, y: s.y, width: s.w, height: s.h, rx: 12, fill: IDLE, "class": "chair" });
+    mk("rect", { x: 50, y: 262, width: 740, height: 22, rx: 8, fill: "#6b4a3f" });
+    mk("rect", { x: 70, y: 284, width: 700, height: 76, fill: "#3b2a2a" });
+    [[180, 252], [330, 254], [510, 251], [640, 253]].forEach(function (p, i) {
+      mk("rect", { x: p[0], y: p[1], width: 50, height: 12, rx: 2, fill: "#efe9df", transform: "rotate(" + (i % 2 ? 3 : -4) + " " + (p[0] + 25) + " " + p[1] + ")" });
     });
-    // papers on the table
-    [[230,160],[400,150],[560,170],[330,185]].forEach(function (p, i) {
-      shape("rect", { x: p[0], y: p[1], width: 46, height: 30, rx: 3, fill: "#efe9df", transform: "rotate(" + (i % 2 ? 8 : -6) + " " + (p[0]+23) + " " + (p[1]+15) + ")" });
-    });
-
-    function seat() {
-      chairs.forEach(function (c, i) {
-        setTimeout(function () { c.setAttribute("fill", i % 2 ? AMBER : RED); }, reduce ? 0 : i * 110);
+    var bubbleLayer = mk("g", {});
+    var lines = ["Why?", "No.", "Prove it.", "Wait…", "Exactly.", "Hmm.", "Says who?", "Fair.", "Nope.", "Hold on.", "Really?", "Okay, but…"];
+    var busy = {};
+    function speak() {
+      var talking = Object.keys(busy).filter(function (k) { return busy[k]; }).map(Number);
+      if (talking.length >= 2) return;
+      var free = people.map(function (_, i) { return i; }).filter(function (i) {
+        return !busy[i] && !busy[i - 1] && !busy[i + 1];   // neighbours never talk over each other's bubbles
       });
-      if (reduce) return;
-      setInterval(function () {
-        var c = chairs[Math.floor(Math.random() * chairs.length)];
-        c.setAttribute("fill", c.getAttribute("fill") === RED ? AMBER : RED);
-      }, 2600);
+      if (!free.length) return;
+      var i = free[Math.floor(Math.random() * free.length)], p = people[i];
+      busy[i] = true;
+      var text = lines[Math.floor(Math.random() * lines.length)];
+      var w = text.length * 13 + 34, h = 40;
+      var x = Math.max(8, Math.min(832 - w, p.cx - w / 2)), y = 72;
+      var b = mk("g", { "class": "bubble" }, bubbleLayer);
+      mk("rect", { x: x, y: y, width: w, height: h, rx: 20, fill: "#fff" }, b);
+      mk("path", { d: "M" + (p.cx - 8) + " " + (y + h - 1) + " l8 12 l8 -12z", fill: "#fff" }, b);
+      var t = mk("text", { x: x + w / 2, y: y + 27, "text-anchor": "middle", fill: "#1b1f4a", "font-family": "Archivo, sans-serif", "font-weight": "750", "font-size": "20" }, b);
+      t.textContent = text;
+      requestAnimationFrame(function () { b.classList.add("on"); p.g.classList.add("talking"); });
+      setTimeout(function () {
+        b.classList.remove("on"); p.g.classList.remove("talking");
+        setTimeout(function () { b.remove(); busy[i] = false; }, 400);
+      }, 2300);
     }
+    var started = false;
+    function start() { if (started) return; started = true; speak(); setInterval(speak, 1100); }
     if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (es) {
-        if (es[0].isIntersecting) { seat(); io.disconnect(); }
-      }, { threshold: 0.4 });
+      var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { start(); io.disconnect(); } }, { threshold: 0.3 });
       io.observe(svg);
-    } else { seat(); }
+    } else { start(); }
 
-    /* ---- Sealed until the night ends ---- */
+    /* ---- The sealed envelope ---- */
     var unseal = new Date(E.unsealAt).getTime();
-    var body = $("sealed-body");
+    var fmt = new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Perth", weekday: "long", hour: "numeric", minute: "2-digit" });
+    $("addr").textContent = "For the jury. Not before " + fmt.format(unseal).replace(":00", "") + ".";
 
     function renderSealed() {
-      body.appendChild(el("span", "stamp", "Sealed"));
-      var h = el("h2", null, "After the verdict");
-      h.id = "sealed-h";
-      body.appendChild(h);
-      body.appendChild(el("p", "intro", "Reading material and what the internet thinks. It opens when the night ends, so everyone walks in with only their own head."));
-      var clock = el("div", "clock");
-      clock.setAttribute("aria-live", "off");
-      [["d", "days"], ["h", "hours"], ["m", "minutes"]].forEach(function (u) {
-        var unit = el("div", "unit");
-        var dg = el("span", "digits"); dg.id = "u-" + u[0];
-        dg.appendChild(el("span", null, "00"));
-        unit.appendChild(dg);
-        unit.appendChild(el("small", null, u[1]));
-        clock.appendChild(unit);
-      });
-      body.appendChild(clock);
+      $("sealed-say").textContent = "Reading list and what the internet thinks. You walk in with only your own head.";
+      $("clock").hidden = false;
     }
 
-    function renderOpen() {
-      body.innerHTML = "";
-      var h = el("h2", null, "After the verdict");
-      h.id = "sealed-h";
-      body.appendChild(h);
-      body.appendChild(el("p", "intro", "Now go and see who agrees with you."));
+    function renderOpen(animate) {
+      $("sealed-h").textContent = "The verdict is in.";
+      $("sealed-say").textContent = "Now go and see who agrees with you.";
+      $("clock").hidden = true;
+      var env = $("env");
+      if (animate) setTimeout(function () { env.classList.add("open"); }, 300); else env.classList.add("open");
+      var box = $("opened"); box.hidden = false; box.innerHTML = "";
       var ul = el("ul", "reading");
       E.reading.forEach(function (r) {
         var li = el("li");
@@ -195,11 +216,11 @@
         li.appendChild(el("p", null, r.note));
         ul.appendChild(li);
       });
-      body.appendChild(ul);
-      body.appendChild(el("h3", null, "What the internet thinks"));
+      box.appendChild(ul);
+      box.appendChild(el("h3", null, "What the internet thinks"));
       var v = el("div", "verdict-text");
       E.internetVerdict.forEach(function (p) { v.appendChild(el("p", null, p)); });
-      body.appendChild(v);
+      box.appendChild(v);
     }
 
     function setUnit(id, val) {
@@ -212,16 +233,15 @@
 
     function tick() {
       var left = unseal - Date.now();
-      if (left <= 0) { renderOpen(); return; }
+      if (left <= 0) { renderOpen(true); return; }
       var mins = Math.ceil(left / 6e4);
       setUnit("u-d", Math.floor(mins / 1440));
       setUnit("u-h", Math.floor(mins / 60) % 24);
       setUnit("u-m", mins % 60);
-      // wake up right as the next minute turns over
       setTimeout(tick, (left % 6e4) + 50);
     }
 
-    if (Date.now() >= unseal) { renderOpen(); } else { renderSealed(); tick(); }
+    if (Date.now() >= unseal) { renderOpen(false); } else { renderSealed(); tick(); }
   })();
   </script>
 </body>

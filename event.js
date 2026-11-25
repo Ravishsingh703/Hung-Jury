@@ -17,20 +17,18 @@ window.EVENT = {
   headline: "Would you rather be the person they trust, or the person they invite?",
 
   // One line under the headline.
-  deck: "Same people, same life. You only get one of them.",
+  deck: "Same people, same life. Pick one.",
 
+  // Two short lines, shown under the table. Keep them punchy.
   brief: [
-    "Respected means people rate you: your judgement, your work, your word. Liked means people want you around: your company, your warmth, your energy.",
-    "Most of us tell ourselves we have both. Thursday, you don’t. Picture your boss, your friends, the person you love, and decide which one you’d keep if the other went.",
-    "No “it depends”. No “why not both”. Bring your own reasons, from your own life. No quotes, no studies, no homework. That comes after."
+    "You get one. No \u201cit depends\u201d, no \u201cwhy not both\u201d.",
+    "No quotes, no studies, no homework. Just your own reasons, said out loud."
   ],
 
-  details: [
-    { label: "When", value: "Thursday 10 December, 6pm to 9pm" },
-    { label: "Where", value: "Venue confirmed in the group chat" },
-    { label: "Arrive", value: "By 6pm. The door closes once we start." },
-    { label: "Food", value: "Order your own, pay your own." }
-  ],
+  // The night. `day` is shown huge, `time` under it, then the small print.
+  day: "Thursday 10 December",
+  time: "6pm. The door closes once we start.",
+  smallPrint: ["Venue in the group chat.", "Order your own, pay your own.", "Done by 9."],
 
   unsealAt: "2026-12-10T21:00:00+08:00",
 
