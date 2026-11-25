@@ -14,10 +14,10 @@ window.EVENT = {
   topic: "Respected or liked?",
 
   // The big question. Make it one that sticks in people's heads all week.
-  headline: "Would you rather be the person they trust, or the person they invite?",
+  headline: "Would you rather be respected by people who can\u2019t stand you, or liked by people who think you\u2019re a joke?",
 
   // One line under the headline.
-  deck: "Same people, same life. Pick one.",
+  deck: "Everyone says both. Nobody gets both. Pick.",
 
   // Two short lines, shown under the table. Keep them punchy.
   brief: [

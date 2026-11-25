@@ -3,13 +3,13 @@
 @font-face { font-family: "Newsreader"; src: url("fonts/newsreader-italic.woff2") format("woff2-variations"); font-weight: 200 800; font-style: italic; font-display: swap; }
 
 :root {
-  --night: #1b1f4a;     /* jury-room night */
-  --night-2: #282d6b;
-  --verdict: #e0313c;   /* verdict red */
-  --heat: #ffb238;      /* the heat of that room */
-  --light: #f4f5f8;
-  --text: #23263a;
-  --muted: #6b6f85;
+  --night: #22060a;     /* oxblood, the room after midnight */
+  --night-2: #4a0d13;
+  --verdict: #e2231a;   /* verdict red */
+  --heat: #f5a524;      /* the heat of that room */
+  --light: #ece8e2;     /* bone */
+  --text: #1c1012;
+  --muted: #7a6a66;
   --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --serif: "Newsreader", Georgia, serif;
   --ease: cubic-bezier(.2,.7,.2,1);
@@ -30,7 +30,7 @@ a { color: inherit; }
 .nav {
   position: fixed; inset: 0 0 auto 0; z-index: 20;
   backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  background: rgba(27,31,74,.82); color: #fff;
+  background: rgba(34,6,10,.82); color: #fff;
 }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 3.5rem; }
 .nav .brand { font-weight: 800; font-stretch: 80%; font-size: 1.2rem; text-decoration: none; }
@@ -46,10 +46,11 @@ a { color: inherit; }
 .btn:active { transform: translateY(0) scale(.98); }
 .btn-donate { background: var(--heat); color: var(--night); padding: .55rem 1.25rem; font-size: 1rem; animation: pulse 2.8s var(--ease) infinite; }
 .btn-light { background: #fff; color: var(--night); }
+.btn-ghost { color: #fff; padding: .55rem 1rem; font-size: 1rem; font-weight: 700; }
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,178,56,.55); }
-  70% { box-shadow: 0 0 0 14px rgba(255,178,56,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,178,56,0); }
+  0% { box-shadow: 0 0 0 0 rgba(245,165,36,.55); }
+  70% { box-shadow: 0 0 0 14px rgba(245,165,36,0); }
+  100% { box-shadow: 0 0 0 0 rgba(245,165,36,0); }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(.25em); } to { opacity: 1; transform: none; } }
 
@@ -71,8 +72,8 @@ a { color: inherit; }
 .hero {
   color: #fff; align-items: end; padding-bottom: 5rem;
   background:
-    radial-gradient(60% 55% at 85% 15%, rgba(224,49,60,.35), transparent 70%),
-    radial-gradient(50% 50% at 10% 90%, rgba(255,178,56,.18), transparent 70%),
+    radial-gradient(60% 55% at 85% 15%, rgba(226,35,26,.35), transparent 70%),
+    radial-gradient(50% 50% at 10% 90%, rgba(245,165,36,.18), transparent 70%),
     var(--night);
 }
 .fan { position: absolute; top: -6rem; right: -6rem; width: min(46rem, 90vw); aspect-ratio: 1; opacity: .13; animation: spin 22s linear infinite; }
@@ -89,7 +90,9 @@ a { color: inherit; }
 .hero h1 sup { font-size: .18em; vertical-align: top; position: relative; top: .5em; margin-left: .05em; -webkit-text-fill-color: var(--heat); }
 .hero h1 sup a { text-decoration: none; }
 @keyframes sheen { from { background-position: 0% 0; } to { background-position: 100% 0; } }
-.hero .say { color: rgba(255,255,255,.88); margin-top: 1.75rem; }
+.hero .punch { margin: 2rem 0 0; font-weight: 850; font-stretch: 72%; font-size: clamp(2.2rem, 5.2vw, 4.2rem); line-height: .98; letter-spacing: -.01em; max-width: 14ch; }
+.hero .punch em { font-style: normal; color: var(--verdict); }
+.hero .say { color: rgba(255,255,255,.8); margin-top: 1.25rem; }
 .cue { margin-top: 3rem; display: inline-flex; align-items: center; gap: .75rem; color: rgba(255,255,255,.6); font-weight: 600; font-size: .95rem; text-decoration: none; }
 .cue i { width: 1px; height: 2.5rem; background: rgba(255,255,255,.35); position: relative; overflow: hidden; }
 .cue i::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--heat); animation: drip 1.8s ease-in-out infinite; }
@@ -98,7 +101,7 @@ a { color: inherit; }
 /* 1. The question */
 .question { background: var(--light); }
 .question .tag { font-weight: 750; font-stretch: 85%; color: var(--verdict); font-size: 1.15rem; margin: 0 0 1.25rem; }
-.question h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(2.6rem, 6.6vw, 5.6rem); line-height: 1.02; letter-spacing: -.02em; max-width: 16ch; }
+.question h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(2.3rem, 5.4vw, 4.7rem); line-height: 1.04; letter-spacing: -.02em; max-width: 21ch; }
 .question .say { margin-top: 2rem; font-style: italic; color: var(--muted); }
 
 /* 2. The table */
@@ -106,22 +109,50 @@ a { color: inherit; }
 .table svg { width: 100%; height: auto; display: block; margin: 0 auto 3rem; max-width: 60rem; }
 .table .lines { text-align: center; }
 .table .say { margin-left: auto; margin-right: auto; color: rgba(255,255,255,.9); }
-.person { transition: transform .35s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; }
+.rules-link { text-align: center; margin: 2.5rem 0 0; }
+.rules-link .btn { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.8); padding: .9rem 2rem; font-size: 1.15rem; }
+.rules-link .btn:hover { background: #fff; color: var(--night); }
+.person { transition: transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; }
 .person.talking { transform: translateY(-6px) rotate(-2deg); }
-.person .arm { transition: transform .35s var(--ease); transform-box: fill-box; transform-origin: 50% 8%; }
+.person.standing { transform: translateY(-46px) rotate(-3deg); }
+.person.laugh { animation: giggle .12s 10 alternate; }
+.person .arm { transition: transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 8%; }
 .person.talking .arm-r { transform: rotate(-150deg); }
 .person.talking .arm-l { transform: rotate(150deg); }
-.bubble { opacity: 0; transition: opacity .25s, transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; transform: scale(.6); }
+.person.slam .arm-r { animation: slam .55s var(--ease); }
+.person.slam .arm-l { animation: slamL .55s var(--ease); }
+@keyframes slam { 0% { transform: rotate(0); } 45% { transform: rotate(-170deg); } 60% { transform: rotate(-40deg); } 100% { transform: rotate(-60deg); } }
+@keyframes slamL { 0% { transform: rotate(0); } 45% { transform: rotate(170deg); } 60% { transform: rotate(40deg); } 100% { transform: rotate(60deg); } }
+.person .mouth { opacity: 0; transition: opacity .15s; }
+.person.talking .mouth, .person.laugh .mouth { opacity: 1; }
+.person.talking .lips, .person.laugh .lips { opacity: 0; }
+@keyframes giggle { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-5px) rotate(2deg); } }
+.board.shake { animation: shake .45s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake { 10%,90% { transform: translate(-2px,1px); } 20%,80% { transform: translate(4px,-2px); } 30%,50%,70% { transform: translate(-6px,2px); } 40%,60% { transform: translate(6px,-1px); } }
+.paper { transform-box: fill-box; }
+.paper.hop { animation: hop .55s var(--ease); }
+@keyframes hop { 30% { transform: translateY(-22px) rotate(14deg); } 100% { transform: none; } }
+.cup { transition: transform .45s cubic-bezier(.5,1.6,.5,1); transform-box: fill-box; transform-origin: 100% 100%; }
+.cup.spilt { transform: rotate(88deg) translate(-4px, 6px); }
+.cup .steam { animation: steam 2s ease-in-out infinite; }
+@keyframes steam { 50% { opacity: .2; transform: translateY(-4px); } }
+.puddle { transform-box: fill-box; transform-origin: 0% 50%; transform: scaleX(0); opacity: 0; transition: transform 1.4s var(--ease) .25s, opacity .4s; }
+.puddle.on { transform: scaleX(1); opacity: 1; }
+.burst { transform-box: fill-box; transform-origin: center; animation: burst .8s var(--ease) forwards; }
+@keyframes burst { 0% { transform: scale(.2) rotate(-12deg); opacity: 0; } 25% { transform: scale(1.15) rotate(4deg); opacity: 1; } 70% { opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 0; } }
+.bubble { opacity: 0; transition: opacity .2s, transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; transform: scale(.6); }
 .bubble.on { opacity: 1; transform: scale(1); }
+.bubble.loud.on { animation: jolt .3s 2; }
+@keyframes jolt { 50% { transform: scale(1.08) rotate(-2deg); } }
 
 /* 3. The night */
-.night { background: var(--heat); color: var(--night); }
+.night { background: var(--verdict); color: #fff; }
 .night .say { margin-top: 1.5rem; }
 .small-print { display: flex; flex-wrap: wrap; gap: .6rem; margin: 2.5rem 0 0; padding: 0; list-style: none; }
-.small-print li { border: 2px solid var(--night); border-radius: 999px; padding: .4rem 1rem; font-weight: 700; font-stretch: 88%; }
+.small-print li { border: 2px solid rgba(255,255,255,.85); border-radius: 999px; padding: .4rem 1rem; font-weight: 700; font-stretch: 88%; }
 
 /* 4. The verdict */
-.verdict { color: #fff; text-align: center; background: radial-gradient(60% 60% at 50% 35%, rgba(224,49,60,.35), transparent 70%), var(--night); }
+.verdict { color: #fff; text-align: center; background: radial-gradient(60% 60% at 50% 35%, rgba(226,35,26,.35), transparent 70%), var(--night); }
 .verdict .big { margin-bottom: 1rem; }
 .verdict .say { margin: 0 auto 3.5rem; color: rgba(255,255,255,.8); }
 .env-wrap { width: min(34rem, 100%); margin: 0 auto; animation: float 6s ease-in-out infinite; }
@@ -178,9 +209,9 @@ a { color: inherit; }
 .verdict-text p { margin: 0 0 1rem; break-inside: avoid-column; }
 
 /* 5. Give */
-.give { background: var(--verdict); color: #fff; text-align: center; min-height: 80svh; }
-.give .say { margin: 1.5rem auto 2.5rem; color: rgba(255,255,255,.9); }
-.give .btn { background: #fff; color: var(--verdict); font-size: 1.6rem; padding: 1.3rem 3.2rem; }
+.give { background: var(--heat); color: var(--night); text-align: center; min-height: 80svh; }
+.give .say { margin: 1.5rem auto 2.5rem; color: var(--night); }
+.give .btn { background: var(--night); color: #fff; font-size: 1.6rem; padding: 1.3rem 3.2rem; }
 .give .btn:hover { box-shadow: 0 16px 34px -12px rgba(0,0,0,.45); }
 
 /* Footnote */
@@ -199,6 +230,7 @@ a { color: inherit; }
   .reveal { transform: none; }
   .digits.flip span { animation: fade .4s both; }
   .person, .person .arm, .bubble { transition: opacity .25s !important; }
-  .person.talking { transform: none; }
+  .person.talking, .person.standing { transform: none; }
+  .person.laugh, .board.shake, .paper.hop, .bubble.loud.on, .person.slam .arm-r, .person.slam .arm-l, .cup .steam { animation: none !important; }
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
