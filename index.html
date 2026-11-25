@@ -17,6 +17,13 @@
     </div>
   </nav>
 
+  <div class="thermo" id="thermo" aria-hidden="true">
+    <span class="temp" id="temp">21&deg;</span>
+    <div class="tube"><div class="merc"></div></div>
+    <div class="bulb"></div>
+    <div class="bits" id="bits"></div>
+  </div>
+
   <main>
     <!-- 0. Who we are -->
     <header class="chapter hero">
@@ -131,6 +138,44 @@
       }, { threshold: 0.25 });
       chapters.forEach(function (c) { cio.observe(c); });
     } else { chapters.forEach(function (c) { c.classList.add("in"); }); }
+
+    /* ---- The thermometer: the room heats up, then it blows ---- */
+    var th = $("thermo"), bits = $("bits"), tempEl = $("temp"), blown = false, BLOW = 0.9;
+    var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function blow() {
+      blown = true; th.classList.remove("hot"); th.classList.add("boom");
+      tempEl.textContent = "Boiling.";
+      var colours = ["rgba(255,255,255,.85)", "rgba(255,255,255,.6)", "#e2231a", "#f5a524", "#e2231a"];
+      for (var k = 0; k < 18; k++) {
+        var b = document.createElement("i"); b.className = "bit";
+        var glass = k % 3 === 0, ang = Math.random() * Math.PI * 2, dist = 60 + Math.random() * 140;
+        b.style.setProperty("--dx", (Math.cos(ang) * dist - 40).toFixed(0) + "px");
+        b.style.setProperty("--dy", (Math.sin(ang) * dist - 30).toFixed(0) + "px");
+        b.style.setProperty("--rot", (Math.random() * 540 - 270).toFixed(0) + "deg");
+        b.style.setProperty("--s", (glass ? 6 + Math.random() * 8 : 5 + Math.random() * 7).toFixed(0) + "px");
+        b.style.setProperty("--r", glass ? "1px" : "50%");
+        b.style.setProperty("--c", colours[k % colours.length]);
+        bits.appendChild(b);
+      }
+      var bang = document.createElement("span"); bang.className = "bang"; bang.textContent = "Too hot.";
+      bits.appendChild(bang);
+    }
+    function heal() { blown = false; th.classList.remove("boom"); bits.innerHTML = ""; }
+    function heat() {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      var p = max > 0 ? Math.min(1, scrollY / max) : 0;
+      var f = Math.min(1, p / BLOW);
+      th.style.setProperty("--h", (6 + f * 94).toFixed(1) + "%");
+      th.style.setProperty("--glow", f.toFixed(2));
+      if (!blown) tempEl.textContent = Math.round(21 + f * 27) + "\u00b0";
+      th.classList.toggle("hot", !blown && f > .75 && !reduceMotion);
+      if (!blown && p >= BLOW) blow();
+      else if (blown && p < BLOW * .8) heal();
+    }
+    var heatTick = false;
+    addEventListener("scroll", function () { if (!heatTick) { heatTick = true; requestAnimationFrame(function () { heat(); heatTick = false; }); } }, { passive: true });
+    addEventListener("resize", heat);
+    heat();
 
     /* ---- The table: a jury losing its temper ---- */
     var NS = "http://www.w3.org/2000/svg";
