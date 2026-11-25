@@ -4,7 +4,9 @@ One page. This week's question, the brief, the night, and the reading list that 
 
 ## Weekly update (5 minutes)
 
-Edit **one file: `event.js`**. Change the question, brief, details, `unsealAt` time and reading list. Commit. GitHub Pages republishes in about a minute.
+Edit **one file: `event.js`**. Change the topic, the headline question, the deck line, the brief, the details, the `unsealAt` time and the reading list. Commit. GitHub Pages republishes in about a minute.
+
+The headline is the hook: make it a question people can't stop chewing on all week.
 
 Nothing else needs touching.
 

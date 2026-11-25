@@ -4,49 +4,142 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Hung Jury: Donate</title>
+  <meta name="theme-color" content="#ffb238">
+  <title>Hung Jury: Keep the jury in session</title>
+  <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
   <style>
-    .amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin: var(--s3) 0; }
-    .amounts .choice { justify-content: center; font-size: 1.5rem; }
-    .verdict { display: none; }
-    .verdict.shown { display: block; }
-    @media (max-width: 34rem) { .amounts { grid-template-columns: 1fr; } }
+    body { background: var(--heat); color: var(--night); }
+    .nav { background: rgba(27,31,74,.94); }
+    .pitch { min-height: 100svh; padding: 7.5rem 0 5rem; }
+    .pitch h1 {
+      margin: 0; font-weight: 850; font-stretch: 68%;
+      font-size: clamp(3.6rem, 11vw, 9rem); line-height: .86; letter-spacing: -.015em;
+      max-width: 11ch;
+      animation: rise 1s var(--ease) both;
+    }
+    .pitch .lede {
+      font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.6rem); line-height: 1.4;
+      max-width: 36rem; margin: 1.75rem 0 3rem;
+      animation: rise 1s .15s var(--ease) both;
+    }
+    .impact {
+      list-style: none; padding: 0; margin: 0 0 3.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+      border-top: 2px solid var(--night);
+      animation: rise 1s .3s var(--ease) both;
+    }
+    .impact li { padding: 1.25rem 1.5rem 0 0; }
+    .impact li + li { border-left: 1px solid rgba(27,31,74,.25); padding-left: 1.5rem; }
+    .impact b { display: block; font-weight: 850; font-stretch: 72%; font-size: clamp(2.6rem, 5vw, 3.6rem); line-height: 1; }
+    .impact span { display: block; font-family: var(--serif); font-size: 1.15rem; margin-top: .5rem; }
+    .amounts { display: flex; flex-wrap: wrap; gap: 1rem; animation: rise 1s .45s var(--ease) both; }
+    .amounts .btn { background: var(--night); color: #fff; font-size: 1.5rem; padding: 1.2rem 2.6rem; }
+    .amounts .btn:hover { box-shadow: 0 16px 30px -12px rgba(27,31,74,.65); }
+    .amounts .btn.ghost { background: transparent; color: var(--night); box-shadow: inset 0 0 0 2.5px var(--night); }
+    .fine { margin-top: 1.25rem; font-size: .95rem; opacity: .75; }
+
+    /* The rejection */
+    .court {
+      position: fixed; inset: 0; z-index: 50;
+      display: grid; place-items: center; text-align: center;
+      background:
+        radial-gradient(70% 70% at 50% 40%, #f0414b, var(--verdict) 60%, #a81b25);
+      color: #fff; padding: 1.5rem;
+      opacity: 0; visibility: hidden;
+    }
+    .court.on { visibility: visible; animation: flash .35s ease-out forwards; }
+    @keyframes flash { 0% { opacity: 0; } 15% { opacity: 1; background-color: #fff; } 100% { opacity: 1; } }
+    .court .stamp-big {
+      display: inline-block;
+      font-weight: 900; font-stretch: 70%;
+      font-size: clamp(4rem, 15vw, 10rem); line-height: 1;
+      color: #fff; border: .07em solid #fff; border-radius: .08em;
+      padding: .04em .22em .08em;
+      transform: rotate(-8deg);
+    }
+    .court.on .stamp-big { animation: slam .55s cubic-bezier(.2,1.6,.4,1) both .1s; }
+    @keyframes slam {
+      0% { transform: rotate(-8deg) scale(3.2); opacity: 0; }
+      60% { transform: rotate(-8deg) scale(.94); opacity: 1; }
+      100% { transform: rotate(-8deg) scale(1); opacity: 1; }
+    }
+    .court.on .inner { animation: shake .4s ease-out .5s; }
+    @keyframes shake {
+      0%,100% { transform: none; } 20% { transform: translate(-10px, 4px); }
+      40% { transform: translate(8px, -6px); } 60% { transform: translate(-6px, 3px); } 80% { transform: translate(4px, -2px); }
+    }
+    .court h2 {
+      margin: clamp(2.5rem, 5vw, 4.5rem) 0 .5rem; font-weight: 850; font-stretch: 72%;
+      font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1;
+    }
+    .court p { font-family: var(--serif); font-size: clamp(1.2rem, 2.2vw, 1.5rem); margin: 0 auto; max-width: 30rem; }
+    .court .kmm { font-weight: 800; font-family: var(--sans); font-stretch: 80%; font-size: clamp(1.6rem, 3.4vw, 2.3rem); margin-bottom: 1.25rem; }
+    .court .after { opacity: 0; }
+    .court.on .after { animation: rise .7s var(--ease) both .9s; }
+    .court .btn-light { margin-top: 2.5rem; font-size: 1.4rem; padding: 1.15rem 2.6rem; }
+
+    @media (max-width: 40rem) {
+      .impact { grid-template-columns: 1fr; }
+      .impact li + li { border-left: 0; padding-left: 0; }
+      .impact li { padding-bottom: 1rem; border-bottom: 1px solid rgba(27,31,74,.2); }
+      .amounts .btn { flex: 1 1 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) { .court.on { opacity: 1; } }
   </style>
 </head>
 <body>
-  <header class="masthead">
-    <a class="name" href="./" style="text-decoration:none">Hung Jury</a>
-    <span class="session">Donations</span>
-  </header>
+  <nav class="nav" aria-label="Main">
+    <div class="wrap">
+      <a class="brand" href="./">Hung Jury</a>
+      <a class="btn btn-donate" href="#give" aria-current="page">Donate</a>
+    </div>
+  </nav>
 
-  <main class="sheet">
-    <section class="ballot">
-      <h1 class="question">Support the jury</h1>
-      <p>Pick an amount.</p>
-      <div class="amounts">
-        <button class="choice" type="button">$5</button>
-        <button class="choice" type="button">$20</button>
-        <button class="choice" type="button">$100</button>
+  <main class="pitch">
+    <div class="wrap">
+      <h1>Keep the jury in session.</h1>
+      <p class="lede">Every Hung Jury night is a table someone booked, a brief someone wrote at midnight, and a dessert owed to whoever had the nerve to change their mind. Right now, one person covers all of it. A little from each of you changes what this can become.</p>
+
+      <ul class="impact">
+        <li><b>$1</b><span>from each juror puts another night on the calendar.</span></li>
+        <li><b>$5</b><span>buys dessert for whoever changes their mind.</span></li>
+        <li><b>$20</b><span>gets us a bigger table, and room for the people you bring.</span></li>
+      </ul>
+
+      <div class="amounts" id="give">
+        <button class="btn" type="button">Donate $1</button>
+        <button class="btn" type="button">Donate $5</button>
+        <button class="btn" type="button">Donate $20</button>
+        <button class="btn ghost" type="button">Choose an amount</button>
       </div>
-    </section>
-
-    <section class="verdict" id="verdict" aria-live="polite">
-      <span class="seal">Rejected</span>
-      <h2>The host has motion.</h2>
-      <p>Hung Jury doesn&rsquo;t run on member money. Nobody here is paying to belong. It runs because someone cares enough to book the table, write the brief and sit there while you take their argument apart.</p>
-      <p>Keep your money. Bring a better argument.</p>
-      <p><a href="./">Back to this week&rsquo;s brief</a></p>
-    </section>
+      <p class="fine">Secure, instant, and takes about two seconds.</p>
+    </div>
   </main>
 
+  <div class="court" id="court" role="alertdialog" aria-modal="true" aria-labelledby="court-h" aria-describedby="court-d">
+    <div class="inner">
+      <span class="stamp-big">Rejected</span>
+      <div class="after">
+        <h2 id="court-h">The host has motion.</h2>
+        <p class="kmm">Keep your money.</p>
+        <p id="court-d">Cash is inadmissible in this court. The only thing we accept is a better argument, and you can bring that to the table.</p>
+        <a class="btn btn-light" href="./" id="back">Back to the brief</a>
+      </div>
+    </div>
+  </div>
+
   <script>
-    document.querySelectorAll(".amounts .choice").forEach(function (b) {
+    var court = document.getElementById("court");
+    document.querySelectorAll(".amounts .btn").forEach(function (b) {
       b.addEventListener("click", function () {
-        var v = document.getElementById("verdict");
-        v.classList.add("shown");
-        v.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+        court.classList.add("on");
+        document.body.style.overflow = "hidden";
+        setTimeout(function () { document.getElementById("back").focus({ preventScroll: true }); }, 1000);
       });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && court.classList.contains("on")) { location.href = "./"; }
     });
   </script>
 </body>

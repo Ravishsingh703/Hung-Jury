@@ -1,26 +1,34 @@
 /*
-  HUNG JURY — this week's session.
-  This is the only file you edit each week. Change the values between the quotes,
+  HUNG JURY: this week's session.
+  This is the only file you edit each week. Change the text between the quotes,
   save, commit. The page rebuilds itself from this.
 
-  Times are Perth time. `unsealAt` is when the reading material opens
-  (set it to when the night ends, so everyone walks in raw).
+  Times are Perth time. `unsealAt` is when the reading material opens.
+  Set it to when the night ends, so everyone walks in raw.
 */
 window.EVENT = {
   session: 1,
-  question: "Respected or liked?",
-  options: ["Respected", "Liked"],
+  dateline: "Perth, Thursday 10 December 2026",
+
+  // The topic in plain words, shown small above the headline.
+  topic: "Respected or liked?",
+
+  // The big question. Make it one that sticks in people's heads all week.
+  headline: "Would you rather be the person they trust, or the person they invite?",
+
+  // One line under the headline.
+  deck: "Same people, same life. You only get one of them.",
 
   brief: [
-    "You get one. Not both, not “it depends”. One.",
-    "Respected means people rate you: your judgement, your work, your word. Liked means people want you around: your company, your warmth, your energy. Picture the people in your life, your boss, your friends, the person you love, and decide which one you’d keep if the other went.",
-    "Bring your own reasons, from your own life. No quotes, no studies, no homework. That comes after."
+    "Respected means people rate you: your judgement, your work, your word. Liked means people want you around: your company, your warmth, your energy.",
+    "Most of us tell ourselves we have both. Thursday, you don’t. Picture your boss, your friends, the person you love, and decide which one you’d keep if the other went.",
+    "No “it depends”. No “why not both”. Bring your own reasons, from your own life. No quotes, no studies, no homework. That comes after."
   ],
 
   details: [
-    { label: "When", value: "Thursday 10 December, 6:00pm to 9:00pm" },
-    { label: "Where", value: "Venue to be confirmed in the group chat" },
-    { label: "Arrive", value: "By 6:00pm. The door closes once we start." },
+    { label: "When", value: "Thursday 10 December, 6pm to 9pm" },
+    { label: "Where", value: "Venue confirmed in the group chat" },
+    { label: "Arrive", value: "By 6pm. The door closes once we start." },
     { label: "Food", value: "Order your own, pay your own." }
   ],
 

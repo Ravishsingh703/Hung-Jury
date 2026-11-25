@@ -4,41 +4,85 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1b1f4a">
   <title>Hung Jury</title>
+  <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="masthead">
-    <span class="name">Hung Jury</span>
-    <span class="session" id="session"></span>
+  <nav class="nav" aria-label="Main">
+    <div class="wrap">
+      <a class="brand" href="./">Hung Jury</a>
+      <a class="btn btn-donate" href="donate.html">Donate</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <svg class="fan" viewBox="-100 -100 200 200" aria-hidden="true">
+      <g fill="#fff">
+        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z"/>
+        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(90)"/>
+        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(180)"/>
+        <path d="M0 -8 C 18 -30, 22 -80, 0 -94 C -22 -80, -18 -30, 0 -8Z" transform="rotate(270)"/>
+        <circle r="13"/>
+      </g>
+    </svg>
+    <div class="wrap">
+      <h1>Hung Jury<sup><a href="#footnote" aria-label="Footnote 1">1</a></sup></h1>
+      <p class="lede">A dinner where people argue properly and try to change each other&rsquo;s minds.</p>
+      <div class="when">
+        <span class="session-tag" id="session"></span>
+        <span class="date" id="hero-date"></span>
+      </div>
+    </div>
   </header>
 
-  <main class="sheet">
-    <section class="ballot" aria-labelledby="question">
-      <h1 class="question" id="question"></h1>
-      <div class="choices" id="choices"></div>
-      <p class="note" id="ballot-note" aria-live="polite">Mark one. Nobody sees this but you.</p>
+  <main>
+    <article class="brief" aria-labelledby="headline">
+      <div class="wrap">
+        <div class="paper-head">
+          <span class="title">The Brief</span>
+          <span class="dateline" id="dateline"></span>
+        </div>
+
+        <figure class="plate">
+          <div class="art"><svg id="table" viewBox="0 0 840 360" role="img" aria-label="Twelve chairs around a jury table"></svg></div>
+          <figcaption>Twelve chairs. Red sits for respected, amber for liked. Watch them move.</figcaption>
+        </figure>
+
+        <div class="story">
+          <p class="kicker" id="topic"></p>
+          <h2 id="headline"></h2>
+          <p class="deck" id="deck"></p>
+          <div class="columns" id="brief"></div>
+        </div>
+      </div>
+    </article>
+
+    <section class="night" aria-labelledby="night-h">
+      <div class="wrap">
+        <h2 id="night-h">The night</h2>
+        <dl class="facts" id="facts"></dl>
+      </div>
     </section>
 
-    <section aria-labelledby="brief-h">
-      <h2 id="brief-h">The brief</h2>
-      <div id="brief"></div>
+    <section class="sealed" aria-labelledby="sealed-h" id="sealed">
+      <div class="wrap" id="sealed-body"></div>
     </section>
 
-    <section aria-labelledby="details-h">
-      <h2 id="details-h">The night</h2>
-      <dl class="details" id="details"></dl>
-    </section>
-
-    <section aria-labelledby="after-h" id="after">
-      <h2 id="after-h">After the verdict</h2>
-      <div id="after-body"></div>
+    <section class="give" aria-labelledby="give-h">
+      <div class="wrap">
+        <h2 id="give-h">Keep the jury in session</h2>
+        <p>Every night costs something. See what a dollar does.</p>
+        <a class="btn btn-big" href="donate.html">Donate</a>
+      </div>
     </section>
   </main>
 
   <footer class="foot">
-    <span>What does the name mean? Watch <i>12 Angry Men</i>.</span>
-    <a href="donate.html">Donate</a>
+    <div class="wrap">
+      <p class="note" id="footnote"><sup>1</sup>The name, the awards and most of the attitude come from <i>12 Angry Men</i> (1957). If you haven&rsquo;t seen it, that&rsquo;s your homework.</p>
+    </div>
   </footer>
 
   <script src="event.js"></script>
@@ -52,88 +96,129 @@
       if (text != null) n.textContent = text;
       return n;
     };
+    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    document.title = "Hung Jury: " + E.question;
+    document.title = "Hung Jury: " + E.topic;
     $("session").textContent = "Session " + String(E.session).padStart(2, "0");
-    $("question").textContent = E.question;
-
-    // Ballot: private, nothing is sent anywhere.
-    var notes = [
-      "Noted. Keep it to yourself until the night.",
-      "Changed your mind already? Save that energy for the table."
-    ];
-    var marked = 0;
-    E.options.forEach(function (opt) {
-      var b = el("button", "choice");
-      b.type = "button";
-      b.setAttribute("aria-pressed", "false");
-      var box = el("span", "box");
-      box.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 8 L32 32"/><path d="M32 8 L8 32"/></svg>';
-      b.appendChild(box);
-      b.appendChild(document.createTextNode(opt));
-      b.addEventListener("click", function () {
-        var already = b.getAttribute("aria-pressed") === "true";
-        if (already) return;
-        document.querySelectorAll(".choice").forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
-        b.setAttribute("aria-pressed", "true");
-        $("ballot-note").textContent = notes[marked > 0 ? 1 : 0];
-        marked++;
-      });
-      $("choices").appendChild(b);
-    });
-
+    $("hero-date").textContent = E.details[0].value;
+    $("dateline").textContent = E.dateline;
+    $("topic").textContent = E.topic;
+    $("headline").textContent = E.headline;
+    $("deck").textContent = E.deck;
     E.brief.forEach(function (p) { $("brief").appendChild(el("p", null, p)); });
-
     E.details.forEach(function (d) {
-      $("details").appendChild(el("dt", null, d.label));
-      $("details").appendChild(el("dd", null, d.value));
+      var w = el("div");
+      w.appendChild(el("dt", null, d.label));
+      w.appendChild(el("dd", null, d.value));
+      $("facts").appendChild(w);
     });
 
-    // Sealed until the night ends.
+    /* ---- The jury table: twelve chairs that keep changing their minds ---- */
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = $("table");
+    function shape(tag, attrs) {
+      var n = document.createElementNS(NS, tag);
+      for (var k in attrs) n.setAttribute(k, attrs[k]);
+      svg.appendChild(n); return n;
+    }
+    shape("rect", { x: 165, y: 125, width: 510, height: 110, rx: 22, fill: "#3b2a2a" });
+    shape("rect", { x: 175, y: 135, width: 490, height: 90, rx: 16, fill: "#5a3f37" });
+    var seats = [];
+    [210, 315, 420, 525, 630].forEach(function (x) {
+      seats.push({ x: x - 34, y: 58, w: 68, h: 50 });
+      seats.push({ x: x - 34, y: 252, w: 68, h: 50 });
+    });
+    seats.push({ x: 92, y: 146, w: 50, h: 68 });
+    seats.push({ x: 698, y: 146, w: 50, h: 68 });
+    var RED = "#e0313c", AMBER = "#ffb238", IDLE = "#3a3f7a";
+    var chairs = seats.map(function (s) {
+      return shape("rect", { x: s.x, y: s.y, width: s.w, height: s.h, rx: 12, fill: IDLE, "class": "chair" });
+    });
+    // papers on the table
+    [[230,160],[400,150],[560,170],[330,185]].forEach(function (p, i) {
+      shape("rect", { x: p[0], y: p[1], width: 46, height: 30, rx: 3, fill: "#efe9df", transform: "rotate(" + (i % 2 ? 8 : -6) + " " + (p[0]+23) + " " + (p[1]+15) + ")" });
+    });
+
+    function seat() {
+      chairs.forEach(function (c, i) {
+        setTimeout(function () { c.setAttribute("fill", i % 2 ? AMBER : RED); }, reduce ? 0 : i * 110);
+      });
+      if (reduce) return;
+      setInterval(function () {
+        var c = chairs[Math.floor(Math.random() * chairs.length)];
+        c.setAttribute("fill", c.getAttribute("fill") === RED ? AMBER : RED);
+      }, 2600);
+    }
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting) { seat(); io.disconnect(); }
+      }, { threshold: 0.4 });
+      io.observe(svg);
+    } else { seat(); }
+
+    /* ---- Sealed until the night ends ---- */
     var unseal = new Date(E.unsealAt).getTime();
-    var body = $("after-body");
+    var body = $("sealed-body");
 
     function renderSealed() {
-      body.innerHTML = "";
-      var env = el("div", "envelope");
-      env.appendChild(el("span", "seal", "Sealed"));
-      env.appendChild(el("p", null, "Reading material and what the internet thinks. It opens when the night ends, so everyone walks in with only their own head."));
-      var cd = el("p", "countdown");
-      cd.id = "countdown";
-      env.appendChild(cd);
-      body.appendChild(env);
+      body.appendChild(el("span", "stamp", "Sealed"));
+      var h = el("h2", null, "After the verdict");
+      h.id = "sealed-h";
+      body.appendChild(h);
+      body.appendChild(el("p", "intro", "Reading material and what the internet thinks. It opens when the night ends, so everyone walks in with only their own head."));
+      var clock = el("div", "clock");
+      clock.setAttribute("aria-live", "off");
+      [["d", "days"], ["h", "hours"], ["m", "minutes"]].forEach(function (u) {
+        var unit = el("div", "unit");
+        var dg = el("span", "digits"); dg.id = "u-" + u[0];
+        dg.appendChild(el("span", null, "00"));
+        unit.appendChild(dg);
+        unit.appendChild(el("small", null, u[1]));
+        clock.appendChild(unit);
+      });
+      body.appendChild(clock);
     }
 
     function renderOpen() {
       body.innerHTML = "";
-      body.appendChild(el("p", null, "Now go and see who agrees with you."));
+      var h = el("h2", null, "After the verdict");
+      h.id = "sealed-h";
+      body.appendChild(h);
+      body.appendChild(el("p", "intro", "Now go and see who agrees with you."));
       var ul = el("ul", "reading");
       E.reading.forEach(function (r) {
         var li = el("li");
         var a = el("a", null, r.title);
         a.href = r.url; a.target = "_blank"; a.rel = "noopener";
         li.appendChild(a);
-        li.appendChild(el("span", "source", r.source));
-        li.appendChild(el("p", "note", r.note));
+        li.appendChild(el("span", "src", r.source));
+        li.appendChild(el("p", null, r.note));
         ul.appendChild(li);
       });
       body.appendChild(ul);
-      body.appendChild(el("h2", null, "What the internet thinks"));
-      E.internetVerdict.forEach(function (p) { body.appendChild(el("p", null, p)); });
+      body.appendChild(el("h3", null, "What the internet thinks"));
+      var v = el("div", "verdict-text");
+      E.internetVerdict.forEach(function (p) { v.appendChild(el("p", null, p)); });
+      body.appendChild(v);
+    }
+
+    function setUnit(id, val) {
+      var dg = $(id), txt = String(val).padStart(2, "0");
+      if (dg.textContent === txt) return;
+      dg.innerHTML = "";
+      dg.appendChild(el("span", null, txt));
+      dg.classList.remove("flip"); void dg.offsetWidth; dg.classList.add("flip");
     }
 
     function tick() {
       var left = unseal - Date.now();
       if (left <= 0) { renderOpen(); return; }
-      var d = Math.floor(left / 864e5),
-          h = Math.floor(left / 36e5) % 24,
-          m = Math.floor(left / 6e4) % 60;
-      var parts = [];
-      if (d) parts.push(d + (d === 1 ? " day" : " days"));
-      if (d || h) parts.push(h + (h === 1 ? " hour" : " hours"));
-      parts.push(m + (m === 1 ? " minute" : " minutes"));
-      $("countdown").textContent = "Opens in " + parts.join(", ") + ".";
-      setTimeout(tick, 30000);
+      var mins = Math.ceil(left / 6e4);
+      setUnit("u-d", Math.floor(mins / 1440));
+      setUnit("u-h", Math.floor(mins / 60) % 24);
+      setUnit("u-m", mins % 60);
+      // wake up right as the next minute turns over
+      setTimeout(tick, (left % 6e4) + 50);
     }
 
     if (Date.now() >= unseal) { renderOpen(); } else { renderSealed(); tick(); }
