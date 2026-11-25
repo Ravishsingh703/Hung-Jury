@@ -81,10 +81,13 @@
   /* ---------- the table ---------- */
   var board = mk("g", { "class": "board" }, scene);
   mk("rect", { x: 40, y: TABLE_Y, width: 820, height: 24, rx: 9, fill: "#5e3a2e" }, board);
-  mk("rect", { x: 62, y: TABLE_Y + 24, width: 776, height: 116, fill: "#2e1b17" }, board);
-  [["Respected", 255], ["Liked", 645]].forEach(function (t, i) {
-    var tx = mk("text", { x: t[1], y: 420, "text-anchor": "middle", fill: SIDE[i], opacity: .28, "font-family": "Archivo, sans-serif", "font-weight": 900, "font-size": 56, "font-stretch": "70%" }, board);
+  mk("rect", { x: 40, y: TABLE_Y + 24, width: 820, height: 116, fill: "#2e1b17" }, board);
+  var sideLabels = [255, 645].map(function (x, i) {
+    var g = mk("g", { "class": "side-label", tabindex: 0, role: "button", "aria-label": "Sit with " + E.sides[i] }, board);
+    mk("rect", { x: x - 170, y: TABLE_Y + 34, width: 340, height: 100, rx: 14, fill: "transparent", "class": "side-hit" }, g);
+    var tx = mk("text", { x: x, y: 420, "text-anchor": "middle", fill: SIDE[i], "font-family": "Archivo, sans-serif", "font-weight": 900, "font-size": 56, "font-stretch": "70%" }, g);
     tx.textContent = E.sides[i];
+    return g;
   });
   var puddle = mk("ellipse", { cx: 708, cy: TABLE_Y + 9, rx: 80, ry: 7, fill: "#7a3e17", "class": "puddle" }, board);
   var papers = [[110, TABLE_Y + 4], [300, TABLE_Y + 6], [560, TABLE_Y + 3], [770, TABLE_Y + 5]].map(function (q) {
@@ -96,8 +99,8 @@
   mk("path", { d: "M675 " + (TABLE_Y - 32) + " q4 -6 0 -12 M683 " + (TABLE_Y - 32) + " q4 -6 0 -12", fill: "none", stroke: "rgba(255,255,255,.45)", "stroke-width": 2.5, "stroke-linecap": "round", "class": "steam" }, cup);
 
   // tent cards with juror numbers
-  function tent(p, label) {
-    var t = mk("g", { "class": "tent" }, board);
+  function tent(p, label, parent) {
+    var t = mk("g", { "class": "tent" }, parent || board);
     mk("rect", { x: p.x - 24, y: TABLE_Y - 20, width: 48, height: 24, rx: 4, fill: "#ece8e2", stroke: SIDE[p.side], "stroke-width": 4, "class": "tent-card" }, t);
     var tx = mk("text", { x: p.x, y: TABLE_Y - 2, "text-anchor": "middle", fill: "#22060a", "font-family": "Archivo, sans-serif", "font-weight": 850, "font-size": 16, "font-stretch": "80%" }, t);
     tx.textContent = label;
@@ -235,48 +238,92 @@
   function hold(ms) { clearTimeout(timer); timer = setTimeout(next, ms); }
 
   /* ---------- you ---------- */
-  var you = null;
+  var you = null, youWalk = null, youTentWalk = null;
+  var HOME = 450, ENDS = [82, 818];
   var KEY = "hj-vote-" + E.session;
-  function store(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  function store(v) { try { if (v) localStorage.setItem(KEY, JSON.stringify(v)); else localStorage.removeItem(KEY); } catch (e) {} }
   function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
 
+  function moveYou(x, instant) {
+    var dx = x - HOME;
+    [youWalk, youTentWalk].forEach(function (w) {
+      if (instant) w.style.transition = "none";
+      w.style.transform = "translateX(" + dx + "px)";
+      if (instant) { void w.getBoundingClientRect(); w.style.transition = ""; }
+    });
+    you.x = x;
+  }
+  function lightSide(side) { sideLabels.forEach(function (l, i) { l.classList.toggle("lit", i === side); }); }
+
   function sitDown(silent) {
-    if (you) return;
-    chair.classList.add("taken");
-    you = { n: "You", side: -1, x: 450, skin: "#d9a57c", hair: "#2b1d16", style: "short" };
-    var g = drawPerson(you, scene);
-    scene.insertBefore(g, board);
+    if (you) { if (you.side !== -1) { choose(-1, silent); } return; }
+    you = { n: "You", side: -1, x: HOME, skin: "#d9a57c", hair: "#2b1d16", style: "short" };
+    youWalk = mk("g", { "class": "walker" }); scene.insertBefore(youWalk, board);
+    youTentWalk = mk("g", { "class": "walker" }, board);
+    var g = drawPerson(you, youWalk);
     g.classList.add("arrive", "undecided");
-    tent(you, "You");
+    tent(you, "You", youTentWalk);
+    chair.classList.add("taken");
     if (!silent) {
       hold(3200);
       perform(cast[0], "talk", "Finally. Someone with sense.", 2200);
       setTimeout(function () { perform(cast[4], "laugh", "Sit with us. We have snacks.", 2200); }, 1100);
-      note("The court", "A new juror takes the empty chair.");
+      note("The court", "A new juror takes the empty chair. Tap a side on the table to pick one.");
     }
+    renderControls();
   }
+
   function choose(side, silent) {
+    if (!you) sitDown(true);
     var was = you.side;
+    if (side === was) return;
+    if (side === -1) {                         // back to the middle, undecided
+      you.side = -1; you.g.classList.add("undecided");
+      moveYou(HOME); lightSide(-1); chair.classList.add("taken");
+      if (!silent) { hold(2600); perform(pick(cast), "laugh", "Undecided? Brave.", 2200); note("The court", "You went back to the middle. Undecided is allowed. For now."); }
+      var u = load() || {}; u.now = undefined; store(u);
+      renderControls(); return;
+    }
     you.g.classList.remove("undecided");
     setSide(you, side);
+    moveYou(ENDS[side]); lightSide(side);
+    chair.classList.remove("taken");           // the middle chair is free again
     var mine = cast.filter(function (p) { return p.side === side; });
     var theirs = cast.filter(function (p) { return p.side !== side; });
     if (!silent) {
-      hold(3400);
-      if (was === -1) {
-        perform(pick(mine), "talk", pick(["Welcome to the right side.", "Good. You’re one of us.", "Smart. Sit.", "Knew it."]), 2400);
-        setTimeout(function () { perform(pick(theirs), "laugh", pick(["Pfft. Enjoy being wrong.", "HA. Give it an hour.", "Oh, you’re one of THOSE."]), 2400); }, 900);
-        note("The court", "You walked in saying " + E.sides[side] + ". We’ll see if you still are at 9.");
-      } else {
-        perform(pick(mine), "stand", pick(["OHHH! A defector!", "Welcome over!", "MIND CHANGED!"]), 2600);
-        setTimeout(function () { perform(pick(theirs), "hurt", "…traitor.", 2200); }, 900);
-        note("The court", "You crossed the floor. That’s what we’re here for.");
-      }
+      hold(3600);
+      setTimeout(function () {
+        if (was === -1) {
+          perform(pick(mine), "talk", pick(["Welcome to the right side.", "Good. You’re one of us.", "Smart. Sit.", "Knew it."]), 2400);
+          setTimeout(function () { perform(pick(theirs), "laugh", pick(["Pfft. Enjoy being wrong.", "HA. Give it an hour.", "Oh, you’re one of THOSE."]), 2400); }, 900);
+        } else {
+          perform(pick(mine), "stand", pick(["OHHH! A defector!", "Welcome over!", "MIND CHANGED!"]), 2600);
+          setTimeout(function () { perform(pick(theirs), "hurt", "…traitor.", 2200); }, 900);
+        }
+      }, 700);
+      note("The court", was === -1 || was === undefined
+        ? "You walked in saying " + E.sides[side] + ". We’ll see if you still are at 9."
+        : "You crossed the floor. That’s what we’re here for.");
     }
     var v = load() || {};
-    v.first = v.first === undefined ? side : v.first;
-    v.now = side; v.switches = (v.switches || 0) + (was !== -1 && was !== side ? 1 : 0);
+    if (v.first === undefined) v.first = side;
+    v.switches = (v.switches || 0) + (was !== -1 && was !== undefined && was !== side ? 1 : 0);
+    v.now = side;
     store(v);
+    renderControls();
+  }
+
+  function leave() {
+    if (!you) return;
+    hold(2600);
+    perform(pick(cast), pick(["laugh", "shout"]), pick(["Running already?", "Coward.", "Leaving mid-argument? Classic.", "We’ll keep your seat warm."]), 2200);
+    note("The court", "You left the table. The chair’s still there.");
+    you.g.classList.add("leaving");
+    var w1 = youWalk, w2 = youTentWalk;
+    setTimeout(function () { w1.remove(); w2.remove(); }, 600);
+    you = youWalk = youTentWalk = null;
+    lightSide(-1); chair.classList.remove("taken");
+    store(null);
     renderControls();
   }
 
@@ -291,27 +338,29 @@
     if (!controls) return;
     controls.innerHTML = "";
     var row = document.createElement("div"); row.className = "seat-row";
+    var q = document.createElement("p"); q.className = "seat-q";
     if (!you) {
-      row.appendChild(btn("Take the empty chair", function () { sitDown(false); renderControls(); }, "hot"));
+      row.appendChild(btn("Take the empty chair", function () { sitDown(false); }, "hot"));
       row.appendChild(btn("Slam the table", userSlam, "ghost"));
       controls.appendChild(row);
       var hint = document.createElement("p"); hint.className = "seat-hint";
-      hint.textContent = "Or poke a juror. They love that.";
+      hint.textContent = "Or click the chair. Or poke a juror. They love that.";
       controls.appendChild(hint);
-    } else if (you.side === -1) {
-      var q = document.createElement("p"); q.className = "seat-q"; q.textContent = "Where do you sit?";
+      return;
+    }
+    if (you.side === -1) {
+      q.textContent = "Where do you sit? Tap a side on the table, or:";
       controls.appendChild(q);
       E.sides.forEach(function (s, i) { row.appendChild(btn(s, function () { choose(i); }, "side side-" + i)); });
-      controls.appendChild(row);
     } else {
-      var st = document.createElement("p"); st.className = "seat-q";
-      st.innerHTML = "You’re sitting with <b></b>.";
-      st.querySelector("b").textContent = E.sides[you.side];
-      controls.appendChild(st);
+      q.innerHTML = "You’re sitting with <b></b>.";
+      q.querySelector("b").textContent = E.sides[you.side];
+      controls.appendChild(q);
       row.appendChild(btn("Cross the floor", function () { choose(1 - you.side); }, "hot"));
-      row.appendChild(btn("Slam the table", userSlam, "ghost"));
-      controls.appendChild(row);
+      row.appendChild(btn("Back to the middle", function () { choose(-1); }, "ghost"));
     }
+    row.appendChild(btn("Leave the table", leave, "ghost quiet"));
+    controls.appendChild(row);
   }
   function userSlam() {
     hold(2600);
@@ -329,13 +378,21 @@
       note("Juror " + p.n, "Has been poked. Is not happy about it.");
     });
   });
+  // the chair, the sides, the table
+  chair.style.cursor = "pointer";
+  chair.addEventListener("click", function (e) { e.stopPropagation(); sitDown(false); });
+  sideLabels.forEach(function (l, i) {
+    function go(e) { e.stopPropagation(); if (!you) sitDown(true); choose(i); }
+    l.addEventListener("click", go);
+    l.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(e); } });
+  });
   board.style.cursor = "pointer";
   board.addEventListener("click", function () { userSlam(); });
 
   /* ---------- start when seen ---------- */
   var saved = load();
-  if (saved && saved.now !== undefined) { sitDown(true); choose(saved.now, true); }
-  renderControls();
+  if (saved && saved.now !== undefined && saved.now !== null) { sitDown(true); choose(saved.now, true); }
+  else renderControls();
 
   function start() { if (running) return; running = true; note("The court", "The jury is seated. Arguments begin."); timer = setTimeout(next, 1200); }
   if ("IntersectionObserver" in window) {

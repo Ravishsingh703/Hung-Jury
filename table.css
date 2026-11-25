@@ -37,6 +37,15 @@
 .chair-empty rect { animation: beckon 1.8s ease-in-out infinite; }
 @keyframes beckon { 50% { stroke: rgba(245,165,36,.95); } }
 .chair-empty.taken { display: none; }
+.chair-empty:hover rect { stroke: #f5a524; }
+.walker { transition: transform 1.1s cubic-bezier(.45,0,.2,1); }
+.juror.leaving { animation: leave .6s var(--ease) forwards; }
+@keyframes leave { to { transform: translateY(70px); opacity: 0; } }
+.side-label { cursor: pointer; outline: none; }
+.side-label text { opacity: .3; transition: opacity .35s, filter .35s; }
+.side-label:hover text, .side-label:focus-visible text { opacity: .65; }
+.side-label.lit text { opacity: 1; filter: drop-shadow(0 0 10px rgba(255,190,110,.75)) drop-shadow(0 0 24px rgba(255,120,60,.5)); animation: litPulse 2.2s ease-in-out infinite; }
+@keyframes litPulse { 50% { filter: drop-shadow(0 0 4px rgba(255,190,110,.5)) drop-shadow(0 0 12px rgba(255,120,60,.3)); } }
 
 .tent { transform-box: fill-box; transform-origin: center; }
 .tent.flip { animation: flip-card .6s var(--ease); }
@@ -76,6 +85,7 @@
 .seat .btn.side-1 { background: var(--heat); color: var(--night); min-width: 9rem; }
 .seat-q { font-family: var(--serif); font-size: 1.35rem; margin: 0 0 1rem; }
 .seat-q b { font-family: var(--sans); color: var(--heat); }
+.seat .btn.quiet { box-shadow: inset 0 0 0 2px rgba(255,255,255,.4); color: rgba(255,255,255,.85); }
 .seat-hint { margin: .9rem 0 0; font-family: var(--serif); font-style: italic; color: rgba(255,255,255,.7); }
 .table .lines { margin-top: 3rem; text-align: center; }
 .table .say { margin-left: auto; margin-right: auto; color: rgba(255,255,255,.9); }
@@ -88,5 +98,5 @@
   html:not(.heat-on) .juror.talking, html:not(.heat-on) .juror.standing { transform: none; }
   html:not(.heat-on) .juror.laugh, html:not(.heat-on) .board.shake, html:not(.heat-on) .paper.hop,
   html:not(.heat-on) .bubble.loud.on, html:not(.heat-on) .juror.slam .arm-r, html:not(.heat-on) .juror.slam .arm-l,
-  html:not(.heat-on) .cup .steam, html:not(.heat-on) .chair-empty rect, html:not(.heat-on) .tent.flip { animation: none !important; }
+  html:not(.heat-on) .cup .steam, html:not(.heat-on) .chair-empty rect, html:not(.heat-on) .tent.flip, html:not(.heat-on) .side-label.lit text { animation: none !important; }
 }

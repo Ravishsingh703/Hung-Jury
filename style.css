@@ -260,3 +260,19 @@ a { color: inherit; }
 .heat-pill .x { background: none; border: 0; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--muted); padding: .2rem .4rem; }
 
 .nav a.sworn::after { content: " \2713"; color: var(--heat); }
+
+/* ---------- The namesake band ---------- */
+.namesake { position: relative; overflow: hidden; padding: 6rem 0; background: #1a0405; color: #fff;
+  border-top: 3px dashed rgba(255,255,255,.18); }
+.namesake .wrap { position: relative; }
+.ns-12 { position: absolute; right: -2vw; top: 50%; transform: translateY(-50%); font-weight: 900; font-stretch: 62%;
+  font-size: clamp(16rem, 40vw, 34rem); line-height: .8; color: transparent; -webkit-text-stroke: 2px rgba(245,165,36,.28);
+  animation: nsGlow 5s ease-in-out infinite; pointer-events: none; }
+@keyframes nsGlow { 50% { -webkit-text-stroke-color: rgba(245,165,36,.5); } }
+.ns-kick { margin: 0 0 1rem; font-weight: 750; font-stretch: 85%; color: var(--heat); font-size: 1.15rem; }
+.ns-kick sup { font-size: .8em; margin-right: .2rem; }
+.namesake h2 { margin: 0; font-weight: 900; font-stretch: 66%; font-size: clamp(2.6rem, 6vw, 5.2rem); line-height: .95; max-width: 16ch; }
+.ns-say { margin: 1.5rem 0 2rem; max-width: 32rem; font-family: var(--serif); font-size: clamp(1.2rem, 2vw, 1.45rem); line-height: 1.4; color: rgba(255,255,255,.85); }
+.ns-btn { background: var(--heat); color: var(--night); padding: 1rem 2rem; font-size: 1.2rem; }
+@media (max-width: 30rem) { .nav .btn-ghost { padding: .5rem .55rem; font-size: .92rem; } .nav .btn-donate { padding: .5rem .9rem; } }
+@media (prefers-reduced-motion: reduce) { html:not(.heat-on) .ns-12 { animation: none; } }
