@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Hung Jury</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead">
+    <span class="name">Hung Jury</span>
+    <span class="session" id="session"></span>
+  </header>
+
+  <main class="sheet">
+    <section class="ballot" aria-labelledby="question">
+      <h1 class="question" id="question"></h1>
+      <div class="choices" id="choices"></div>
+      <p class="note" id="ballot-note" aria-live="polite">Mark one. Nobody sees this but you.</p>
+    </section>
+
+    <section aria-labelledby="brief-h">
+      <h2 id="brief-h">The brief</h2>
+      <div id="brief"></div>
+    </section>
+
+    <section aria-labelledby="details-h">
+      <h2 id="details-h">The night</h2>
+      <dl class="details" id="details"></dl>
+    </section>
+
+    <section aria-labelledby="after-h" id="after">
+      <h2 id="after-h">After the verdict</h2>
+      <div id="after-body"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>What does the name mean? Watch <i>12 Angry Men</i>.</span>
+    <a href="donate.html">Donate</a>
+  </footer>
+
+  <script src="event.js"></script>
+  <script>
+  (function () {
+    var E = window.EVENT;
+    var $ = function (id) { return document.getElementById(id); };
+    var el = function (tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    };
+
+    document.title = "Hung Jury: " + E.question;
+    $("session").textContent = "Session " + String(E.session).padStart(2, "0");
+    $("question").textContent = E.question;
+
+    // Ballot: private, nothing is sent anywhere.
+    var notes = [
+      "Noted. Keep it to yourself until the night.",
+      "Changed your mind already? Save that energy for the table."
+    ];
+    var marked = 0;
+    E.options.forEach(function (opt) {
+      var b = el("button", "choice");
+      b.type = "button";
+      b.setAttribute("aria-pressed", "false");
+      var box = el("span", "box");
+      box.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 8 L32 32"/><path d="M32 8 L8 32"/></svg>';
+      b.appendChild(box);
+      b.appendChild(document.createTextNode(opt));
+      b.addEventListener("click", function () {
+        var already = b.getAttribute("aria-pressed") === "true";
+        if (already) return;
+        document.querySelectorAll(".choice").forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", "true");
+        $("ballot-note").textContent = notes[marked > 0 ? 1 : 0];
+        marked++;
+      });
+      $("choices").appendChild(b);
+    });
+
+    E.brief.forEach(function (p) { $("brief").appendChild(el("p", null, p)); });
+
+    E.details.forEach(function (d) {
+      $("details").appendChild(el("dt", null, d.label));
+      $("details").appendChild(el("dd", null, d.value));
+    });
+
+    // Sealed until the night ends.
+    var unseal = new Date(E.unsealAt).getTime();
+    var body = $("after-body");
+
+    function renderSealed() {
+      body.innerHTML = "";
+      var env = el("div", "envelope");
+      env.appendChild(el("span", "seal", "Sealed"));
+      env.appendChild(el("p", null, "Reading material and what the internet thinks. It opens when the night ends, so everyone walks in with only their own head."));
+      var cd = el("p", "countdown");
+      cd.id = "countdown";
+      env.appendChild(cd);
+      body.appendChild(env);
+    }
+
+    function renderOpen() {
+      body.innerHTML = "";
+      body.appendChild(el("p", null, "Now go and see who agrees with you."));
+      var ul = el("ul", "reading");
+      E.reading.forEach(function (r) {
+        var li = el("li");
+        var a = el("a", null, r.title);
+        a.href = r.url; a.target = "_blank"; a.rel = "noopener";
+        li.appendChild(a);
+        li.appendChild(el("span", "source", r.source));
+        li.appendChild(el("p", "note", r.note));
+        ul.appendChild(li);
+      });
+      body.appendChild(ul);
+      body.appendChild(el("h2", null, "What the internet thinks"));
+      E.internetVerdict.forEach(function (p) { body.appendChild(el("p", null, p)); });
+    }
+
+    function tick() {
+      var left = unseal - Date.now();
+      if (left <= 0) { renderOpen(); return; }
+      var d = Math.floor(left / 864e5),
+          h = Math.floor(left / 36e5) % 24,
+          m = Math.floor(left / 6e4) % 60;
+      var parts = [];
+      if (d) parts.push(d + (d === 1 ? " day" : " days"));
+      if (d || h) parts.push(h + (h === 1 ? " hour" : " hours"));
+      parts.push(m + (m === 1 ? " minute" : " minutes"));
+      $("countdown").textContent = "Opens in " + parts.join(", ") + ".";
+      setTimeout(tick, 30000);
+    }
+
+    if (Date.now() >= unseal) { renderOpen(); } else { renderSealed(); tick(); }
+  })();
+  </script>
+</body>
+</html>

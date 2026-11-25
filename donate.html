@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Hung Jury: Donate</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin: var(--s3) 0; }
+    .amounts .choice { justify-content: center; font-size: 1.5rem; }
+    .verdict { display: none; }
+    .verdict.shown { display: block; }
+    @media (max-width: 34rem) { .amounts { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <a class="name" href="./" style="text-decoration:none">Hung Jury</a>
+    <span class="session">Donations</span>
+  </header>
+
+  <main class="sheet">
+    <section class="ballot">
+      <h1 class="question">Support the jury</h1>
+      <p>Pick an amount.</p>
+      <div class="amounts">
+        <button class="choice" type="button">$5</button>
+        <button class="choice" type="button">$20</button>
+        <button class="choice" type="button">$100</button>
+      </div>
+    </section>
+
+    <section class="verdict" id="verdict" aria-live="polite">
+      <span class="seal">Rejected</span>
+      <h2>The host has motion.</h2>
+      <p>Hung Jury doesn&rsquo;t run on member money. Nobody here is paying to belong. It runs because someone cares enough to book the table, write the brief and sit there while you take their argument apart.</p>
+      <p>Keep your money. Bring a better argument.</p>
+      <p><a href="./">Back to this week&rsquo;s brief</a></p>
+    </section>
+  </main>
+
+  <script>
+    document.querySelectorAll(".amounts .choice").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var v = document.getElementById("verdict");
+        v.classList.add("shown");
+        v.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      });
+    });
+  </script>
+</body>
+</html>
