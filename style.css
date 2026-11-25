@@ -8,6 +8,8 @@
   --verdict: #e2231a;   /* verdict red */
   --heat: #f5a524;      /* the heat of that room */
   --light: #ece8e2;     /* bone */
+  --blood: #7d0b10;     /* mid red */
+  --ember: #ff4d1c;     /* the hottest red */
   --text: #1c1012;
   --muted: #7a6a66;
   --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
@@ -30,7 +32,7 @@ a { color: inherit; }
 .nav {
   position: fixed; inset: 0 0 auto 0; z-index: 20;
   backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  background: rgba(34,6,10,.82); color: #fff;
+  background: rgba(90,8,12,.78); color: #fff;
 }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 3.5rem; }
 .nav .brand { font-weight: 800; font-stretch: 80%; font-size: 1.2rem; text-decoration: none; }
@@ -72,17 +74,17 @@ a { color: inherit; }
 .hero {
   color: #fff; align-items: end; padding-bottom: 5rem;
   background:
-    radial-gradient(60% 55% at 85% 15%, rgba(226,35,26,.35), transparent 70%),
-    radial-gradient(50% 50% at 10% 90%, rgba(245,165,36,.18), transparent 70%),
-    var(--night);
+    radial-gradient(55% 55% at 85% 12%, rgba(255,77,28,.55), transparent 70%),
+    radial-gradient(50% 50% at 8% 95%, rgba(245,165,36,.28), transparent 70%),
+    linear-gradient(165deg, #b3120f 0%, var(--blood) 50%, #2a0609 100%);
 }
-.fan { position: absolute; top: -6rem; right: -6rem; width: min(46rem, 90vw); aspect-ratio: 1; opacity: .13; animation: spin 22s linear infinite; }
+.fan { position: absolute; top: -6rem; right: -6rem; width: min(46rem, 90vw); aspect-ratio: 1; opacity: .16; animation: spin 22s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .hero h1 {
   margin: 0; font-weight: 850; font-stretch: 68%;
   font-size: clamp(5rem, 21vw, 17rem); line-height: .9; letter-spacing: -.02em;
   padding: 0 .06em .16em 0; margin-bottom: -.16em;
-  background: linear-gradient(100deg, #fff 0%, #fff 30%, var(--heat) 55%, var(--verdict) 80%, #fff 100%);
+  background: linear-gradient(100deg, #fff 0%, #fff 30%, #ffd59a 50%, var(--heat) 70%, #fff 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
   animation: sheen 9s ease-in-out infinite alternate;
@@ -91,7 +93,7 @@ a { color: inherit; }
 .hero h1 sup a { text-decoration: none; }
 @keyframes sheen { from { background-position: 0% 0; } to { background-position: 100% 0; } }
 .hero .punch { margin: 2rem 0 0; font-weight: 850; font-stretch: 72%; font-size: clamp(2.2rem, 5.2vw, 4.2rem); line-height: .98; letter-spacing: -.01em; max-width: 14ch; }
-.hero .punch em { font-style: normal; color: var(--verdict); }
+.hero .punch em { font-style: normal; color: var(--heat); }
 .hero .say { color: rgba(255,255,255,.8); margin-top: 1.25rem; }
 .cue { margin-top: 3rem; display: inline-flex; align-items: center; gap: .75rem; color: rgba(255,255,255,.6); font-weight: 600; font-size: .95rem; text-decoration: none; }
 .cue i { width: 1px; height: 2.5rem; background: rgba(255,255,255,.35); position: relative; overflow: hidden; }
@@ -99,13 +101,13 @@ a { color: inherit; }
 @keyframes drip { to { top: 100%; } }
 
 /* 1. The question */
-.question { background: var(--light); }
-.question .tag { font-weight: 750; font-stretch: 85%; color: var(--verdict); font-size: 1.15rem; margin: 0 0 1.25rem; }
+.question { background: radial-gradient(70% 60% at 20% 10%, #ff3a20, transparent 70%), var(--verdict); color: #fff; }
+.question .tag { font-weight: 750; font-stretch: 85%; color: #ffd59a; font-size: 1.15rem; margin: 0 0 1.25rem; }
 .question h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(2.3rem, 5.4vw, 4.7rem); line-height: 1.04; letter-spacing: -.02em; max-width: 21ch; }
-.question .say { margin-top: 2rem; font-style: italic; color: var(--muted); }
+.question .say { margin-top: 2rem; font-style: italic; color: rgba(255,255,255,.85); }
 
 /* 2. The table */
-.table { background: linear-gradient(180deg, var(--night-2), var(--night)); color: #fff; }
+.table { background: linear-gradient(180deg, #5c0a0e, #2a0609); color: #fff; }
 .table svg { width: 100%; height: auto; display: block; margin: 0 auto 3rem; max-width: 60rem; }
 .table .lines { text-align: center; }
 .table .say { margin-left: auto; margin-right: auto; color: rgba(255,255,255,.9); }
@@ -146,13 +148,13 @@ a { color: inherit; }
 @keyframes jolt { 50% { transform: scale(1.08) rotate(-2deg); } }
 
 /* 3. The night */
-.night { background: var(--verdict); color: #fff; }
+.night { background: linear-gradient(160deg, var(--ember), #e2231a); color: var(--night); }
 .night .say { margin-top: 1.5rem; }
 .small-print { display: flex; flex-wrap: wrap; gap: .6rem; margin: 2.5rem 0 0; padding: 0; list-style: none; }
-.small-print li { border: 2px solid rgba(255,255,255,.85); border-radius: 999px; padding: .4rem 1rem; font-weight: 700; font-stretch: 88%; }
+.small-print li { border: 2px solid var(--night); border-radius: 999px; padding: .4rem 1rem; font-weight: 700; font-stretch: 88%; }
 
 /* 4. The verdict */
-.verdict { color: #fff; text-align: center; background: radial-gradient(60% 60% at 50% 35%, rgba(226,35,26,.35), transparent 70%), var(--night); }
+.verdict { color: #fff; text-align: center; background: radial-gradient(60% 60% at 50% 40%, rgba(226,35,26,.6), transparent 72%), linear-gradient(180deg, #2a0609, #4a080c 60%, #2a0609); }
 .verdict .big { margin-bottom: 1rem; }
 .verdict .say { margin: 0 auto 3.5rem; color: rgba(255,255,255,.8); }
 .env-wrap { width: min(34rem, 100%); margin: 0 auto; animation: float 6s ease-in-out infinite; }
@@ -209,13 +211,13 @@ a { color: inherit; }
 .verdict-text p { margin: 0 0 1rem; break-inside: avoid-column; }
 
 /* 5. Give */
-.give { background: var(--heat); color: var(--night); text-align: center; min-height: 80svh; }
+.give { background: linear-gradient(180deg, var(--ember), var(--heat)); color: var(--night); text-align: center; min-height: 80svh; }
 .give .say { margin: 1.5rem auto 2.5rem; color: var(--night); }
 .give .btn { background: var(--night); color: #fff; font-size: 1.6rem; padding: 1.3rem 3.2rem; }
 .give .btn:hover { box-shadow: 0 16px 34px -12px rgba(0,0,0,.45); }
 
 /* Footnote */
-.foot { background: var(--night); color: rgba(255,255,255,.6); padding: 2.5rem 0 3rem; font-family: var(--serif); }
+.foot { background: #2a0609; color: rgba(255,255,255,.6); padding: 2.5rem 0 3rem; font-family: var(--serif); }
 .foot p { margin: 0; max-width: 36rem; }
 .foot sup { color: var(--heat); font-family: var(--sans); font-weight: 700; margin-right: .3rem; }
 

@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background: var(--night); color: #fff; }
+    body { background: linear-gradient(180deg, #4a080c, #2a0609 40%, #5c0a0e 80%, #2a0609); color: #fff; }
 
     /* a bad fluorescent tube over the table */
     .tube {
@@ -28,11 +28,11 @@
       position: absolute; right: -2vw; top: 50%; z-index: -1;
       font-weight: 900; font-stretch: 62%;
       font-size: clamp(16rem, 52vw, 44rem); line-height: .8;
-      color: transparent; -webkit-text-stroke: 2px rgba(226,35,26,.55);
+      color: transparent; -webkit-text-stroke: 2px rgba(255,77,28,.6);
       transform: translateY(calc(-50% + var(--p, 0) * 1px));
       will-change: transform;
     }
-    .label { font-weight: 750; font-stretch: 85%; color: var(--verdict); font-size: 1.15rem; margin: 0 0 1rem; }
+    .label { font-weight: 750; font-stretch: 85%; color: var(--heat); font-size: 1.15rem; margin: 0 0 1rem; }
     .rule h1, .rule h2 {
       margin: 0; font-weight: 900; font-stretch: 66%;
       font-size: clamp(3.4rem, 10.5vw, 9rem); line-height: .9; letter-spacing: -.015em;
@@ -50,7 +50,7 @@
     @keyframes thud { 20% { transform: translate(-8px, 3px); } 40% { transform: translate(7px, -2px); } 60% { transform: translate(-4px, 1px); } 100% { transform: none; } }
     .echo h2::after {
       content: attr(data-text); position: absolute; left: 0; top: 0; z-index: -1;
-      color: transparent; -webkit-text-stroke: 1.5px var(--verdict);
+      color: transparent; -webkit-text-stroke: 1.5px var(--heat);
       transform: translate(10px, 10px); opacity: 0; transition: opacity .6s 1s;
     }
     .in.echo h2::after { opacity: 1; }
@@ -71,7 +71,7 @@
     }
 
     /* the host */
-    .host { background: var(--heat); color: var(--night); }
+    .host { background: linear-gradient(180deg, var(--ember), var(--heat)); color: var(--night); }
     .host .label { color: var(--night); opacity: .75; }
     .host .num { -webkit-text-stroke-color: rgba(34,6,10,.3); }
     .host .sub { color: var(--night); }
