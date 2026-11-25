@@ -8,6 +8,8 @@
   <title>Hung Jury</title>
   <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="table.css">
+  <script src="js/heat.js"></script>
 </head>
 <body>
   <nav class="nav" aria-label="Main">
@@ -56,7 +58,9 @@
     <!-- 2. The table -->
     <section class="chapter table" aria-label="How it works">
       <div class="wrap">
-        <svg class="reveal" id="table" viewBox="0 0 840 380" role="img" aria-label="A table of people arguing"></svg>
+        <svg class="reveal" id="table" viewBox="0 0 900 460" role="img" aria-label="Six jurors arguing across a table, with an empty chair in the middle"></svg>
+        <p class="transcript" id="transcript" aria-live="polite"></p>
+        <div class="seat" id="seat"></div>
         <div class="lines" id="brief"></div>
         <p class="rules-link reveal"><a class="btn" href="rules.html">Read the four rules</a></p>
       </div>
@@ -110,6 +114,7 @@
   </footer>
 
   <script src="event.js"></script>
+  <script src="js/table.js"></script>
   <script>
   (function () {
     var E = window.EVENT;
@@ -141,7 +146,7 @@
 
     /* ---- The thermometer: the room heats up, then it blows ---- */
     var th = $("thermo"), bits = $("bits"), tempEl = $("temp"), blown = false, BLOW = 0.9;
-    var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var reduceMotion = !!(window.HJ && window.HJ.calm);
     function blow() {
       blown = true; th.classList.remove("hot"); th.classList.add("boom");
       tempEl.textContent = "Boiling.";
@@ -177,142 +182,37 @@
     addEventListener("resize", heat);
     heat();
 
-    /* ---- The table: a jury losing its temper ---- */
-    var NS = "http://www.w3.org/2000/svg";
-    var svg = $("table");
-    svg.setAttribute("viewBox", "0 0 840 380");
-    function mk(tag, attrs, parent) {
-      var n = document.createElementNS(NS, tag);
-      for (var k in attrs) n.setAttribute(k, attrs[k]);
-      (parent || svg).appendChild(n); return n;
-    }
-    var scene = mk("g", { "class": "scene" });
-    var bodies = ["#e2231a", "#f5a524", "#ece8e2", "#8a3324", "#f5a524", "#e2231a"];
-    var skins  = ["#f1c9a5", "#8d5a3b", "#e0ac7e", "#c68a5e", "#f5d5b8", "#6e4630"];
-    var hair   = ["#2b1d16", "#1a1a1a", "#7a4a2a", "#2b1d16", "#c8a36a", "#1a1a1a"];
-    var xs = [140, 252, 364, 476, 588, 700];
-    var people = xs.map(function (cx, i) {
-      var g = mk("g", { "class": "person" }, scene);
-      var right = i % 2 === 0;
-      mk("rect", { x: right ? cx + 26 : cx - 42, y: 200, width: 16, height: 62, rx: 8, fill: bodies[i], "class": "arm " + (right ? "arm-r" : "arm-l") }, g);
-      mk("rect", { x: cx - 40, y: 190, width: 80, height: 130, rx: 34, fill: bodies[i] }, g);
-      mk("circle", { cx: cx, cy: 156, r: 27, fill: skins[i] }, g);
-      mk("path", { d: "M" + (cx - 27) + " 152 a27 27 0 0 1 54 0 q-27 -14 -54 0z", fill: hair[i] }, g);
-      // angry brows, eyes, mouth
-      mk("path", { d: "M" + (cx - 15) + " 147 L" + (cx - 4) + " 152 M" + (cx + 4) + " 152 L" + (cx + 15) + " 147", stroke: "#1a0d0d", "stroke-width": 3.5, "stroke-linecap": "round", "class": "brows" }, g);
-      mk("circle", { cx: cx - 9, cy: 158, r: 2.6, fill: "#1a0d0d" }, g);
-      mk("circle", { cx: cx + 9, cy: 158, r: 2.6, fill: "#1a0d0d" }, g);
-      mk("path", { d: "M" + (cx - 7) + " 170 h14", stroke: "#1a0d0d", "stroke-width": 3, "stroke-linecap": "round", "class": "lips" }, g);
-      mk("ellipse", { cx: cx, cy: 171, rx: 8, ry: 6, fill: "#3a0f10", "class": "mouth" }, g);
-      return { g: g, cx: cx };
-    });
-    var table = mk("g", { "class": "board" }, scene);
-    mk("rect", { x: 50, y: 262, width: 740, height: 22, rx: 8, fill: "#5e3a2e" }, table);
-    mk("rect", { x: 70, y: 284, width: 700, height: 96, fill: "#2e1b17" }, table);
-    var puddle = mk("ellipse", { cx: 500, cy: 272, rx: 78, ry: 7, fill: "#7a3e17", "class": "puddle" }, table);
-    var papers = [[170, 266], [290, 268], [560, 265], [665, 267]].map(function (p, i) {
-      return mk("rect", { x: p[0], y: p[1], width: 50, height: 10, rx: 2, fill: "#efe9df", "class": "paper" }, table);
-    });
-    var cup = mk("g", { "class": "cup" }, table);
-    mk("path", { d: "M432 240 h22 v18 a6 6 0 0 1 -6 6 h-10 a6 6 0 0 1 -6 -6z", fill: "#ece8e2" }, cup);
-    mk("path", { d: "M454 245 a6 6 0 0 1 0 12", fill: "none", stroke: "#ece8e2", "stroke-width": 3.5 }, cup);
-    mk("path", { d: "M439 232 q4 -6 0 -12 M447 232 q4 -6 0 -12", fill: "none", stroke: "rgba(255,255,255,.45)", "stroke-width": 2.5, "stroke-linecap": "round", "class": "steam" }, cup);
-    var fx = mk("g", {});
-
-    function bubble(p, text, loud) {
-      var size = loud ? 24 : 20, w = text.length * (loud ? 15 : 12.5) + 36, h = loud ? 46 : 40;
-      var lift = p.g.classList.contains("standing") ? 40 : 0;
-      var x = Math.max(6, Math.min(834 - w, p.cx - w / 2)), y = 74 - lift;
-      var b = mk("g", { "class": "bubble" + (loud ? " loud" : "") }, fx);
-      if (loud) {
-        mk("path", { d: "M" + x + " " + (y + h / 2) + " l10 -" + h / 2 + " h" + (w - 20) + " l10 " + h / 2 + " l-10 " + h / 2 + " h-" + (w - 20) + "z", fill: "#fff" }, b);
-      } else {
-        mk("rect", { x: x, y: y, width: w, height: h, rx: 20, fill: "#fff" }, b);
-      }
-      mk("path", { d: "M" + (p.cx - 8) + " " + (y + h - 1) + " l8 12 l8 -12z", fill: "#fff" }, b);
-      var t = mk("text", { x: x + w / 2, y: y + h / 2 + size * .36, "text-anchor": "middle", fill: loud ? "#e2231a" : "#22060a", "font-family": "Archivo, sans-serif", "font-weight": "850", "font-size": size, "font-stretch": "80%" }, b);
-      t.textContent = text;
-      requestAnimationFrame(function () { b.classList.add("on"); });
-      return b;
-    }
-    function burst(x, y, word) {
-      var g = mk("g", { "class": "burst" }, fx);
-      var pts = [];
-      for (var k = 0; k < 16; k++) {
-        var r = k % 2 ? 26 : 52, a = Math.PI * 2 * k / 16;
-        pts.push((x + Math.cos(a) * r * 1.5).toFixed(1) + "," + (y + Math.sin(a) * r).toFixed(1));
-      }
-      mk("polygon", { points: pts.join(" "), fill: "#f5a524", stroke: "#22060a", "stroke-width": 3 }, g);
-      var t = mk("text", { x: x, y: y + 9, "text-anchor": "middle", fill: "#22060a", "font-family": "Archivo, sans-serif", "font-weight": "900", "font-size": 26, "font-stretch": "70%" }, g);
-      t.textContent = word;
-      setTimeout(function () { g.remove(); }, 900);
-    }
-    function retrigger(node, cls) { node.classList.remove(cls); void node.getBoundingClientRect(); node.classList.add(cls); }
-
-    var talk  = ["Why?", "Prove it.", "Says who?", "Okay, but…", "Hold on.", "Really?", "That’s not it."];
-    var shout = ["NO.", "LISTEN.", "ARE YOU SERIOUS?", "THAT’S MY POINT!", "LET ME FINISH!"];
-    var laughs = ["HA!", "Pfft.", "Hahaha, no.", "Oh, come on.", "*scoffs*"];
-    var busy = {}, spilt = false;
-
-    function act() {
-      var talking = Object.keys(busy).filter(function (k) { return busy[k]; }).length;
-      if (talking >= 2) return;
-      var free = people.map(function (_, i) { return i; }).filter(function (i) { return !busy[i] && !busy[i - 1] && !busy[i + 1]; });
-      if (!free.length) return;
-      var i = free[Math.floor(Math.random() * free.length)], p = people[i], g = p.g;
-      busy[i] = true;
-      var roll = Math.random(), b, dur = 2300, cls = ["talking"];
-
-      if (roll < .22) {                          // slams the table
-        cls = ["talking", "slam"];
-        b = bubble(p, shout[Math.floor(Math.random() * shout.length)], true);
-        setTimeout(function () {
-          retrigger(table, "shake");
-          burst(p.cx, 250, Math.random() < .5 ? "BANG" : "SLAM");
-          papers.forEach(function (pp) { retrigger(pp, "hop"); });
-          if (!spilt) {
-            spilt = true; cup.classList.add("spilt"); puddle.classList.add("on");
-            setTimeout(function () { cup.classList.remove("spilt"); puddle.classList.remove("on"); spilt = false; }, 6500);
-          }
-        }, 260);
-      } else if (roll < .45) {                   // stands up
-        cls = ["talking", "standing"];
-        g.classList.add("standing");
-        b = bubble(p, shout[Math.floor(Math.random() * shout.length)], true);
-        dur = 2700;
-      } else if (roll < .65) {                   // laughs at you
-        cls = ["laugh"];
-        b = bubble(p, laughs[Math.floor(Math.random() * laughs.length)], false);
-      } else {
-        b = bubble(p, talk[Math.floor(Math.random() * talk.length)], false);
-      }
-      cls.forEach(function (c) { g.classList.add(c); });
-      setTimeout(function () {
-        b.classList.remove("on");
-        ["talking", "standing", "laugh", "slam"].forEach(function (c) { g.classList.remove(c); });
-        setTimeout(function () { b.remove(); busy[i] = false; }, 400);
-      }, dur);
-    }
-    var started = false;
-    function start() { if (started) return; started = true; act(); setInterval(act, 900); }
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { start(); io.disconnect(); } }, { threshold: 0.3 });
-      io.observe(svg);
-    } else { start(); }
-
     /* ---- The sealed envelope ---- */
     var unseal = new Date(E.unsealAt).getTime();
     var fmt = new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Perth", weekday: "long", hour: "numeric", minute: "2-digit" });
     $("addr").textContent = "For the jury. Not before " + fmt.format(unseal).replace(":00", "") + ".";
 
+    var tries = 0;
+    var teases = ["Not yet.", "Still sealed.", "Patience is also a virtue.", "The seal is not a button.", "You\u2019re very keen. We like that.", "Okay, now you\u2019re just poking wax."];
     function renderSealed() {
       $("sealed-say").textContent = "Reading list and what the internet thinks. You walk in with only your own head.";
       $("clock").hidden = false;
+      var env = $("env");
+      env.setAttribute("role", "button"); env.setAttribute("tabindex", "0");
+      env.setAttribute("aria-label", "Sealed envelope. Opens after the night.");
+      function tease() {
+        env.classList.remove("nope"); void env.offsetWidth; env.classList.add("nope");
+        $("sealed-say").textContent = teases[Math.min(tries++, teases.length - 1)];
+      }
+      env.addEventListener("click", tease);
+      env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tease(); } });
     }
 
     function renderOpen(animate) {
       $("sealed-h").textContent = "The verdict is in.";
       $("sealed-say").textContent = "Now go and see who agrees with you.";
+      var v = window.HJ && window.HJ.vote && window.HJ.vote();
+      if (v && v.first !== undefined) {
+        var line = "You walked in saying " + E.sides[v.first] + ".";
+        if (v.now !== v.first) line += " You left saying " + E.sides[v.now] + ". Respect.";
+        else line += " Still there?";
+        $("sealed-say").textContent = line;
+      }
       $("clock").hidden = true;
       var env = $("env");
       if (animate) setTimeout(function () { env.classList.add("open"); }, 300); else env.classList.add("open");

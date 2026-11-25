@@ -18,6 +18,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0; background: var(--night); color: var(--text);
@@ -106,46 +107,8 @@ a { color: inherit; }
 .question h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(2.3rem, 5.4vw, 4.7rem); line-height: 1.04; letter-spacing: -.02em; max-width: 21ch; }
 .question .say { margin-top: 2rem; font-style: italic; color: rgba(255,255,255,.85); }
 
-/* 2. The table */
+/* 2. The table: see table.css */
 .table { background: linear-gradient(180deg, #5c0a0e, #2a0609); color: #fff; }
-.table svg { width: 100%; height: auto; display: block; margin: 0 auto 3rem; max-width: 60rem; }
-.table .lines { text-align: center; }
-.table .say { margin-left: auto; margin-right: auto; color: rgba(255,255,255,.9); }
-.rules-link { text-align: center; margin: 2.5rem 0 0; }
-.rules-link .btn { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.8); padding: .9rem 2rem; font-size: 1.15rem; }
-.rules-link .btn:hover { background: #fff; color: var(--night); }
-.person { transition: transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; }
-.person.talking { transform: translateY(-6px) rotate(-2deg); }
-.person.standing { transform: translateY(-46px) rotate(-3deg); }
-.person.laugh { animation: giggle .12s 10 alternate; }
-.person .arm { transition: transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 8%; }
-.person.talking .arm-r { transform: rotate(-150deg); }
-.person.talking .arm-l { transform: rotate(150deg); }
-.person.slam .arm-r { animation: slam .55s var(--ease); }
-.person.slam .arm-l { animation: slamL .55s var(--ease); }
-@keyframes slam { 0% { transform: rotate(0); } 45% { transform: rotate(-170deg); } 60% { transform: rotate(-40deg); } 100% { transform: rotate(-60deg); } }
-@keyframes slamL { 0% { transform: rotate(0); } 45% { transform: rotate(170deg); } 60% { transform: rotate(40deg); } 100% { transform: rotate(60deg); } }
-.person .mouth { opacity: 0; transition: opacity .15s; }
-.person.talking .mouth, .person.laugh .mouth { opacity: 1; }
-.person.talking .lips, .person.laugh .lips { opacity: 0; }
-@keyframes giggle { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-5px) rotate(2deg); } }
-.board.shake { animation: shake .45s cubic-bezier(.36,.07,.19,.97); }
-@keyframes shake { 10%,90% { transform: translate(-2px,1px); } 20%,80% { transform: translate(4px,-2px); } 30%,50%,70% { transform: translate(-6px,2px); } 40%,60% { transform: translate(6px,-1px); } }
-.paper { transform-box: fill-box; }
-.paper.hop { animation: hop .55s var(--ease); }
-@keyframes hop { 30% { transform: translateY(-22px) rotate(14deg); } 100% { transform: none; } }
-.cup { transition: transform .45s cubic-bezier(.5,1.6,.5,1); transform-box: fill-box; transform-origin: 100% 100%; }
-.cup.spilt { transform: rotate(88deg) translate(-4px, 6px); }
-.cup .steam { animation: steam 2s ease-in-out infinite; }
-@keyframes steam { 50% { opacity: .2; transform: translateY(-4px); } }
-.puddle { transform-box: fill-box; transform-origin: 0% 50%; transform: scaleX(0); opacity: 0; transition: transform 1.4s var(--ease) .25s, opacity .4s; }
-.puddle.on { transform: scaleX(1); opacity: 1; }
-.burst { transform-box: fill-box; transform-origin: center; animation: burst .8s var(--ease) forwards; }
-@keyframes burst { 0% { transform: scale(.2) rotate(-12deg); opacity: 0; } 25% { transform: scale(1.15) rotate(4deg); opacity: 1; } 70% { opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 0; } }
-.bubble { opacity: 0; transition: opacity .2s, transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; transform: scale(.6); }
-.bubble.on { opacity: 1; transform: scale(1); }
-.bubble.loud.on { animation: jolt .3s 2; }
-@keyframes jolt { 50% { transform: scale(1.08) rotate(-2deg); } }
 
 /* 3. The night */
 .night { background: linear-gradient(160deg, var(--ember), #e2231a); color: var(--night); }
@@ -186,6 +149,10 @@ a { color: inherit; }
 .letter b { display: block; font-family: var(--sans); font-weight: 850; font-stretch: 72%; font-size: 1.6em; line-height: 1; margin-bottom: .4em; }
 .env.open .flap { transform: rotateX(180deg); z-index: 0; }
 .env.open .seal-wax, .env.open .addr { opacity: 0; }
+.env-wrap .env { cursor: pointer; }
+.env.nope { animation: nope .45s cubic-bezier(.36,.07,.19,.97); }
+@keyframes nope { 20%,60% { transform: translateX(-10px) rotate(-1deg); } 40%,80% { transform: translateX(10px) rotate(1deg); } }
+.env.open { cursor: default; }
 .env.open .letter { visibility: visible; transform: translateY(-6%); z-index: 3; }
 
 .clock { display: flex; justify-content: center; gap: clamp(1.25rem, 4vw, 3rem); margin-top: 3.5rem; }
@@ -226,15 +193,6 @@ a { color: inherit; }
   .chapter { padding: 6rem 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .fan, .btn-donate, .env-wrap, .seal-wax, .cue i::after { animation: none !important; }
-  .reveal { transform: none; }
-  .digits.flip span { animation: fade .4s both; }
-  .person, .person .arm, .bubble { transition: opacity .25s !important; }
-  .person.talking, .person.standing { transform: none; }
-  .person.laugh, .board.shake, .paper.hop, .bubble.loud.on, .person.slam .arm-r, .person.slam .arm-l, .cup .steam { animation: none !important; }
-}
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- The thermometer: the room heats up as you scroll ---------- */
@@ -276,9 +234,29 @@ a { color: inherit; }
   animation: bangIn .5s cubic-bezier(.2,1.6,.4,1) both;
 }
 @keyframes bangIn { from { transform: scale(.2) rotate(-10deg); opacity: 0; } to { transform: rotate(-6deg); opacity: 1; } }
-@media (max-width: 40rem) { .thermo { right: .5rem; height: 34vh; width: 1.6rem; } .thermo .temp { font-size: .8rem; } .thermo .bang { font-size: 1.6rem; } }
+@media (max-width: 40rem) { .thermo { right: .2rem; bottom: 1rem; height: 24vh; width: 1.1rem; } .thermo .tube { width: 8px; bottom: .8rem; } .thermo .bulb { width: 18px; height: 18px; } .thermo .temp { font-size: .7rem; padding: .1rem .4rem; } .thermo .bang { font-size: 1.5rem; } }
+
+/* ---------- Less motion, unless they turn the heat up ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .thermo.hot .tube, .thermo.hot .bulb { animation: none; }
-  .thermo .bit { display: none; }
-  .thermo .bang { animation: fade .3s both; }
+  html:not(.heat-on) { scroll-behavior: auto; }
+  html:not(.heat-on) .fan, html:not(.heat-on) .btn-donate, html:not(.heat-on) .env-wrap,
+  html:not(.heat-on) .seal-wax, html:not(.heat-on) .cue i::after { animation: none !important; }
+  html:not(.heat-on) .reveal { transform: none; }
+  html:not(.heat-on) .digits.flip span { animation: fade .4s both; }
+  html:not(.heat-on) .thermo.hot .tube, html:not(.heat-on) .thermo.hot .bulb { animation: none; }
+  html:not(.heat-on) .thermo .bit { display: none; }
+  html:not(.heat-on) .thermo .bang { animation: fade .3s both; }
 }
+
+/* the switch that offers the full heat */
+.heat-pill {
+  position: fixed; left: 1rem; bottom: 1rem; z-index: 30; max-width: min(22rem, calc(100vw - 5rem));
+  display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+  background: #fff; color: var(--night); border-radius: 1rem; padding: .7rem .8rem .7rem 1rem;
+  box-shadow: 0 18px 40px -14px rgba(0,0,0,.55); font-size: .92rem; line-height: 1.3;
+}
+.heat-pill p { margin: 0; flex: 1 1 12rem; }
+.heat-pill .btn { background: var(--verdict); color: #fff; padding: .5rem 1rem; font-size: .95rem; }
+.heat-pill .x { background: none; border: 0; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--muted); padding: .2rem .4rem; }
+
+.nav a.sworn::after { content: " \2713"; color: var(--heat); }

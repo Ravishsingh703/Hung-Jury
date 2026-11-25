@@ -4,7 +4,9 @@ One page. This week's question, the brief, the night, and the reading list that 
 
 ## Weekly update (5 minutes)
 
-Edit **one file: `event.js`**. Change the topic, the headline question, the deck line, the two brief lines, the day/time/small print, the `unsealAt` time and the reading list. Commit. GitHub Pages republishes in about a minute.
+Edit **one file: `event.js`**. Change the topic, the headline question, the deck line, the two brief lines, the table `sides` and `script`, the day/time/small print, the `unsealAt` time and the reading list.
+
+The `script` is the argument the six jurors act out at the table: seats 1-3 start on the first side, 4-6 on the second. Moods: talk, shout, stand, slam, laugh, hurt, switch (crosses the floor), cheer. Write it so it builds, and end with someone switching. Commit. GitHub Pages republishes in about a minute.
 
 The headline is the hook: make it a question people can't stop chewing on all week.
 

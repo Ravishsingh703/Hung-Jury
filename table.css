@@ -1,0 +1,92 @@
+/* ---------- The jury table ---------- */
+.table svg { width: 100%; height: auto; display: block; margin: 0 auto; max-width: 62rem; user-select: none; -webkit-user-select: none; }
+
+.juror { transition: transform .32s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; }
+.juror .shirt { fill: var(--shirt, #9a8f8a); transition: fill .7s var(--ease); }
+.juror.undecided .shirt { fill: #8c827e; }
+.juror .brow { stroke: #1a0d0d; stroke-width: 3.6; stroke-linecap: round; transform-box: fill-box; transform-origin: center; transition: transform .2s; }
+.juror .eye { fill: #1a0d0d; transform-box: fill-box; transform-origin: center; transition: transform .15s; }
+.juror .lips { stroke: #1a0d0d; stroke-width: 3; stroke-linecap: round; fill: none; transition: opacity .15s; }
+.juror .mouth { fill: #3a0f10; opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity .15s, transform .15s; }
+.juror .sweat { opacity: 0; transition: opacity .3s; }
+.juror .arm { transition: transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 8%; }
+
+.juror.talking { transform: translateY(-6px) rotate(-1.5deg); }
+.juror.standing { transform: translateY(-46px) rotate(-2deg); }
+.juror.talking .mouth, .juror.laugh .mouth { opacity: 1; }
+.juror.talking .lips, .juror.laugh .lips { opacity: 0; }
+.juror.talking .arm-r { transform: rotate(-150deg); }
+.juror.talking .arm-l { transform: rotate(150deg); }
+.juror.angry .brow-l { transform: rotate(24deg) translateY(2px); }
+.juror.angry .brow-r { transform: rotate(-24deg) translateY(2px); }
+.juror.hurt .brow-l { transform: rotate(-20deg); }
+.juror.hurt .brow-r { transform: rotate(20deg); }
+.juror.hurt .sweat { opacity: 1; }
+.juror.laugh { animation: giggle .12s 12 alternate; }
+.juror.laugh .eye { transform: scaleY(.25); }
+.juror.laugh .mouth { transform: scale(1.35, 1.15); }
+.juror.laugh .brow { transform: translateY(-3px); }
+@keyframes giggle { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-5px) rotate(2deg); } }
+.juror.slam .arm-r { animation: slam .55s var(--ease); }
+.juror.slam .arm-l { animation: slamL .55s var(--ease); }
+@keyframes slam { 0% { transform: rotate(0); } 45% { transform: rotate(-170deg); } 60% { transform: rotate(-40deg); } 100% { transform: rotate(-60deg); } }
+@keyframes slamL { 0% { transform: rotate(0); } 45% { transform: rotate(170deg); } 60% { transform: rotate(40deg); } 100% { transform: rotate(60deg); } }
+.juror.arrive { animation: arrive .7s var(--ease) both; }
+@keyframes arrive { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.chair-empty rect { animation: beckon 1.8s ease-in-out infinite; }
+@keyframes beckon { 50% { stroke: rgba(245,165,36,.95); } }
+.chair-empty.taken { display: none; }
+
+.tent { transform-box: fill-box; transform-origin: center; }
+.tent.flip { animation: flip-card .6s var(--ease); }
+@keyframes flip-card { 50% { transform: scaleX(0); } }
+
+.board.shake { animation: shake .45s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake { 10%,90% { transform: translate(-2px,1px); } 20%,80% { transform: translate(4px,-2px); } 30%,50%,70% { transform: translate(-6px,2px); } 40%,60% { transform: translate(6px,-1px); } }
+.paper { transform-box: fill-box; }
+.paper.hop { animation: hop .55s var(--ease); }
+@keyframes hop { 30% { transform: translateY(-22px) rotate(14deg); } 100% { transform: none; } }
+.cup { transition: transform .45s cubic-bezier(.5,1.6,.5,1); transform-box: fill-box; transform-origin: 100% 100%; }
+.cup.spilt { transform: rotate(88deg) translate(-4px, 6px); }
+.cup .steam { animation: steam 2s ease-in-out infinite; }
+@keyframes steam { 50% { opacity: .2; transform: translateY(-4px); } }
+.puddle { transform-box: fill-box; transform-origin: 0% 50%; transform: scaleX(0); opacity: 0; transition: transform 1.4s var(--ease) .25s, opacity .4s; }
+.puddle.on { transform: scaleX(1); opacity: 1; }
+.burst { transform-box: fill-box; transform-origin: center; animation: burst .8s var(--ease) forwards; }
+@keyframes burst { 0% { transform: scale(.2) rotate(-12deg); opacity: 0; } 25% { transform: scale(1.15) rotate(4deg); opacity: 1; } 70% { opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 0; } }
+.bubble { opacity: 0; transition: opacity .2s, transform .3s var(--ease); transform-box: fill-box; transform-origin: 50% 100%; transform: scale(.6); }
+.bubble.on { opacity: 1; transform: scale(1); }
+.bubble.loud.on { animation: jolt .3s 2; }
+@keyframes jolt { 50% { transform: scale(1.08) rotate(-2deg); } }
+
+/* transcript + controls */
+.transcript {
+  max-width: 40rem; min-height: 3.4em; margin: 1.5rem auto 0; padding: .9rem 1.2rem;
+  border-left: 4px solid var(--heat); background: rgba(0,0,0,.22); border-radius: 0 .6rem .6rem 0;
+  font-family: var(--serif); font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.35; text-align: left;
+}
+.transcript b { font-family: var(--sans); font-weight: 800; font-stretch: 85%; color: var(--heat); margin-right: .6rem; }
+.seat { margin: 2rem auto 0; text-align: center; }
+.seat-row { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
+.seat .btn { padding: .9rem 1.6rem; font-size: 1.1rem; }
+.seat .btn.hot { background: var(--heat); color: var(--night); }
+.seat .btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.8); }
+.seat .btn.side-0 { background: var(--verdict); color: #fff; min-width: 9rem; }
+.seat .btn.side-1 { background: var(--heat); color: var(--night); min-width: 9rem; }
+.seat-q { font-family: var(--serif); font-size: 1.35rem; margin: 0 0 1rem; }
+.seat-q b { font-family: var(--sans); color: var(--heat); }
+.seat-hint { margin: .9rem 0 0; font-family: var(--serif); font-style: italic; color: rgba(255,255,255,.7); }
+.table .lines { margin-top: 3rem; text-align: center; }
+.table .say { margin-left: auto; margin-right: auto; color: rgba(255,255,255,.9); }
+.rules-link { text-align: center; margin: 2.5rem 0 0; }
+.rules-link .btn { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.8); padding: .9rem 2rem; font-size: 1.15rem; }
+.rules-link .btn:hover { background: #fff; color: var(--night); }
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.heat-on) .juror, html:not(.heat-on) .juror .arm, html:not(.heat-on) .bubble { transition: opacity .25s !important; }
+  html:not(.heat-on) .juror.talking, html:not(.heat-on) .juror.standing { transform: none; }
+  html:not(.heat-on) .juror.laugh, html:not(.heat-on) .board.shake, html:not(.heat-on) .paper.hop,
+  html:not(.heat-on) .bubble.loud.on, html:not(.heat-on) .juror.slam .arm-r, html:not(.heat-on) .juror.slam .arm-l,
+  html:not(.heat-on) .cup .steam, html:not(.heat-on) .chair-empty rect, html:not(.heat-on) .tent.flip { animation: none !important; }
+}

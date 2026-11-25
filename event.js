@@ -25,6 +25,25 @@ window.EVENT = {
     "No quotes, no studies, no homework. Just your own reasons, said out loud."
   ],
 
+  // The table scene. Two sides, three jurors each (seats 1-3 on the left, 4-6 on the right).
+  // The script plays in order and loops. Moods: talk, shout, stand, slam, laugh, hurt, switch, cheer.
+  // "switch" moves that juror to the other side; "cheer" gets their whole side going.
+  sides: ["Respected", "Liked"],
+  script: [
+    { j: 1, mood: "talk",   say: "Respect lasts. Being liked wears off." },
+    { j: 4, mood: "talk",   say: "Respect never got anyone invited to dinner." },
+    { j: 2, mood: "stand",  say: "I don\u2019t need invites. I need people to listen." },
+    { j: 5, mood: "laugh",  say: "Pfft. Nobody listens to someone they can\u2019t stand." },
+    { j: 3, mood: "slam",   say: "THAT\u2019S NOT THE POINT." },
+    { j: 6, mood: "talk",   say: "Then what is the point?" },
+    { j: 1, mood: "talk",   say: "Would you rather be liked by people who think you\u2019re a joke?" },
+    { j: 4, mood: "stand",  say: "Would you rather be right, and eat alone?" },
+    { j: 3, mood: "hurt",   say: "\u2026" },
+    { j: 5, mood: "laugh",  say: "HA. He felt that." },
+    { j: 3, mood: "switch", say: "Fine. I\u2019m crossing the floor." },
+    { j: 6, mood: "cheer",  say: "Dessert\u2019s on the host!" }
+  ],
+
   // The night. `day` is shown huge, `time` under it, then the small print.
   day: "Thursday 10 December",
   time: "6pm. The door closes once we start.",
