@@ -99,7 +99,7 @@ a { color: inherit; }
 .cue { margin-top: 3rem; display: inline-flex; align-items: center; gap: .75rem; color: rgba(255,255,255,.6); font-weight: 600; font-size: .95rem; text-decoration: none; }
 .cue i { width: 1px; height: 2.5rem; background: rgba(255,255,255,.35); position: relative; overflow: hidden; }
 .cue i::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--heat); animation: drip 1.8s ease-in-out infinite; }
-@keyframes drip { to { top: 100%; } }
+@keyframes drip { from { transform: translateY(0); } to { transform: translateY(350%); } }
 
 /* 1. The question */
 .question { background: radial-gradient(70% 60% at 20% 10%, #ff3a20, transparent 70%), var(--verdict); color: #fff; }
@@ -294,15 +294,15 @@ a { color: inherit; }
 /* ---------- Noir art ---------- */
 .noir-art { margin: 0; border-radius: .9rem; overflow: hidden; background: #050101; box-shadow: 0 40px 70px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.06); }
 .noir-art svg { display: block; width: 100%; height: auto; }
-.noir-art .mote { animation: mote 9s linear infinite; opacity: 0; }
+.noir-art .mote { opacity: .45; }
 @keyframes mote { 0% { transform: translate(0,0); opacity: 0; } 20% { opacity: .7; } 80% { opacity: .5; } 100% { transform: translate(14px,-60px); opacity: 0; } }
 
 .noir-art .cone { animation: flicker 7s steps(1) infinite; }
 @keyframes flicker { 0%, 61%, 64%, 100% { opacity: 1; } 62% { opacity: .35; } 63% { opacity: .8; } }
-.sides-art .glow-l { animation: tug 8s ease-in-out infinite; }
-.sides-art .glow-r { animation: tug 8s ease-in-out -4s infinite; }
+.sides-art .glow-l { animation: tug 8s steps(10) infinite; }
+.sides-art .glow-r { animation: tug 8s steps(10) -4s infinite; }
 @keyframes tug { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
-.sides-art .ha, .sides-art .ugh { animation: ha 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.sides-art .ha, .sides-art .ugh { animation: ha 1.4s steps(6) infinite; transform-box: fill-box; transform-origin: center; }
 .sides-art .ha2, .sides-art .ugh2 { animation-delay: -.7s; }
 .sides-art .ugh { animation-duration: 3s; }
 @keyframes ha { 50% { transform: translateY(-5px) rotate(-6deg); } }
@@ -328,9 +328,9 @@ a { color: inherit; }
 @keyframes slide { 0%, 8% { transform: translateX(-40px); } 32%, 52% { transform: translateX(110px); } 74%, 100% { transform: translateX(-40px); } }
 @keyframes envSlide { 0%, 8% { transform: translateX(-40px); opacity: 1; } 32%, 56% { transform: translateX(110px); opacity: 1; } 68% { transform: translateX(190px); opacity: 1; } 74% { transform: translateX(260px); opacity: 0; } 86% { transform: translateX(-40px); opacity: 0; } 94%, 100% { transform: translateX(-40px); opacity: 1; } }
 @keyframes grab { 0%, 54% { transform: translateX(0); } 62% { transform: translateX(-60px); } 74%, 100% { transform: translateX(0); } }
-.bribe-art .ember { animation: ember 2.4s ease-in-out infinite; }
+.bribe-art .ember { animation: ember 2.4s steps(6) infinite; }
 @keyframes ember { 50% { fill: #ffd59a; } }
-.bribe-art .smoke { animation: smoke 3.4s ease-out infinite; }
+.bribe-art .smoke { animation: smoke 3.4s steps(14) infinite; }
 .bribe-art .smoke.s2 { animation-delay: -1.7s; }
 @keyframes smoke { 0% { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-26px); } }
 @media (max-width: 52rem) {

@@ -54,10 +54,11 @@
   function onScroll() {
     var max = document.documentElement.scrollHeight - innerHeight;
     bar.style.setProperty("--p", (max > 0 ? scrollY / max * 100 : 0).toFixed(1) + "%");
-    if (!calm) nums.forEach(function (n) {
-      var r = n.parentElement.getBoundingClientRect();
-      n.style.setProperty("--p", ((r.top + r.height / 2 - innerHeight / 2) * -0.35).toFixed(1));
-    });
+    if (!calm) {
+      var mids = [], vh = innerHeight;
+      nums.forEach(function (n) { var r = n.parentElement.getBoundingClientRect(); mids.push(r.bottom > -vh && r.top < vh * 2 ? r.top + r.height / 2 : null); });
+      nums.forEach(function (n, i) { if (mids[i] !== null) n.style.setProperty("--p", ((mids[i] - vh / 2) * -0.35).toFixed(1)); });
+    }
     tick = false;
   }
   addEventListener("scroll", function () { if (!tick) { tick = true; requestAnimationFrame(onScroll); } }, { passive: true });

@@ -54,12 +54,10 @@ body.rules-page { background: linear-gradient(180deg, #4a080c, #2a0609 30%, #5c0
 .intro .blinds { position: absolute; inset: -20% -10%; z-index: 0; pointer-events: none;
   background: repeating-linear-gradient(-14deg, rgba(0,0,0,.32) 0 26px, transparent 26px 52px);
   -webkit-mask-image: radial-gradient(60% 70% at 70% 45%, #000, transparent 75%); mask-image: radial-gradient(60% 70% at 70% 45%, #000, transparent 75%);
-  animation: blindsDrift 14s ease-in-out infinite alternate; }
-@keyframes blindsDrift { to { transform: translate(-2%, 1.5%); } }
+  }
 .intro .grain { position: absolute; inset: -50%; z-index: 0; pointer-events: none; opacity: .08;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain .6s steps(4) infinite; }
-@keyframes grain { 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-1%, 3%); } }
+  }
 .intro::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; box-shadow: inset 0 0 22vmin rgba(0,0,0,.6); }
 .intro > .wrap { z-index: 1; }
 .case-no { font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: .02em; color: rgba(255,255,255,.6); }
@@ -68,17 +66,14 @@ body.rules-page { background: linear-gradient(180deg, #4a080c, #2a0609 30%, #5c0
 .in .intro-art { transform: rotate(1.2deg); }
 .intro-art svg { display: block; width: 100%; height: auto; border-radius: .9rem; }
 .intro-art .exhibit { margin-top: .75rem; font-family: var(--serif); font-style: italic; color: rgba(255,255,255,.55); font-size: .98rem; }
-.noir-stage .lamp-sway { transform-box: view-box; transform-origin: 200px 0; animation: sway 6s ease-in-out infinite alternate; }
-@keyframes sway { from { transform: rotate(-2.2deg); } to { transform: rotate(2.2deg); } }
 .noir-stage .cone { animation: buzz 7s steps(1) infinite; }
 @keyframes buzz { 0%, 61%, 64%, 100% { opacity: 1; } 62% { opacity: .3; } 63% { opacity: .8; } }
 .noir-stage .pool { animation: buzz 7s steps(1) infinite; }
-.noir-stage .mote { animation: mote 9s linear infinite; opacity: 0; }
-@keyframes mote { 0% { transform: translate(0,0); opacity: 0; } 20% { opacity: .7; } 80% { opacity: .5; } 100% { transform: translate(14px,-60px); opacity: 0; } }
-.noir-stage .smoke { animation: smoke 3.6s ease-out infinite; }
+.noir-stage .mote { opacity: .45; }
+.noir-stage .smoke { animation: smoke 3.6s steps(14) infinite; }
 .noir-stage .smoke.s2 { animation-delay: -1.8s; }
 @keyframes smoke { 0% { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-26px); } }
-.noir-stage .ember { animation: ember 2.4s ease-in-out infinite; }
+.noir-stage .ember { animation: ember 2.4s steps(6) infinite; }
 
 /* the stage each rule plays on */
 .stage {
@@ -102,11 +97,8 @@ body.rules-page { background: linear-gradient(180deg, #4a080c, #2a0609 30%, #5c0
 #punch .bulb.broken .glow, #punch .bulb.broken .glass, #punch .bulb.broken .shine { opacity: 0; }
 #punch .filament { fill: none; stroke: #e2231a; stroke-width: 2.6; stroke-linecap: round; filter: drop-shadow(0 0 3px #ff6a5a); }
 #punch .bulb.broken .filament { stroke: #5a3a30; filter: none; }
-#punch .bulb:not(.broken) .glow { animation: hum 3.2s ease-in-out infinite; }
-@keyframes hum { 50% { opacity: .42; } }
 #punch .cap { fill: rgba(255,255,255,.7); font-family: var(--serif); font-style: italic; font-size: 19px; }
 #punch .who { filter: drop-shadow(0 0 5px rgba(226,35,26,.75)) drop-shadow(0 0 16px rgba(226,35,26,.35)); }
-#punch .ember { animation: ember 2.4s ease-in-out infinite; }
 @keyframes ember { 50% { fill: #ffd59a; } }
 #punch .glove { transform-box: view-box; filter: drop-shadow(0 8px 10px rgba(0,0,0,.6)); }
 #punch .glove.hit { animation: punch .75s cubic-bezier(.5,0,.2,1); }
@@ -131,7 +123,7 @@ body.rules-page { background: linear-gradient(180deg, #4a080c, #2a0609 30%, #5c0
 .paper-in { position: absolute; left: 0; right: 0; bottom: 2.4rem; padding: 0 1.1rem; transition: transform .25s; }
 .paper-in p { margin: 0; font-family: "Courier New", Courier, monospace; font-weight: 700; font-size: min(1.05rem, calc((100cqw - 2.3rem) / 18.6)); line-height: 1.5rem; color: #22060a; white-space: nowrap; }
 .paper-in p.loud { color: var(--verdict); font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 2.2rem; letter-spacing: .04em; }
-.paper-in p.typing::after { content: "▌"; color: var(--verdict); animation: caret .7s steps(1) infinite; }
+.paper-in p.typing::after { content: "▌"; color: var(--verdict); }
 @keyframes caret { 50% { opacity: 0; } }
 .machine { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
 .machine .plate { fill: #f5a524; font-family: var(--serif); font-style: italic; font-size: 13px; }
