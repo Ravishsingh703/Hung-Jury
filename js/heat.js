@@ -17,6 +17,15 @@
     document.querySelectorAll('.nav a[href="rules.html"]').forEach(function (a) { a.classList.add("sworn"); a.title = "You\u2019re sworn in"; });
   });
 
+  // pause animations in sections that are off-screen
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.target.classList.toggle("paused", !e.isIntersecting); });
+    }, { rootMargin: "100px 0px" });
+    document.querySelectorAll("main > *, body > section, body > header, .namesake").forEach(function (el) { io.observe(el); });
+  });
+
   if (!reduce || forced || dismissed) return;
   document.addEventListener("DOMContentLoaded", function () {
     var pill = document.createElement("div");

@@ -44,8 +44,7 @@
 .side-label { cursor: pointer; outline: none; }
 .side-label text { opacity: .3; transition: opacity .35s, filter .35s; }
 .side-label:hover text, .side-label:focus-visible text { opacity: .65; }
-.side-label.lit text { opacity: 1; filter: drop-shadow(0 0 10px rgba(255,190,110,.75)) drop-shadow(0 0 24px rgba(255,120,60,.5)); animation: litPulse 2.2s ease-in-out infinite; }
-@keyframes litPulse { 50% { filter: drop-shadow(0 0 4px rgba(255,190,110,.5)) drop-shadow(0 0 12px rgba(255,120,60,.3)); } }
+.side-label.lit text { opacity: 1; filter: drop-shadow(0 0 10px rgba(255,170,80,.7)); }
 
 .tent { transform-box: fill-box; transform-origin: center; }
 .tent.flip { animation: flip-card .6s var(--ease); }

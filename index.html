@@ -199,7 +199,7 @@
       var max = document.documentElement.scrollHeight - innerHeight;
       var p = max > 0 ? Math.min(1, scrollY / max) : 0;
       var f = Math.min(1, p / BLOW);
-      th.style.setProperty("--h", (6 + f * 94).toFixed(1) + "%");
+      th.style.setProperty("--f", (.06 + f * .94).toFixed(3));
       th.style.setProperty("--glow", f.toFixed(2));
       if (!blown) tempEl.textContent = Math.round(21 + f * 27) + "\u00b0";
       th.classList.toggle("hot", !blown && f > .75 && !reduceMotion);

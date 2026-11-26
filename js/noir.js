@@ -83,7 +83,7 @@
       '<g class="lamp-sway"><line x1="200" y1="0" x2="200" y2="40" stroke="#2a2a2a" stroke-width="3"/>' +
         '<polygon class="cone" points="186,58 214,58 300,480 100,480" fill="url(#nr-cone)"/>' +
         '<path d="M182 58 L188 40 H212 L218 58Z" fill="#1a1a1a"/><ellipse cx="200" cy="59" rx="9" ry="4" fill="#fff1d6"/>' +
-        '<g class="motes" fill="#fff1d6">' + motes(26, 150, 250, 80, 440) + '</g></g>' +
+        '<g class="motes" fill="#fff1d6">' + motes(10, 150, 250, 80, 440) + '</g></g>' +
       // the man himself
       '<use href="#nr-man" transform="translate(200 440)" fill="#000"/>' +
       '<g font-family="Archivo, sans-serif" font-weight="900" font-stretch="66%" font-size="34">' +
@@ -104,7 +104,7 @@
       '<g class="lamp-sway nb-lamp"><line x1="240" y1="0" x2="240" y2="34" stroke="#2a2a2a" stroke-width="3"/>' +
         '<polygon class="cone" points="226,52 254,52 360,250 120,250" fill="url(#nb-cone)"/>' +
         '<path d="M222 52 L228 34 H252 L258 52Z" fill="#1a1a1a"/><ellipse cx="240" cy="53" rx="9" ry="4" fill="#fff1d6"/>' +
-        '<g class="motes" fill="#fff1d6">' + motes(18, 190, 300, 70, 240) + '</g></g>' +
+        '<g class="motes" fill="#fff1d6">' + motes(8, 190, 300, 70, 240) + '</g></g>' +
       // the host, seated
       '<g fill="#000"><use href="#nr-man" transform="translate(380 336) scale(1.6)"/></g>' +
       '<path d="M362 108 a19 19 0 0 1 30 -4" fill="none" stroke="#e2231a" stroke-width="2" opacity=".6"/>' +
