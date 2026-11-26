@@ -28,8 +28,8 @@ body.why-page::after { content: ""; position: fixed; inset: 0; z-index: 39; poin
 @keyframes breathe { 50% { -webkit-text-stroke-color: rgba(255,190,110,.45); transform: translateY(-1.5vw); } }
 
 /* the vote */
-.vote { position: relative; height: 340vh; background: linear-gradient(180deg, #2a0609, #4a080c 50%, #2a0609); }
-.vote-stick { position: sticky; top: 0; height: 100svh; display: grid; align-items: center; padding-top: 3.5rem; }
+.vote { position: relative; background: linear-gradient(180deg, #2a0609, #4a080c 50%, #2a0609); }
+.vote-stick { min-height: 100svh; display: grid; align-items: center; padding: 6rem 0 5rem; }
 .vote .wrap { width: 100%; text-align: center; }
 .spoil { margin: 0 0 1rem; font-family: var(--serif); font-style: italic; color: rgba(255,255,255,.55); font-size: .95rem; }
 .tally { display: flex; justify-content: center; align-items: baseline; gap: clamp(1rem, 3vw, 2.5rem); font-weight: 900; font-stretch: 64%; line-height: 1; }
@@ -50,7 +50,7 @@ body.why-page::after { content: ""; position: fixed; inset: 0; z-index: 39; poin
 .ballot i small { font-size: .7rem; font-weight: 700; opacity: .8; }
 .ballot .g { background: var(--verdict); color: #fff; }
 .ballot .n { background: var(--heat); color: var(--night); transform: rotateY(180deg); }
-.vote-line { min-height: 3.2em; margin: 2.25rem auto 0; max-width: 34rem; font-family: var(--serif); font-size: clamp(1.25rem, 2.4vw, 1.7rem); line-height: 1.3; }
+.vote-line { margin: 2.25rem auto 0; max-width: 34rem; font-family: var(--serif); font-size: clamp(1.25rem, 2.4vw, 1.7rem); line-height: 1.3; }
 .vote-line.swap { animation: lineIn .5s var(--ease); }
 @keyframes lineIn { from { opacity: 0; transform: translateY(10px); } }
 
@@ -80,7 +80,7 @@ body.why-page::after { content: ""; position: fixed; inset: 0; z-index: 39; poin
 
 /* why it's built this way */
 .built { background: linear-gradient(180deg, #5c0a0e, #2a0609); }
-.deck { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+.deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
 .dc { position: relative; height: 12.5rem; border: 0; padding: 0; background: none; cursor: pointer; perspective: 900px; color: inherit; font: inherit; text-align: left; }
 .dc .f, .dc .b { position: absolute; inset: 0; padding: 1.2rem 1.3rem; border-radius: 1rem; backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: transform .65s cubic-bezier(.3,1.4,.5,1); display: flex; }
 .dc .f { align-items: flex-end; background: linear-gradient(160deg, #e2231a, #8f0d12); font-weight: 850; font-stretch: 75%; font-size: 1.45rem; line-height: 1.05; box-shadow: 0 14px 28px -16px rgba(0,0,0,.7); }
@@ -141,3 +141,6 @@ body.why-page::after { content: ""; position: fixed; inset: 0; z-index: 39; poin
   html:not(.heat-on) .strip { overflow-x: auto; }
   html:not(.heat-on) .reveal { transform: none; }
 }
+
+.vote-sub { margin: .75rem auto 0; max-width: 30rem; font-family: var(--serif); font-style: italic; color: rgba(255,255,255,.65); font-size: 1.05rem; }
+.ballot.juror8 { box-shadow: 0 0 0 3px #fff, 0 0 34px rgba(245,165,36,.55); border-radius: .6rem; }

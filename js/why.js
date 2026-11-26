@@ -24,38 +24,11 @@
     c.addEventListener("click", (function (card) { return function () { card.classList.toggle("ng"); count(); }; })(c));
     box.appendChild(c); cards[n] = c;
   }
-  var order = [9, 5, 11, 2, 6, 7, 12, 1, 10, 4, 3];   // Juror 3 holds out last
-  var lines = [
-    "It starts eleven to one. One man isn’t sure.",
-    "He doesn’t say they’re wrong. He asks to talk it through.",
-    "One by one, people find their own reasons to doubt.",
-    "The room gets hotter. The holdouts get louder.",
-    "The last one to move is the angriest. Then he moves too."
-  ];
-  var shownLine = -1, lastK = -1;
+  cards[8].classList.add("juror8");
   function count() {
     var ng = Object.keys(cards).filter(function (k) { return cards[k].classList.contains("ng"); }).length;
     gEl.textContent = 12 - ng; ngEl.textContent = ng;
   }
-  function setLine(i) {
-    if (i === shownLine) return;
-    shownLine = i; line.textContent = lines[i]; retrigger(line, "swap");
-  }
-  function onScroll() {
-    var r = vote.getBoundingClientRect(), span = r.height - innerHeight;
-    var p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-    var k = Math.round(Math.min(1, Math.max(0, (p - 0.06) / 0.86)) * order.length);
-    if (k !== lastK) {
-      lastK = k;
-      order.forEach(function (j, i) { cards[j].classList.toggle("ng", i < k); });
-      cards[8].classList.add("ng");
-      count();
-    }
-    setLine(k === 0 ? 0 : k <= 3 ? 1 : k <= 7 ? 2 : k <= 10 ? 3 : 4);
-  }
-  var t = false;
-  addEventListener("scroll", function () { if (!t) { t = true; requestAnimationFrame(function () { onScroll(); t = false; }); } }, { passive: true });
-  onScroll();
 
   /* ---------- the film strip loops ---------- */
   var strip = $("strip");
