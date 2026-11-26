@@ -105,25 +105,43 @@
   punchSvg.querySelector(".who").style.cursor = "pointer";
   starters.r1 = punch;
 
-  /* ---------- rule two: someone always forgets ---------- */
-  var notes = $("notes"), tally = $("note-tally"), count = 0;
+  /* ---------- rule two: the court typewriter ---------- */
+  var typer = $("typer"), paper = $("paper"), tally = $("note-tally"), forgetBtn = $("forget-btn"), ding = $("ding");
+  var tKeys = typer.querySelectorAll(".k"), carriage = typer.querySelector(".carriage");
+  var count = 0, typing = false;
   var lines = ["The idea. Not the person.", "Argue the point. Not the face.", "Again: the idea.", "We literally just said this.", "Not. The. Person.", "SERIOUSLY."];
-  function slapNote() {
-    if (count >= lines.length) { notes.innerHTML = ""; count = 0; }
-    var n = document.createElement("div");
-    var last = count === lines.length - 1;
-    n.className = "note" + (last ? " loud" : "");
-    n.textContent = lines[count];
-    n.style.left = rand(3, last ? 30 : 48) + "%";
-    n.style.top = rand(4, last ? 30 : 52) + "%";
-    n.style.setProperty("--rot", rand(-12, 12).toFixed(1) + "deg");
-    notes.appendChild(n);
-    count++;
-    tally.textContent = count === 1 ? "Reminded once." : "Reminded " + count + " times.";
-    $("forget-btn").textContent = count >= lines.length ? "Start fresh" : "Someone forgot";
+  function strike() {
+    var k = tKeys[Math.floor(Math.random() * tKeys.length)];
+    k.classList.add("down"); setTimeout(function () { k.classList.remove("down"); }, 70);
+    retrigger(typer, "jolt");
   }
-  $("forget-btn").addEventListener("click", slapNote);
-  starters.r2 = slapNote;
+  function typeLine() {
+    if (typing) return;
+    if (count >= lines.length) { paper.innerHTML = ""; count = 0; }
+    typing = true; forgetBtn.disabled = true;
+    var text = lines[count], last = count === lines.length - 1;
+    var p = document.createElement("p"); p.className = "typing" + (last ? " loud" : "");
+    paper.appendChild(p);
+    var speed = Math.max(22, 80 - count * 12), n = 0;
+    function next() {
+      if (calm) { p.textContent = text; n = text.length; }
+      if (n < text.length) {
+        p.textContent += text[n++]; strike();
+        carriage.style.transform = "translateX(" + (-n * 3) + "px)";
+        return setTimeout(next, speed + Math.random() * speed * .6);
+      }
+      p.classList.remove("typing");
+      retrigger(ding, "show");
+      setTimeout(function () { carriage.style.transform = ""; }, 150);
+      if (last) retrigger(typer, "jam");
+      count++; typing = false; forgetBtn.disabled = false;
+      tally.textContent = count === 1 ? "Reminded once." : "Reminded " + count + " times.";
+      forgetBtn.textContent = count >= lines.length ? "Fresh sheet" : "Someone forgot";
+    }
+    next();
+  }
+  forgetBtn.addEventListener("click", typeLine);
+  starters.r2 = typeLine;
 
   /* ---------- rule three: the table leans in for raw thoughts ---------- */
   var talk = $("talk"), bubble = $("bubble"), reacts = $("reacts"), talkTally = $("talk-tally");

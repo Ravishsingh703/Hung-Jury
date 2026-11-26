@@ -122,18 +122,31 @@ body.rules-page { background: linear-gradient(180deg, #4a080c, #2a0609 30%, #5c0
 #punch .shard { transform-box: fill-box; transform-origin: center; animation: shard .9s cubic-bezier(.15,.7,.3,1) forwards; }
 @keyframes shard { to { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; } }
 
-/* rule two: the notes */
-.board-notes { position: relative; height: clamp(18rem, 30vw, 22rem); border-radius: 1rem; overflow: hidden;
-  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.05), transparent 60%), repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 6px, transparent 6px 12px); }
-.note {
-  position: absolute; width: 11.5rem; padding: 1rem 1.1rem 1.3rem; background: var(--heat); color: var(--night);
-  font-weight: 850; font-stretch: 78%; font-size: 1.25rem; line-height: 1.05;
-  box-shadow: 0 10px 18px -8px rgba(0,0,0,.6); transform: rotate(var(--rot));
-  animation: slap .4s cubic-bezier(.2,1.5,.4,1) both;
-}
-.note::before { content: ""; position: absolute; top: -.5rem; left: 50%; width: 3rem; height: 1rem; transform: translateX(-50%) rotate(-3deg); background: rgba(255,255,255,.45); }
-.note.loud { background: var(--verdict); color: #fff; font-size: 2rem; width: 13rem; }
-@keyframes slap { from { transform: rotate(var(--rot)) scale(1.9); opacity: 0; } to { transform: rotate(var(--rot)) scale(1); opacity: 1; } }
+/* rule two: the court typewriter */
+#r2 .stage { background: #050101; border-color: rgba(255,255,255,.07); box-shadow: 0 40px 70px -30px rgba(0,0,0,.85); }
+.typer { position: relative; padding-top: .5rem; background: radial-gradient(60% 55% at 50% 30%, rgba(255,241,214,.12), transparent 70%); border-radius: 1rem; }
+.paper { position: relative; z-index: 0; width: 78%; container-type: inline-size; height: clamp(11rem, 19vw, 13.5rem); margin: 0 auto -1.6rem; overflow: hidden;
+  background: #ece8e2; border-radius: .2rem .2rem 0 0; box-shadow: 0 0 30px rgba(255,241,214,.12);
+  background-image: linear-gradient(transparent 1.45rem, rgba(125,11,16,.08) 1.45rem); background-size: 100% 1.5rem; }
+.paper-in { position: absolute; left: 0; right: 0; bottom: 2.4rem; padding: 0 1.1rem; transition: transform .25s; }
+.paper-in p { margin: 0; font-family: "Courier New", Courier, monospace; font-weight: 700; font-size: min(1.05rem, calc((100cqw - 2.3rem) / 18.6)); line-height: 1.5rem; color: #22060a; white-space: nowrap; }
+.paper-in p.loud { color: var(--verdict); font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 2.2rem; letter-spacing: .04em; }
+.paper-in p.typing::after { content: "▌"; color: var(--verdict); animation: caret .7s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.machine { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+.machine .plate { fill: #f5a524; font-family: var(--serif); font-style: italic; font-size: 13px; }
+.machine .k circle:first-child { fill: #0b0b0b; stroke: #6c5f4b; stroke-width: 1.2; }
+.machine .k .cap { fill: #ece8e2; transition: transform .06s, fill .06s; transform-box: fill-box; transform-origin: center; }
+.machine .k.down .cap { fill: var(--heat); transform: translateY(1.5px) scale(.88); }
+.machine .space { fill: #ece8e2; }
+.machine .carriage { transition: transform .12s linear; }
+.typer.jolt .machine { animation: jolt .07s; }
+@keyframes jolt { 50% { transform: translateY(1px); } }
+.typer.jam .machine { animation: jam .09s 6; }
+@keyframes jam { 25% { transform: translate(-3px, 1px) rotate(-.6deg); } 75% { transform: translate(3px, -1px) rotate(.6deg); } }
+.ding { position: absolute; right: 4%; top: 46%; z-index: 2; font-family: var(--serif); font-style: italic; font-size: 1.2rem; color: var(--heat); opacity: 0; pointer-events: none; }
+.ding.show { animation: dingUp .9s ease-out; }
+@keyframes dingUp { 0% { opacity: 0; transform: translateY(6px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px) rotate(-6deg); } }
 
 /* rule three: the table's reaction */
 .talk { position: relative; border-radius: 1rem; overflow: hidden; }
