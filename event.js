@@ -16,9 +16,6 @@ window.EVENT = {
   // The big question. Make it one that sticks in people's heads all week.
   headline: "Would you rather be respected by people who can\u2019t stand you, or liked by people who think you\u2019re a joke?",
 
-  // One line under the headline.
-  deck: "Everyone says both. Nobody gets both. Pick.",
-
   // Two short lines, shown under the table. Keep them punchy.
   brief: [
     "You get one. No \u201cit depends\u201d, no \u201cwhy not both\u201d.",
@@ -44,12 +41,27 @@ window.EVENT = {
     { j: 6, mood: "cheer",  say: "Dessert\u2019s on the host!" }
   ],
 
+  // The happy ending. Dessert lands, everyone eats, and the jurors say
+  // something good about each other's arguments. Plays after the script.
+  ending: [
+    { j: 4, say: "Juror 1. \u201cRespect lasts\u201d was a good line. Annoyingly." },
+    { j: 1, say: "Your dinner invite point got me. A bit." },
+    { j: 5, say: "Juror 3, takes guts to cross. Respect." },
+    { j: 3, say: "You lot made it hard. That\u2019s the point." },
+    { j: 2, say: "Still Respected. Pass the cake." }
+  ],
+
   // The night. `day` is shown huge, `time` under it, then the small print.
   day: "Thursday 10 December",
   time: "6pm. The door closes once we start.",
   smallPrint: ["Venue in the group chat.", "Order your own, pay your own.", "Done by 9."],
 
   unsealAt: "2026-12-10T21:00:00+08:00",
+
+  // Fill these in after the night. They show once the envelope opens.
+  // result: { count: "4\u20133", side: 1, note: "Two crossed the floor." }
+  result: null,
+  next: "Session 02 is being drafted. Same table. New question.",
 
   reading: [
     {

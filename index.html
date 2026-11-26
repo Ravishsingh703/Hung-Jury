@@ -15,7 +15,7 @@
   <nav class="nav" aria-label="Main">
     <div class="wrap">
       <a class="brand" href="./">Hung Jury</a>
-      <span><a class="btn btn-ghost" href="rules.html">Rules</a> <a class="btn btn-ghost" href="why.html">Why</a> <a class="btn btn-donate" href="donate.html">Donate</a></span>
+      <span class="nav-btns"><a class="btn btn-nav" href="rules.html">Code of Conduct</a><a class="btn btn-nav" href="why.html">Why Hung Jury?</a><a class="btn btn-donate" href="donate.html">Donate</a></span>
     </div>
   </nav>
 
@@ -39,7 +39,7 @@
         </g>
       </svg>
       <div class="wrap">
-        <h1 class="reveal">Hung Jury<sup><a href="#footnote" aria-label="Footnote 1">1</a></sup></h1>
+        <h1 class="reveal">Hung Jury<sup><a href="#question" id="sess" aria-label="Session 1">1</a></sup></h1>
         <p class="punch reveal">Bring an opinion. <em>Leave without it.</em></p>
         <p class="say reveal">One table. One question. Nobody&rsquo;s opinion is safe, least of all yours.</p>
         <a class="cue reveal" href="#question"><i></i>This week&rsquo;s question</a>
@@ -48,10 +48,12 @@
 
     <!-- 1. The question -->
     <section class="chapter question" id="question" aria-labelledby="headline">
-      <div class="wrap">
-        <p class="tag reveal" id="topic"></p>
-        <h2 class="reveal" id="headline"></h2>
-        <p class="say reveal" id="deck"></p>
+      <div class="wrap q-grid">
+        <div class="q-text">
+          <p class="tag reveal" id="topic"></p>
+          <h2 class="reveal" id="headline"></h2>
+        </div>
+        <figure class="noir-art sides-art reveal" data-noir="sides"></figure>
       </div>
     </section>
 
@@ -62,7 +64,7 @@
         <p class="transcript" id="transcript" aria-live="polite"></p>
         <div class="seat" id="seat"></div>
         <div class="lines" id="brief"></div>
-        <p class="rules-link reveal"><a class="btn" href="rules.html">Read the four rules</a></p>
+        <p class="rules-link reveal"><a class="btn" href="rules.html">Read the code of conduct</a></p>
       </div>
     </section>
 
@@ -80,9 +82,23 @@
       <div class="wrap">
         <h2 class="big reveal" id="sealed-h">Sealed until the last word.</h2>
         <p class="say reveal" id="sealed-say"></p>
-        <div class="env-wrap reveal">
+        <div class="env-wrap reveal" id="env-wrap">
+          <div class="stamper" id="stamper" aria-hidden="true">
+            <svg viewBox="0 0 120 340" overflow="visible">
+              <rect x="34" y="-600" width="52" height="752" fill="#111"/>
+              <line x1="35" y1="-600" x2="35" y2="152" stroke="#e2231a" stroke-width="2" opacity=".7"/>
+              <rect x="36" y="146" width="48" height="46" rx="3" fill="#ece8e2"/>
+              <circle cx="60" cy="172" r="4" fill="#e2231a"/>
+              <rect x="28" y="188" width="64" height="54" rx="22" fill="#070707"/>
+              <path d="M36 206 h48 M36 220 h48" stroke="#2a2a2a" stroke-width="2"/>
+              <rect x="49" y="240" width="22" height="60" fill="#5a3a22"/>
+              <rect x="49" y="240" width="6" height="60" fill="#7a5233"/>
+              <rect x="18" y="298" width="84" height="12" rx="3" fill="#c69a3c"/>
+              <rect x="18" y="308" width="84" height="16" rx="3" fill="#8f6a22"/>
+            </svg>
+          </div>
           <div class="env" id="env">
-            <div class="letter"><b>The verdict is in.</b>Reading list and what the internet thinks, just below.</div>
+            <div class="letter"><b id="letter-h">Case closed.</b><span id="letter-p">The verdict is just below.</span><i>The court</i></div>
             <div class="flap"></div>
             <div class="seal-wax" aria-hidden="true"><span>HJ</span></div>
             <span class="addr" id="addr"></span>
@@ -99,10 +115,13 @@
 
     <!-- 5. The ask -->
     <section class="chapter give" aria-labelledby="give-h">
-      <div class="wrap">
-        <h2 class="big reveal" id="give-h">Keep the jury in session.</h2>
-        <p class="say reveal">Every night costs something. See what a dollar does.</p>
-        <a class="btn reveal" href="donate.html">Donate</a>
+      <div class="wrap give-grid">
+        <div class="give-text">
+          <h2 class="big reveal" id="give-h">Keep the jury in session.</h2>
+          <p class="say reveal">Every night costs something. See what a dollar does.</p>
+          <a class="btn reveal" href="donate.html">Donate</a>
+        </div>
+        <figure class="noir-art bribe-art reveal" data-noir="bribe"></figure>
       </div>
     </section>
   </main>
@@ -110,10 +129,10 @@
   <section class="namesake" id="footnote" aria-labelledby="namesake-h">
     <span class="ns-12" aria-hidden="true">12</span>
     <div class="wrap">
-      <p class="ns-kick"><sup>1</sup> The name</p>
+      <p class="ns-kick">The name</p>
       <h2 id="namesake-h">Named after a 1957 film about twelve strangers who couldn&rsquo;t agree.</h2>
       <p class="ns-say">The name, the awards and most of the attitude come from <i>12 Angry Men</i>. Here&rsquo;s the long version.</p>
-      <a class="btn ns-btn" href="why.html">Why Hung Jury</a>
+      <a class="btn ns-btn" href="why.html">Why Hung Jury?</a>
     </div>
   </section>
 
@@ -123,6 +142,7 @@
 
   <script src="event.js"></script>
   <script src="js/table.js"></script>
+  <script src="js/noir.js"></script>
   <script>
   (function () {
     var E = window.EVENT;
@@ -137,7 +157,8 @@
     document.title = "Hung Jury: " + E.topic;
     $("topic").textContent = "Session " + String(E.session).padStart(2, "0") + ": " + E.topic;
     $("headline").textContent = E.headline;
-    $("deck").textContent = E.deck;
+    $("sess").textContent = E.session;
+    $("sess").setAttribute("aria-label", "Session " + E.session);
     E.brief.forEach(function (p) { $("brief").appendChild(el("p", "say reveal", p)); });
     $("day").textContent = E.day + ".";
     $("time").textContent = E.time;
@@ -192,54 +213,134 @@
 
     /* ---- The sealed envelope ---- */
     var unseal = new Date(E.unsealAt).getTime();
+    var dev = /[?&]pass=juror8(&|$)/.test(location.search);
+    var S = E.sides;
+    var env = $("env"), envWrap = $("env-wrap"), stamper = $("stamper");
     var fmt = new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Perth", weekday: "long", hour: "numeric", minute: "2-digit" });
     $("addr").textContent = "For the jury. Not before " + fmt.format(unseal).replace(":00", "") + ".";
+    $("letter-h").textContent = "Case closed.";
+    $("letter-p").textContent = "Session " + String(E.session).padStart(2, "0") + ". The verdict is just below.";
+    function isOpen() { return dev || Date.now() >= unseal; }
+    if (dev) {
+      var rib = el("div", "dev-pass", "Dev pass. Everyone else still sees the seal.");
+      document.body.appendChild(rib);
+    }
+    function sealCentre() {
+      var r = env.getBoundingClientRect(), w = envWrap.getBoundingClientRect();
+      return { x: r.left - w.left + r.width / 2, y: r.top - w.top + r.height * .58, w: r.width };
+    }
+
+    // a hand comes down and stamps the wax on
+    function stampIt(then) {
+      if (env.classList.contains("stamped")) { if (then) then(); return; }
+      if (reduceMotion) { env.classList.add("stamped"); if (then) setTimeout(then, 500); return; }
+      stamper.classList.add("go");
+      setTimeout(function () {
+        env.classList.add("stamped");
+        env.classList.remove("thud"); void env.offsetWidth; env.classList.add("thud");
+        var c = sealCentre();
+        HJ.spray(envWrap, c.x, c.y, { n: 18, spread: c.w * .3, fall: true });
+      }, 760);
+      setTimeout(function () { stamper.classList.remove("go"); if (then) then(); }, 1550);
+    }
+
+    // the seal cracks and the letter comes out
+    var cracked = false;
+    function crack() {
+      if (cracked) return; cracked = true;
+      var seal = env.querySelector(".seal-wax");
+      if (!reduceMotion) {
+        ["l", "r"].forEach(function (k) {
+          var h = seal.cloneNode(true); h.classList.add("half", "half-" + k); env.appendChild(h);
+        });
+        var c = sealCentre();
+        HJ.spray(envWrap, c.x, c.y, { n: 14, spread: c.w * .22, size: 5 });
+      }
+      seal.style.visibility = "hidden";
+      setTimeout(function () { env.classList.add("open"); }, reduceMotion ? 0 : 450);
+      setTimeout(showCase, reduceMotion ? 0 : 1800);
+    }
 
     var tries = 0;
-    var teases = ["Not yet.", "Still sealed.", "Patience is also a virtue.", "The seal is not a button.", "You\u2019re very keen. We like that.", "Okay, now you\u2019re just poking wax."];
+    var teases = ["Not yet.", "Still sealed.", "Patience is also a virtue.", "The seal is not a button.", "You’re very keen. We like that.", "Okay, now you’re just poking wax."];
+    function tease() {
+      if (isOpen()) return;
+      env.classList.remove("nope"); void env.offsetWidth; env.classList.add("nope");
+      $("sealed-say").textContent = teases[Math.min(tries++, teases.length - 1)];
+    }
     function renderSealed() {
       $("sealed-say").textContent = "Reading list and what the internet thinks. You walk in with only your own head.";
       $("clock").hidden = false;
-      var env = $("env");
       env.setAttribute("role", "button"); env.setAttribute("tabindex", "0");
       env.setAttribute("aria-label", "Sealed envelope. Opens after the night.");
-      function tease() {
-        env.classList.remove("nope"); void env.offsetWidth; env.classList.add("nope");
-        $("sealed-say").textContent = teases[Math.min(tries++, teases.length - 1)];
-      }
       env.addEventListener("click", tease);
       env.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tease(); } });
     }
-
-    function renderOpen(animate) {
+    function renderOpen() {
       $("sealed-h").textContent = "The verdict is in.";
-      $("sealed-say").textContent = "Now go and see who agrees with you.";
-      var v = window.HJ && window.HJ.vote && window.HJ.vote();
-      if (v && v.first !== undefined) {
-        var line = "You walked in saying " + E.sides[v.first] + ".";
-        if (v.now !== v.first) line += " You left saying " + E.sides[v.now] + ". Respect.";
-        else line += " Still there?";
-        $("sealed-say").textContent = line;
-      }
+      $("sealed-say").textContent = "Case closed. Here’s what the room couldn’t tell you.";
       $("clock").hidden = true;
-      var env = $("env");
-      if (animate) setTimeout(function () { env.classList.add("open"); }, 300); else env.classList.add("open");
+      env.removeAttribute("role"); env.removeAttribute("tabindex"); env.removeAttribute("aria-label");
+      if (seen) stampIt(crack);
+    }
+
+    function showCase() {
       var box = $("opened"); box.hidden = false; box.innerHTML = "";
-      var ul = el("ul", "reading");
-      E.reading.forEach(function (r) {
+      var v = window.HJ && window.HJ.vote && window.HJ.vote();
+      var cases = el("div", "case");
+
+      var stamp, line, tone = "";
+      if (v && v.first !== undefined && v.first !== null) {
+        var now = (v.now === undefined || v.now === null) ? null : v.now;
+        if (now === null) { stamp = "Undecided"; line = "You walked in saying " + S[v.first] + ", then went back to the middle."; }
+        else if (now !== v.first) { stamp = "Mind changed"; tone = "warm"; line = "You walked in saying " + S[v.first] + ". You left saying " + S[now] + "."; }
+        else if (v.switches) { stamp = "Came back"; line = "You walked in saying " + S[v.first] + ", crossed the floor, and came home."; }
+        else { stamp = "Held the line"; line = "You walked in saying " + S[v.first] + ". You never moved."; }
+        if (v.switches > 1) line += " Crossed the floor " + v.switches + " times.";
+      } else { stamp = "No vote"; line = "You never took a seat at the table up there. Next time, sit down."; }
+      var f1 = el("article", "file");
+      f1.appendChild(el("span", "stamp " + tone, stamp));
+      f1.appendChild(el("h3", null, "Your verdict"));
+      f1.appendChild(el("p", null, line));
+      cases.appendChild(f1);
+
+      if (E.result) {
+        var f2 = el("article", "file");
+        f2.appendChild(el("h3", null, "The table"));
+        f2.appendChild(el("p", "count", E.result.count + " " + (S[E.result.side] || "")));
+        if (E.result.note) f2.appendChild(el("p", null, E.result.note));
+        cases.appendChild(f2);
+      } else if (dev) {
+        var f3 = el("article", "file ghost");
+        f3.appendChild(el("h3", null, "The table"));
+        f3.appendChild(el("p", "count", "4–3 " + S[1]));
+        f3.appendChild(el("p", null, "Placeholder. After the night, fill in result in event.js and the real count shows here."));
+        cases.appendChild(f3);
+      }
+
+      var f4 = el("article", "file wide");
+      f4.appendChild(el("h3", null, "What the internet thinks"));
+      var vt = el("div", "verdict-text");
+      E.internetVerdict.forEach(function (p) { vt.appendChild(el("p", null, p)); });
+      f4.appendChild(vt);
+      cases.appendChild(f4);
+      box.appendChild(cases);
+
+      box.appendChild(el("h3", "ev-h", "The evidence"));
+      var ol = el("ol", "reading");
+      E.reading.forEach(function (r, i) {
         var li = el("li");
+        li.appendChild(el("span", "ex", "Exhibit " + (i + 1)));
         var a = el("a", null, r.title);
         a.href = r.url; a.target = "_blank"; a.rel = "noopener";
         li.appendChild(a);
         li.appendChild(el("span", "src", r.source));
         li.appendChild(el("p", null, r.note));
-        ul.appendChild(li);
+        ol.appendChild(li);
       });
-      box.appendChild(ul);
-      box.appendChild(el("h3", null, "What the internet thinks"));
-      var v = el("div", "verdict-text");
-      E.internetVerdict.forEach(function (p) { v.appendChild(el("p", null, p)); });
-      box.appendChild(v);
+      box.appendChild(ol);
+      if (E.next) box.appendChild(el("p", "next-session", E.next));
+      requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add("show"); }); });
     }
 
     function setUnit(id, val) {
@@ -249,10 +350,9 @@
       dg.appendChild(el("span", null, txt));
       dg.classList.remove("flip"); void dg.offsetWidth; dg.classList.add("flip");
     }
-
     function tick() {
       var left = unseal - Date.now();
-      if (left <= 0) { renderOpen(true); return; }
+      if (left <= 0) { renderOpen(); return; }
       var mins = Math.ceil(left / 6e4);
       setUnit("u-d", Math.floor(mins / 1440));
       setUnit("u-h", Math.floor(mins / 60) % 24);
@@ -260,7 +360,18 @@
       setTimeout(tick, (left % 6e4) + 50);
     }
 
-    if (Date.now() >= unseal) { renderOpen(false); } else { renderSealed(); tick(); }
+    // play the stamp (and the unsealing, if it's time) when the envelope comes into view
+    var seen = false;
+    function onSeen() {
+      if (seen) return; seen = true;
+      setTimeout(function () { stampIt(isOpen() ? function () { setTimeout(crack, 500); } : null); }, 350);
+    }
+    if ("IntersectionObserver" in window) {
+      var eio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { onSeen(); eio.disconnect(); } }, { threshold: 0.6 });
+      eio.observe(env);
+    } else onSeen();
+
+    if (isOpen()) renderOpen(); else { renderSealed(); tick(); }
   })();
   </script>
 </body>

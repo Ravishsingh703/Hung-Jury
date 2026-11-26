@@ -201,7 +201,7 @@
     clearMood(p);
     var loud = mood === "slam" || mood === "stand" || mood === "shout" || /[A-Z]{3,}/.test(text);
     var cls = { talk: ["talking"], shout: ["talking", "angry"], stand: ["talking", "standing", "angry"], slam: ["talking", "slam", "angry"],
-                laugh: ["laugh"], hurt: ["hurt"], "switch": ["talking"], cheer: ["talking"] }[mood] || ["talking"];
+                laugh: ["laugh"], hurt: ["hurt"], "switch": ["talking"], cheer: ["talking"], eat: ["talking"] }[mood] || ["talking"];
     cls.forEach(function (c) { p.g.classList.add(c); });
     var b = say(p, text, loud);
     if (mood === "slam") setTimeout(function () { slamTable(p.x); }, 260);
@@ -215,27 +215,103 @@
     }, dur);
   }
 
+  /* ---------- dessert ---------- */
+  var dessertOn = false, plates = [], yourPlate = null;
+  function crumbs(x, y) {
+    if (calm) return;
+    var cols = ["#f5a524", "#ffffff", "#e2231a", "#ffd59a"];
+    for (var k = 0; k < 9; k++) {
+      var c = mk("circle", { cx: x, cy: y, r: 1.5 + Math.random() * 2.5, fill: cols[k % 4], "class": "crumb" }, fx);
+      var a = Math.PI + Math.random() * Math.PI, d = 18 + Math.random() * 34;
+      c.style.setProperty("--dx", (Math.cos(a) * d).toFixed(0) + "px");
+      c.style.setProperty("--dy", (Math.sin(a) * d).toFixed(0) + "px");
+      setTimeout(function (n) { return function () { n.remove(); }; }(c), 900);
+    }
+  }
+  function plate(x, parent, delay, screenX) {
+    var g = mk("g", { "class": "plate" }, parent);
+    g.style.animationDelay = delay + "ms";
+    mk("ellipse", { cx: x, cy: TABLE_Y + 1, rx: 27, ry: 5, fill: "#ece8e2" }, g);
+    var cake = mk("g", { "class": "cake" }, g);
+    cake.style.animationDelay = (delay + 900) + "ms";
+    mk("path", { d: "M" + (x - 15) + " " + (TABLE_Y - 2) + " h30 v-17 l-30 8z", fill: "#f5a524" }, cake);
+    mk("path", { d: "M" + (x - 15) + " " + (TABLE_Y - 8) + " l30 -5 v3 l-30 5z", fill: "#fff3df" }, cake);
+    mk("path", { d: "M" + (x - 15) + " " + (TABLE_Y - 11) + " l30 -8 v4 l-30 6z", fill: "#e2231a" }, cake);
+    mk("circle", { cx: x + 9, cy: TABLE_Y - 23, r: 4.5, fill: "#b3120f" }, cake);
+    setTimeout(function () { crumbs(screenX == null ? x : screenX, TABLE_Y - 6); }, delay + 380);
+    plates.push(g);
+    return g;
+  }
+  function everyone() { return cast.concat(you && you.side !== -1 ? [you] : []); }
+  function serve() {
+    if (dessertOn) return 300;
+    dessertOn = true;
+    board.classList.add("dessert");
+    cast.forEach(function (p, i) { plate(p.x, board, i * 110); });
+    if (you && you.side !== -1) yourPlate = plate(HOME, youTentWalk, 660, you.x);
+    everyone().forEach(function (p) { p.g.classList.add("eating"); });
+    note("The court", "Dessert has entered the courtroom.");
+    return 1600;
+  }
+  function plateForYou() {
+    if (!dessertOn || !you || you.side === -1 || yourPlate) return;
+    yourPlate = plate(HOME, youTentWalk, 0, you.x);
+    you.g.classList.add("eating");
+  }
+  function takeYourPlate() {
+    if (!yourPlate) return;
+    var pl = yourPlate; yourPlate = null;
+    pl.classList.add("taken");
+    plates = plates.filter(function (q) { return q !== pl; });
+    setTimeout(function () { pl.remove(); }, 700);
+    if (you) you.g.classList.remove("eating");
+  }
+  function clearDessert() {
+    if (!dessertOn) return;
+    dessertOn = false; yourPlate = null;
+    board.classList.remove("dessert");
+    plates.forEach(function (pl) { pl.classList.add("gone"); setTimeout(function () { pl.remove(); }, 600); });
+    plates = [];
+    cast.concat(you ? [you] : []).forEach(function (p) { p.g.classList.remove("eating"); });
+  }
+
   /* ---------- the script ---------- */
-  var step = 0, timer = null, running = false, origin = cast.map(function (p) { return p.side; });
-  var DUR = { talk: 2600, shout: 2600, stand: 3000, slam: 2800, laugh: 2300, hurt: 2000, "switch": 3200, cheer: 2800 };
+  var step = 0, timer = null, running = false, visible = false, waiting = false;
+  var origin = cast.map(function (p) { return p.side; });
+  var DUR = { talk: 2600, shout: 2600, stand: 3000, slam: 2800, laugh: 2300, hurt: 2000, "switch": 3200, cheer: 2800, eat: 2900 };
+  function buildProgram() {
+    var prog = E.script.slice();
+    if (E.ending && E.ending.length) {
+      prog.push({ act: "serve" });
+      E.ending.forEach(function (l) { prog.push({ j: l.j, mood: "eat", say: l.say }); });
+      prog.push({ act: "clear", wait: 1800 });
+    }
+    return prog;
+  }
+  var program = buildProgram();
 
   function next() {
-    if (step >= E.script.length) {
+    if (!visible) { waiting = true; return; }
+    if (step >= program.length) {
       // the night resets: everyone back to their opening seats
-      step = 0;
+      step = 0; program = buildProgram(); clearDessert();
       cast.forEach(function (p, i) { if (p.side !== origin[i]) setSide(p, origin[i]); });
       note("The court", "A new night. Same question.");
       timer = setTimeout(next, 2600);
       return;
     }
-    var line = E.script[step++], p = cast[line.j - 1];
+    var line = program[step++];
+    if (line.act === "serve") { timer = setTimeout(next, serve()); return; }
+    if (line.act === "clear") { timer = setTimeout(function () { clearDessert(); timer = setTimeout(next, 900); }, line.wait || 1200); return; }
+    var p = line.j === "you" ? you : cast[line.j - 1];
     if (!p) { timer = setTimeout(next, 100); return; }
     var dur = DUR[line.mood] || 2600;
     perform(p, line.mood, line.say, dur - 300);
-    note("Juror " + p.n, line.say);
+    note(p === you ? "You" : "Juror " + p.n, line.say);
     timer = setTimeout(next, dur);
   }
   function hold(ms) { clearTimeout(timer); timer = setTimeout(next, ms); }
+  function inject(lines) { program.splice.apply(program, [step, 0].concat(lines)); }
 
   /* ---------- you ---------- */
   var you = null, youWalk = null, youTentWalk = null;
@@ -269,18 +345,77 @@
       perform(cast[0], "talk", "Finally. Someone with sense.", 2200);
       setTimeout(function () { perform(cast[4], "laugh", "Sit with us. We have snacks.", 2200); }, 1100);
       note("The court", "A new juror takes the empty chair. Tap a side on the table to pick one.");
+      nudgeLater();
     }
     renderControls();
+  }
+
+  var lastMove = 0, crosses = [], lockedUntil = 0, lockTimer = null, idleTimer = null;
+  var PRAISE = ["Takes guts to cross. Eat up.", "Your point was good, by the way.", "Fair play. You actually listened.", "Pull up a plate, defector."];
+
+  function crossed(side) {
+    var now = Date.now();
+    crosses = crosses.filter(function (t) { return now - t < 60000; });
+    crosses.push(now);
+    var n = crosses.length;
+    var mine = cast.filter(function (p) { return p.side === side; });
+    var theirs = cast.filter(function (p) { return p.side !== side; });
+    if (n === 1) {
+      hold(3400);
+      setTimeout(function () {
+        perform(pick(mine), "stand", pick(["OHHH! A defector!", "Welcome over!", "MIND CHANGED!"]), 2600);
+        setTimeout(function () { perform(pick(theirs), "hurt", "…traitor.", 2200); }, 900);
+      }, 700);
+      note("The court", "You crossed the floor. That’s what we’re here for.");
+      if (dessertOn) {
+        plateForYou();
+        inject([{ j: pick(theirs).n, mood: "eat", say: pick(PRAISE) }]);
+      } else {
+        inject([
+          { j: mine[mine.length - 1].n, mood: "cheer", say: "Dessert’s on the host!" },
+          { act: "serve" },
+          { j: pick(theirs).n, mood: "eat", say: pick(PRAISE) },
+          { j: pick(mine).n, mood: "eat", say: pick(PRAISE.filter(function (t) { return t.indexOf("Pull") < 0; })) },
+          { act: "clear", wait: 1500 }
+        ]);
+      }
+    } else if (n === 2) {
+      hold(3600);
+      perform(pick(cast), "shout", "AGAIN?", 2200);
+      setTimeout(function () { perform(pick(cast), "talk", "Dessert’s for people who change their mind once.", 2600); takeYourPlate(); }, 1000);
+      note("The court", "Crossed back already. The cake has been confiscated.");
+    } else if (n === 3) {
+      hold(3600);
+      perform(pick(mine), "laugh", "FLIP!", 2400);
+      setTimeout(function () { perform(pick(theirs), "laugh", "FLOP!", 2400); }, 600);
+      setTimeout(function () { cast.forEach(function (q) { q.g.classList.add("laugh"); setTimeout(function () { q.g.classList.remove("laugh"); }, 1600); }); }, 900);
+      note("The court", "The jury has noticed. Pick a lane.");
+    } else {
+      hold(4200);
+      takeYourPlate();
+      perform(pick(cast), "slam", "CONTEMPT OF COURT.", 2800);
+      note("The court", "Held in contempt. Sit still for 15 seconds.");
+      crosses = [];
+      lockedUntil = now + 15000;
+      clearInterval(lockTimer);
+      lockTimer = setInterval(function () { if (Date.now() >= lockedUntil) { clearInterval(lockTimer); lockedUntil = 0; note("The court", "Contempt lifted. Behave."); } renderControls(); }, 1000);
+    }
   }
 
   function choose(side, silent) {
     if (!you) sitDown(true);
     var was = you.side;
     if (side === was) return;
+    var now = Date.now();
+    if (!silent && now < lockedUntil) { retrigger(you.g, "nope"); return; }
+    if (!silent && now - lastMove < 1000) return;     // still walking
+    lastMove = now;
+    clearTimeout(idleTimer);
     if (side === -1) {                         // back to the middle, undecided
       you.side = -1; you.g.classList.add("undecided");
       moveYou(HOME); lightSide(-1); chair.classList.add("taken");
-      if (!silent) { hold(2600); perform(pick(cast), "laugh", "Undecided? Brave.", 2200); note("The court", "You went back to the middle. Undecided is allowed. For now."); }
+      if (!silent) { hold(2600); perform(pick(cast), "laugh", "Undecided? Brave.", 2200); note("The court", "You went back to the middle. Undecided is allowed. For now."); nudgeLater(); }
+      if (yourPlate) takeYourPlate();
       var u = load() || {}; u.now = undefined; store(u);
       renderControls(); return;
     }
@@ -288,33 +423,41 @@
     setSide(you, side);
     moveYou(ENDS[side]); lightSide(side);
     chair.classList.remove("taken");           // the middle chair is free again
-    var mine = cast.filter(function (p) { return p.side === side; });
-    var theirs = cast.filter(function (p) { return p.side !== side; });
-    if (!silent) {
+    var isCross = you.firm !== undefined && you.firm !== side;
+    you.firm = side;
+    if (!silent && isCross) crossed(side);
+    else if (!silent) {
+      var mine = cast.filter(function (p) { return p.side === side; });
+      var theirs = cast.filter(function (p) { return p.side !== side; });
       hold(3600);
       setTimeout(function () {
-        if (was === -1) {
-          perform(pick(mine), "talk", pick(["Welcome to the right side.", "Good. You’re one of us.", "Smart. Sit.", "Knew it."]), 2400);
-          setTimeout(function () { perform(pick(theirs), "laugh", pick(["Pfft. Enjoy being wrong.", "HA. Give it an hour.", "Oh, you’re one of THOSE."]), 2400); }, 900);
-        } else {
-          perform(pick(mine), "stand", pick(["OHHH! A defector!", "Welcome over!", "MIND CHANGED!"]), 2600);
-          setTimeout(function () { perform(pick(theirs), "hurt", "…traitor.", 2200); }, 900);
-        }
+        perform(pick(mine), "talk", pick(["Welcome to the right side.", "Good. You’re one of us.", "Smart. Sit.", "Knew it."]), 2400);
+        setTimeout(function () { perform(pick(theirs), "laugh", pick(["Pfft. Enjoy being wrong.", "HA. Give it an hour.", "Oh, you’re one of THOSE."]), 2400); }, 900);
       }, 700);
-      note("The court", was === -1 || was === undefined
-        ? "You walked in saying " + E.sides[side] + ". We’ll see if you still are at 9."
-        : "You crossed the floor. That’s what we’re here for.");
+      note("The court", "You walked in saying " + E.sides[side] + ". We’ll see if you still are at 9.");
+      plateForYou();
     }
     var v = load() || {};
     if (v.first === undefined) v.first = side;
-    v.switches = (v.switches || 0) + (was !== -1 && was !== undefined && was !== side ? 1 : 0);
+    v.switches = (v.switches || 0) + (isCross ? 1 : 0);
     v.now = side;
     store(v);
     renderControls();
   }
 
+  function nudgeLater() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () {
+      if (!you || you.side !== -1 || !visible) return;
+      hold(3000);
+      perform(pick(cast), "talk", pick(["You picking a side or just here for the bread?", "The middle chair isn’t a side.", "Any day now."]), 2600);
+    }, 20000);
+  }
+
   function leave() {
     if (!you) return;
+    if (Date.now() < lockedUntil) { retrigger(you.g, "nope"); note("The court", "Nobody leaves while held in contempt."); return; }
+    clearTimeout(idleTimer); takeYourPlate();
     hold(2600);
     perform(pick(cast), pick(["laugh", "shout"]), pick(["Running already?", "Coward.", "Leaving mid-argument? Classic.", "We’ll keep your seat warm."]), 2200);
     note("The court", "You left the table. The chair’s still there.");
@@ -356,6 +499,16 @@
       q.innerHTML = "You’re sitting with <b></b>.";
       q.querySelector("b").textContent = E.sides[you.side];
       controls.appendChild(q);
+      var left = Math.ceil((lockedUntil - Date.now()) / 1000);
+      if (left > 0) {
+        q.innerHTML = "Held in contempt. <b></b>";
+        q.querySelector("b").textContent = left + "s";
+        var held = btn("Cross the floor", function () {}, "hot");
+        held.disabled = true;
+        row.appendChild(held);
+        controls.appendChild(row);
+        return;
+      }
       row.appendChild(btn("Cross the floor", function () { choose(1 - you.side); }, "hot"));
       row.appendChild(btn("Back to the middle", function () { choose(-1); }, "ghost"));
     }
@@ -396,9 +549,14 @@
 
   function start() { if (running) return; running = true; note("The court", "The jury is seated. Arguments begin."); timer = setTimeout(next, 1200); }
   if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { start(); io.disconnect(); } }, { threshold: 0.3 });
+    var io = new IntersectionObserver(function (es) {
+      visible = es[0].isIntersecting;
+      if (!visible) return;
+      if (!running) start();
+      else if (waiting) { waiting = false; next(); }
+    }, { threshold: 0.2 });
     io.observe(svg);
-  } else start();
+  } else { visible = true; start(); }
 
   window.HJ = window.HJ || {};
   window.HJ.vote = load;

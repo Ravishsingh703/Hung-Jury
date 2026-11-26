@@ -100,3 +100,32 @@
   html:not(.heat-on) .bubble.loud.on, html:not(.heat-on) .juror.slam .arm-r, html:not(.heat-on) .juror.slam .arm-l,
   html:not(.heat-on) .cup .steam, html:not(.heat-on) .chair-empty rect, html:not(.heat-on) .tent.flip, html:not(.heat-on) .side-label.lit text { animation: none !important; }
 }
+
+/* ---------- dessert ---------- */
+.plate { transform-box: fill-box; transform-origin: 50% 100%; animation: plateIn .55s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes plateIn { from { transform: translateY(-70px) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.plate .cake { transform-box: fill-box; transform-origin: 0% 100%; animation: eaten 9s steps(4, end) forwards; }
+@keyframes eaten { to { transform: scale(.4, .55); } }
+.plate.gone { animation: plateOut .5s ease-in forwards; }
+@keyframes plateOut { to { transform: translateY(16px); opacity: 0; } }
+.plate.taken { animation: plateTaken .7s cubic-bezier(.5,0,.7,.4) forwards; }
+@keyframes plateTaken { 30% { transform: translateY(-14px); } to { transform: translate(140px, -40px) rotate(18deg); opacity: 0; } }
+.board .tent { transition: opacity .4s; }
+.board.dessert .tent { opacity: 0; }
+.crumb { transform-box: fill-box; animation: crumb .85s cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes crumb { to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+.juror.eating .eye { transform: scaleY(.3); }
+.juror.eating:not(.talking) .arm-r { animation: fork 1.1s ease-in-out infinite; }
+.juror.eating:not(.talking) .arm-l { animation: forkL 1.1s ease-in-out infinite; }
+@keyframes fork { 50% { transform: rotate(-70deg); } }
+@keyframes forkL { 50% { transform: rotate(70deg); } }
+.juror.eating:not(.talking) .lips { animation: chew .35s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+@keyframes chew { to { transform: scaleX(.55); } }
+.juror.nope { animation: nopeJ .4s cubic-bezier(.36,.07,.19,.97); }
+@keyframes nopeJ { 25%,75% { transform: translateX(-6px); } 50% { transform: translateX(6px); } }
+.seat .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html:not(.heat-on) .plate, html:not(.heat-on) .plate .cake, html:not(.heat-on) .juror.eating .arm-r,
+  html:not(.heat-on) .juror.eating .arm-l, html:not(.heat-on) .juror.eating .lips, html:not(.heat-on) .juror.nope { animation: none !important; }
+  html:not(.heat-on) .plate.gone, html:not(.heat-on) .plate.taken { animation: fade .3s reverse forwards !important; }
+}

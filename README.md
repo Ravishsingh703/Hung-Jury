@@ -4,7 +4,7 @@ One page. This week's question, the brief, the night, and the reading list that 
 
 ## Weekly update (5 minutes)
 
-Edit **one file: `event.js`**. Change the topic, the headline question, the deck line, the two brief lines, the table `sides` and `script`, the day/time/small print, the `unsealAt` time and the reading list.
+Edit **one file: `event.js`**. Change the topic, the headline question, the two brief lines, the table `sides`, `script` and `ending` (the dessert compliments), the day/time/small print, the `unsealAt` time and the reading list.
 
 The `script` is the argument the six jurors act out at the table: seats 1-3 start on the first side, 4-6 on the second. Moods: talk, shout, stand, slam, laugh, hurt, switch (crosses the floor), cheer. Write it so it builds, and end with someone switching. Commit. GitHub Pages republishes in about a minute.
 
@@ -30,3 +30,11 @@ Nothing else needs touching.
 ## The laughing cat
 
 The rejection screen on the donate page shows `laughing-cat.gif` if it exists in the repo root. Upload any GIF with that exact name and it appears; delete it and the screen works without it.
+
+## After the night
+
+Fill in `result` in `event.js` (for example `{ count: "4–3", side: 1, note: "Two crossed the floor." }`) and it shows in the case file once the envelope opens. `next` is the teaser line at the bottom.
+
+## Dev pass
+
+Add `?pass=juror8` to the URL to see the envelope crack open and the case file before the unseal time. Everyone else still sees the seal. Like the seal itself, this is soft: the repo is public.
