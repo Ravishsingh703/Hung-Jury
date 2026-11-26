@@ -122,9 +122,12 @@
   }
   var active = [];
   function say(p, text, loud) {
-    var lines = wrap(text, loud ? 18 : 24), size = loud ? 21 : 18, lh = size + 5;
+    // on a phone the whole table shrinks, so the bubbles get bigger to stay readable
+    var small = svg.getBoundingClientRect().width < 560;
+    var k = small ? (loud ? 1.5 : 1.75) : 1;
+    var lines = wrap(text, loud ? (small ? 26 : 18) : 24), size = (loud ? 21 : 18) * k, lh = size + 5 * k;
     var longest = Math.max.apply(null, lines.map(function (l) { return l.length; }));
-    var w = longest * (loud ? 12.2 : 9.8) + 34, h = lines.length * lh + 18;
+    var w = (longest * (loud ? 12.2 : 9.8) + 34) * k, h = lines.length * lh + 18 * k;
     var lift = p.g.classList.contains("standing") ? 46 : 0;
     var top = HEAD_Y - 27 - lift - 16 - h;
     var x = Math.max(6, Math.min(W - 6 - w, p.x - w / 2)), y = Math.max(4, top);
@@ -138,11 +141,11 @@
     if (loud) {
       mk("path", { d: "M" + x + " " + (y + h / 2) + " l10 " + (-h / 2) + " h" + (w - 20) + " l10 " + h / 2 + " l-10 " + h / 2 + " h" + (-(w - 20)) + "z", fill: "#fff" }, b);
     } else {
-      mk("rect", { x: x, y: y, width: w, height: h, rx: 18, fill: "#fff" }, b);
+      mk("rect", { x: x, y: y, width: w, height: h, rx: 18 * k, fill: "#fff" }, b);
     }
     mk("path", { d: "M" + (p.x - 8) + " " + (y + h - 1) + " l8 12 l8 -12z", fill: "#fff" }, b);
     lines.forEach(function (l, i) {
-      var t = mk("text", { x: x + w / 2, y: y + 9 + lh * (i + 1) - 6, "text-anchor": "middle", fill: loud ? "#e2231a" : "#22060a", "font-family": "Archivo, sans-serif", "font-weight": loud ? 850 : 700, "font-size": size, "font-stretch": "82%" }, b);
+      var t = mk("text", { x: x + w / 2, y: y + 9 * k + lh * (i + 1) - 6 * k, "text-anchor": "middle", fill: loud ? "#e2231a" : "#22060a", "font-family": "Archivo, sans-serif", "font-weight": loud ? 850 : 700, "font-size": size, "font-stretch": "82%" }, b);
       t.textContent = l;
     });
     requestAnimationFrame(function () { b.classList.add("on"); });
