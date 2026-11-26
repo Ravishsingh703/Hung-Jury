@@ -33,12 +33,70 @@
 
   <main>
     <section class="rule intro" id="top">
+      <div class="blinds" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
       <div class="wrap">
         <div class="text">
+          <p class="label case-no">Case file &middot; house rules</p>
           <h1 class="slam">Before you sit down.</h1>
           <p class="sub">Four rules. We read them out loud at the start of every night, so nobody&rsquo;s ever the new one. Play with them. Then swear in.</p>
           <a class="scroll-hint" href="#r1"><i></i>Rule one</a>
         </div>
+        <figure class="stage noir-stage intro-art">
+          <svg viewBox="0 0 400 340" role="img" aria-label="An empty table under a single hanging lamp. Chairs pushed in, a reserved card, an ashtray still smoking, and the rules sheet waiting on the table.">
+            <defs>
+              <radialGradient id="in-wall" cx="50%" cy="28%" r="75%"><stop offset="0" stop-color="#6a0b10"/><stop offset=".55" stop-color="#2a0609"/><stop offset="1" stop-color="#050101"/></radialGradient>
+              <pattern id="in-blinds" width="400" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(-14)"><rect width="400" height="10" fill="#000" opacity=".55"/></pattern>
+              <linearGradient id="in-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1d6" stop-opacity=".5"/><stop offset="1" stop-color="#fff1d6" stop-opacity="0"/></linearGradient>
+              <radialGradient id="in-pool" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffdfa8" stop-opacity=".42"/><stop offset="1" stop-color="#ffdfa8" stop-opacity="0"/></radialGradient>
+              <linearGradient id="in-top" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0a08"/><stop offset="1" stop-color="#120304"/></linearGradient>
+            </defs>
+            <rect width="400" height="340" fill="url(#in-wall)"/>
+            <rect width="400" height="250" fill="url(#in-blinds)"/>
+            <rect y="246" width="400" height="94" fill="#070102"/>
+            <line x1="0" y1="246" x2="400" y2="246" stroke="rgba(255,255,255,.08)"/>
+            <!-- far chairs -->
+            <g fill="#050101">
+              <path d="M112 262 v-62 q0 -8 8 -8 h30 q8 0 8 8 v62z"/><path d="M178 262 v-66 q0 -8 8 -8 h28 q8 0 8 8 v66z"/><path d="M242 262 v-62 q0 -8 8 -8 h30 q8 0 8 8 v62z"/>
+            </g>
+            <g stroke="#e2231a" stroke-opacity=".35" stroke-width="1.2" fill="none">
+              <path d="M112 236 v-36 q0 -8 8 -8 h30 q8 0 8 8 v36"/><path d="M178 232 v-36 q0 -8 8 -8 h28 q8 0 8 8 v36"/><path d="M242 236 v-36 q0 -8 8 -8 h30 q8 0 8 8 v36"/>
+            </g>
+            <!-- the table -->
+            <polygon points="92,256 308,256 362,302 38,302" fill="url(#in-top)"/>
+            <polygon points="38,302 362,302 362,312 38,312" fill="#050101"/>
+            <rect x="52" y="312" width="9" height="28" fill="#050101"/><rect x="339" y="312" width="9" height="28" fill="#050101"/>
+            <ellipse class="pool" cx="200" cy="280" rx="130" ry="24" fill="url(#in-pool)"/>
+            <!-- the rules sheet -->
+            <g class="sheet">
+              <polygon points="168,266 228,264 240,292 160,295" fill="#ece8e2"/>
+              <text x="199" y="274.5" text-anchor="middle" font-family="Archivo, sans-serif" font-weight="900" font-stretch="70%" font-size="7" fill="#22060a" transform="rotate(-1.5 199 274)">THE RULES</text>
+              <g stroke="#9b8d78" stroke-width="1.6" stroke-linecap="round"><path d="M170 279.5 h52"/><path d="M169 283.5 h46"/><path d="M168 287.5 h56"/><path d="M167 291.5 h38"/></g>
+              <g fill="#e2231a" font-family="Archivo, sans-serif" font-weight="800" font-size="4.6"><text x="163" y="281">1</text><text x="162" y="285">2</text><text x="161" y="289">3</text><text x="160" y="293">4</text></g>
+            </g>
+            <!-- reserved card -->
+            <g><polygon points="104,284 140,284 136,268 108,268" fill="#d9d2c6"/><polygon points="104,284 140,284 138,290 102,290" fill="#8f8577"/>
+              <text x="122" y="279.5" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-style="italic" font-size="7.5" fill="#7d0b10">Reserved</text></g>
+            <!-- glass -->
+            <g><path d="M258 272 h14 l-2 18 h-10z" fill="rgba(255,241,214,.18)" stroke="rgba(255,241,214,.5)" stroke-width="1"/><path d="M260 282 h10 l-1 8 h-8z" fill="#7d0b10" opacity=".85"/></g>
+            <!-- ashtray -->
+            <ellipse cx="300" cy="288" rx="16" ry="5" fill="#2a2a2a"/><ellipse cx="300" cy="286.5" rx="11" ry="3" fill="#0d0d0d"/>
+            <rect x="298" y="282" width="20" height="3" rx="1.5" fill="#ece8e2" transform="rotate(-12 308 283)"/><circle class="ember" cx="318" cy="279.6" r="1.9" fill="#ff4d1c"/>
+            <path class="smoke" d="M318 276 q8 -16 -2 -30 q-10 -14 3 -32" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2.4" stroke-linecap="round"/>
+            <path class="smoke s2" d="M319 276 q-8 -14 3 -28 q11 -14 -2 -30" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="2" stroke-linecap="round"/>
+            <!-- near chairs, in the dark -->
+            <g fill="#030000"><path d="M18 340 v-52 q0 -10 10 -10 h34 q10 0 10 10 v52z"/><path d="M328 340 v-52 q0 -10 10 -10 h34 q10 0 10 10 v52z"/></g>
+            <!-- the lamp -->
+            <g class="lamp-sway">
+              <line x1="200" y1="0" x2="200" y2="56" stroke="#1a1a1a" stroke-width="2.5"/>
+              <polygon class="cone" points="186,74 214,74 336,302 64,302" fill="url(#in-cone)"/>
+              <path d="M178 76 L188 56 H212 L222 76Z" fill="#141414"/><path d="M178 76 L188 56 H212 L222 76Z" fill="none" stroke="#e2231a" stroke-opacity=".4"/>
+              <ellipse cx="200" cy="77" rx="11" ry="4" fill="#fff1d6"/>
+              <g class="motes" fill="#fff1d6"><circle class="mote" cx="170" cy="150" r="1.2"/><circle class="mote" cx="214" cy="120" r="1.6" style="animation-delay:-3s"/><circle class="mote" cx="196" cy="200" r="1"/><circle class="mote" cx="232" cy="180" r="1.4" style="animation-delay:-6s"/><circle class="mote" cx="160" cy="230" r="1.1" style="animation-delay:-4.5s"/><circle class="mote" cx="250" cy="240" r="1.3" style="animation-delay:-1.5s"/><circle class="mote" cx="186" cy="110" r="1" style="animation-delay:-7s"/></g>
+            </g>
+          </svg>
+          <figcaption class="exhibit">Exhibit A. The table, before anyone sits down.</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -52,35 +110,60 @@
           <p class="sub">Tear the argument apart. Leave the human in one piece.</p>
         </div>
         <figure class="stage">
-          <svg id="punch" viewBox="0 0 400 360" role="img" aria-label="A boxing glove smashes a lightbulb labelled the idea, and stops short of a person">
+          <svg id="punch" viewBox="0 0 400 360" role="img" aria-label="A boxing glove smashes a lightbulb labelled the idea, and stops short of a man labelled the person">
+            <defs>
+              <radialGradient id="p-spot-l" cx="30%" cy="42%" r="42%"><stop offset="0" stop-color="#f5a524" stop-opacity=".5"/><stop offset=".6" stop-color="#7d0b10" stop-opacity=".25"/><stop offset="1" stop-color="#7d0b10" stop-opacity="0"/></radialGradient>
+              <radialGradient id="p-spot-r" cx="76%" cy="52%" r="36%"><stop offset="0" stop-color="#e2231a" stop-opacity=".55"/><stop offset="1" stop-color="#e2231a" stop-opacity="0"/></radialGradient>
+              <radialGradient id="p-glove" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#ff6a5a"/><stop offset=".5" stop-color="#e2231a"/><stop offset="1" stop-color="#5c0a0e"/></radialGradient>
+              <radialGradient id="p-glass" cx="40%" cy="34%" r="68%"><stop offset="0" stop-color="#fffdf2"/><stop offset=".55" stop-color="#ffe9a8"/><stop offset="1" stop-color="#f5a524"/></radialGradient>
+              <linearGradient id="p-base" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6e675e"/><stop offset=".4" stop-color="#d8d1c6"/><stop offset="1" stop-color="#5a544c"/></linearGradient>
+              <pattern id="p-blinds" width="400" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="400" height="9" fill="#000" opacity=".5"/></pattern>
+            </defs>
+            <rect width="400" height="360" fill="#070102"/>
+            <rect width="400" height="360" fill="url(#p-spot-l)"/>
+            <rect width="400" height="360" fill="url(#p-spot-r)"/>
+            <rect width="400" height="330" fill="url(#p-blinds)" opacity=".7"/>
+            <rect y="330" width="400" height="30" fill="#030000"/><line x1="0" y1="330" x2="400" y2="330" stroke="rgba(255,255,255,.1)"/>
+            <g class="glove">
+              <rect x="-132" y="134" width="84" height="32" rx="7" fill="#ece8e2"/>
+              <rect x="-132" y="144" width="84" height="7" fill="#e2231a"/>
+              <g stroke="#9b8d78" stroke-width="2" stroke-linecap="round"><path d="M-120 138 l8 24 M-108 138 l8 24 M-96 138 l8 24 M-84 138 l8 24"/></g>
+              <path d="M-56 116 C-30 98 14 104 25 139 C33 170 14 197 -24 195 C-44 194 -57 186 -59 172 Z" fill="url(#p-glove)"/>
+              <path d="M-42 121 C-20 113 3 120 7 139 C-6 134 -25 134 -42 140 Z" fill="#9e1410"/>
+              <path d="M-36 110 C-12 106 8 116 15 130" stroke="#fff" stroke-opacity=".5" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M-50 182 C-30 190 -6 190 10 180" stroke="#3a0406" stroke-opacity=".6" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </g>
+            <circle class="flash" cx="146" cy="148" r="30" fill="#fff6dc"/>
             <g class="bulb">
-              <circle class="glow" cx="120" cy="150" r="78"/>
-              <circle class="glass" cx="120" cy="150" r="52"/>
-              <path class="filament" d="M104 160 q8 -22 16 0 q8 -22 16 0" />
-              <rect x="102" y="198" width="36" height="12" rx="3" fill="#c9c2b8"/>
-              <rect x="105" y="212" width="30" height="10" rx="3" fill="#a69e94"/>
-              <rect x="110" y="224" width="20" height="8" rx="3" fill="#8b847b"/>
+              <circle class="glow" cx="120" cy="148" r="80"/>
+              <path class="glass" d="M120 92 C152 92 172 116 172 144 C172 166 158 178 150 190 C146 196 144 200 144 204 L96 204 C96 200 94 196 90 190 C82 178 68 166 68 144 C68 116 88 92 120 92Z"/>
+              <path class="shine" d="M92 128 C94 112 104 104 116 101" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+              <path d="M110 204 L112 168 M130 204 L128 168" stroke="#b38a4a" stroke-width="1.6" fill="none"/>
+              <path class="filament" d="M106 170 q7 -24 14 0 q7 -24 14 0"/>
+              <rect x="97" y="204" width="46" height="10" rx="2" fill="url(#p-base)"/>
+              <rect x="99" y="215" width="42" height="8" rx="2" fill="url(#p-base)"/>
+              <rect x="101" y="224" width="38" height="8" rx="2" fill="url(#p-base)"/>
+              <path d="M108 233 h24 l-6 8 h-12z" fill="#2a2a2a"/>
             </g>
             <g class="shards" aria-hidden="true"></g>
             <g class="who">
-              <rect x="252" y="200" width="96" height="120" rx="40" fill="#f5a524"/>
-              <circle cx="300" cy="160" r="34" fill="#e0ac7e"/>
-              <path d="M266 156 a34 34 0 0 1 68 0 q-34 -16 -68 0z" fill="#2b1d16"/>
-              <circle cx="289" cy="164" r="3.2" fill="#1a0d0d"/><circle cx="311" cy="164" r="3.2" fill="#1a0d0d"/>
-              <path class="calm-mouth" d="M290 180 q10 8 20 0" stroke="#1a0d0d" stroke-width="3" fill="none" stroke-linecap="round"/>
-            </g>
-            <g class="glove">
-              <rect x="-110" y="138" width="70" height="26" rx="8" fill="#ece8e2"/>
-              <path d="M-48 112 q50 -10 62 38 q4 40 -40 44 q-30 2 -30 -20z" fill="#e2231a"/>
-              <path d="M-14 128 q14 4 14 22" stroke="#9e1410" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <g transform="translate(304 330) scale(1.12)" fill="#0b0203">
+                <ellipse cx="0" cy="-158" rx="23" ry="4.5"/><rect x="-14" y="-179" width="28" height="22" rx="5"/>
+                <circle cx="0" cy="-145" r="12"/>
+                <path d="M-9 -135 h18 l18 14 l6 66 l-10 2 l-4 -40 l-2 58 h-34 l-2 -58 l-4 40 l-10 -2 l6 -66z"/>
+                <rect x="-15" y="-35" width="11" height="35" rx="2"/><rect x="4" y="-35" width="11" height="35" rx="2"/>
+              </g>
+              <rect x="306" y="170" width="16" height="3" rx="1.5" fill="#ece8e2" transform="rotate(-8 306 171)"/><circle class="ember" cx="322" cy="168.6" r="2" fill="#ff4d1c"/>
             </g>
             <g class="no-sign" aria-hidden="true">
-              <circle cx="300" cy="120" r="38" fill="#fff" stroke="#e2231a" stroke-width="8"/>
-              <text x="300" y="128" text-anchor="middle">NOT THE</text>
-              <text x="300" y="146" text-anchor="middle" class="small">PERSON</text>
+              <g transform="rotate(-9 304 108)">
+                <rect x="226" y="88" width="156" height="40" rx="3" fill="rgba(7,1,2,.88)" stroke="#e2231a" stroke-width="4"/>
+                <rect x="232" y="94" width="144" height="28" rx="2" fill="none" stroke="#e2231a" stroke-width="1.2"/>
+                <text x="304" y="114" text-anchor="middle" textLength="132" lengthAdjust="spacingAndGlyphs">NOT THE PERSON</text>
+              </g>
             </g>
-            <text class="cap" x="120" y="262" text-anchor="middle">the idea</text>
-            <text class="cap" x="300" y="342" text-anchor="middle">the person</text>
+            <text class="cap" x="120" y="268" text-anchor="middle">the idea</text>
+            <text class="cap" x="304" y="352" text-anchor="middle">the person</text>
           </svg>
           <figcaption>
             <button class="btn act" type="button" id="punch-btn">Hit the idea</button>
@@ -119,15 +202,44 @@
           <p class="sub">A raw thought of your own beats a perfect one you borrowed. No quotes. No &ldquo;studies show&rdquo;. Just you.</p>
         </div>
         <figure class="stage">
-          <div class="mind" id="mind">
-            <svg class="head" viewBox="0 0 200 240" aria-hidden="true">
-              <path d="M70 230 v-40 q-40 -10 -40 -60 q0 -70 70 -80 q70 -2 80 64 q4 22 -2 30 l14 20 q4 8 -6 10 l-10 2 q4 20 -8 30 q-14 8 -34 4 v20z" fill="#f5a524"/>
-              <circle cx="124" cy="96" r="5" fill="#22060a"/>
+          <div class="talk" id="talk">
+            <svg class="talk-scene" viewBox="0 0 400 262" role="img" aria-label="A man in a hat talks at a table. Three listeners lean back and check their phones when he quotes someone, and lean in when he says what he actually thinks.">
+              <defs>
+                <radialGradient id="t-wall" cx="50%" cy="20%" r="80%"><stop offset="0" stop-color="#5c0a0e"/><stop offset=".6" stop-color="#1e0406"/><stop offset="1" stop-color="#050101"/></radialGradient>
+                <linearGradient id="t-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1d6" stop-opacity=".55"/><stop offset="1" stop-color="#fff1d6" stop-opacity="0"/></linearGradient>
+                <pattern id="t-blinds" width="400" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="400" height="8" fill="#000" opacity=".5"/></pattern>
+              </defs>
+              <rect width="400" height="300" fill="url(#t-wall)"/>
+              <rect width="400" height="230" fill="url(#t-blinds)"/>
+              <rect class="warm" width="400" height="300" fill="#f5a524"/>
+              <g class="t-lamp">
+                <line x1="200" y1="0" x2="200" y2="40" stroke="#1a1a1a" stroke-width="2.5"/>
+                <polygon class="t-cone" points="188,56 212,56 330,232 70,232" fill="url(#t-cone)"/>
+                <path d="M180 58 L189 40 H211 L220 58Z" fill="#141414"/><ellipse cx="200" cy="59" rx="10" ry="3.6" fill="#fff1d6"/>
+              </g>
+              <!-- the speaker -->
+              <g class="speaker" fill="#0b0203">
+                <path d="M44 232 q0 -52 40 -56 q40 4 42 56z"/>
+                <circle cx="86" cy="156" r="16"/>
+                <ellipse cx="86" cy="142" rx="27" ry="4.5"/><rect x="71" y="118" width="30" height="25" rx="5"/>
+                <path d="M100 160 l6 4 l-6 2z"/>
+              </g>
+              <!-- listeners -->
+              <g class="l l1" fill="#0b0203"><path d="M228 232 q0 -34 24 -36 q24 2 24 36z"/><circle cx="252" cy="182" r="13"/><path d="M239 184 l-5 3 l5 2z"/></g>
+              <g class="l l2" fill="#0b0203"><path d="M284 232 q0 -38 26 -40 q26 2 26 40z"/><circle cx="310" cy="176" r="14"/><path d="M296 178 l-5 3 l5 2z"/></g>
+              <g class="l l3" fill="#0b0203"><path d="M340 232 q0 -34 24 -36 q24 2 24 36z"/><circle cx="364" cy="182" r="13"/><path d="M351 184 l-5 3 l5 2z"/></g>
+              <rect class="phone" x="300" y="206" width="12" height="7" rx="1.5" fill="#bfe3ff"/>
+              <!-- table -->
+              <rect y="230" width="400" height="10" fill="#160405"/><rect y="229" width="400" height="2" fill="#e2231a" opacity=".6"/>
+              <rect y="240" width="400" height="22" fill="#070102"/>
             </svg>
-            <div class="bin" aria-hidden="true"><span>Borrowed</span></div>
+            <div class="bubble" id="bubble" hidden></div>
+            <div class="reacts" id="reacts" aria-hidden="true"></div>
           </div>
           <figcaption>
-            <span class="tally" id="bin-tally">Pop the quote marks. Keep the raw stuff.</span>
+            <button class="btn act ghost" type="button" id="quote-btn">Quote a philosopher</button>
+            <button class="btn act" type="button" id="raw-btn">Say what you think</button>
+            <span class="tally" id="talk-tally" aria-live="polite">Watch the table.</span>
           </figcaption>
         </figure>
       </div>
@@ -176,23 +288,53 @@
           <h2 class="slam">The host gets no protection.</h2>
           <p class="sub">If anyone genuinely changes their mind tonight, dessert&rsquo;s on the host.</p>
         </div>
-        <figure class="stage">
-          <svg id="podium" viewBox="0 0 400 360" role="img" aria-label="A crown on the host's podium gets knocked off and a slice of cake takes its place">
-            <rect x="120" y="230" width="160" height="120" rx="6" fill="#22060a"/>
-            <rect x="104" y="214" width="192" height="22" rx="6" fill="#4a080c"/>
-            <text x="200" y="300" text-anchor="middle" class="podium-label">HOST</text>
-            <g class="crown">
-              <path d="M148 206 l8 -60 l26 34 l18 -44 l18 44 l26 -34 l8 60z" fill="#f5a524" stroke="#22060a" stroke-width="4" stroke-linejoin="round"/>
-              <circle cx="156" cy="142" r="7" fill="#e2231a"/><circle cx="200" cy="132" r="7" fill="#e2231a"/><circle cx="244" cy="142" r="7" fill="#e2231a"/>
+        <figure class="stage switch-stage">
+          <svg id="floor" viewBox="0 0 400 250" role="img" aria-label="A table split into for, undecided and against. One juror gets up from the for side, crosses to the against side, the table raises a glass, and a cake lands on the table.">
+            <defs>
+              <radialGradient id="f-wall" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#4a080c"/><stop offset="1" stop-color="#070102"/></radialGradient>
+              <pattern id="f-blinds" width="400" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="400" height="8" fill="#000" opacity=".45"/></pattern>
+            </defs>
+            <rect width="400" height="250" fill="url(#f-wall)"/>
+            <rect width="400" height="200" fill="url(#f-blinds)"/>
+            <rect class="zone z-for" x="8" y="20" width="160" height="182" rx="8"/>
+            <rect class="zone z-und" x="176" y="20" width="56" height="182" rx="8"/>
+            <rect class="zone z-ag" x="240" y="20" width="152" height="182" rx="8"/>
+            <g class="zlabel" text-anchor="middle"><text x="88" y="42" fill="#e2231a">FOR</text><text x="204" y="42" fill="#ece8e2" font-size="11">UNSURE</text><text x="316" y="42" fill="#f5a524">AGAINST</text></g>
+            <!-- the argument that lands -->
+            <path class="arg" d="M296 128 C250 84 196 84 152 126" fill="none" stroke="#f5a524" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8"/>
+            <!-- jurors -->
+            <g fill="#0b0203">
+              <g><path d="M28 192 q0 -30 20 -32 q20 2 20 32z"/><circle cx="48" cy="148" r="11"/></g>
+              <g><path d="M74 192 q0 -30 20 -32 q20 2 20 32z"/><circle cx="94" cy="148" r="11"/></g>
+              <g><path d="M184 192 q0 -30 20 -32 q20 2 20 32z"/><circle cx="204" cy="148" r="11"/></g>
+              <g><path d="M250 192 q0 -30 20 -32 q20 2 20 32z"/><circle cx="270" cy="148" r="11"/></g>
+              <g><path d="M296 192 q0 -30 20 -32 q20 2 20 32z"/><circle cx="316" cy="148" r="11"/></g>
             </g>
+            <!-- empty seat on the against side -->
+            <path class="seat" d="M344 194 v-40 q0 -6 6 -6 h28 q6 0 6 6 v40" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="4 4"/>
+            <!-- you -->
+            <g class="you">
+              <path d="M120 192 q0 -30 20 -32 q20 2 20 32z" fill="#f5a524"/><circle cx="140" cy="148" r="11" fill="#f5a524"/>
+              <text x="140" y="126" text-anchor="middle" class="you-tag">you</text>
+            </g>
+            <!-- glasses up -->
+            <g class="cheers"><g transform="translate(48 0)"><path d="M-7 112 h14 q0 13 -7 14 q-7 -1 -7 -14z" fill="rgba(255,241,214,.25)" stroke="rgba(255,241,214,.85)" stroke-width="1.2"/><path d="M-5.6 118 h11.2 q-1 7 -5.6 7.6 q-4.6 -.6 -5.6 -7.6z" fill="#b3120f"/><rect x="-.8" y="126" width="1.6" height="8" fill="rgba(255,241,214,.85)"/><ellipse cx="0" cy="134.5" rx="5" ry="1.4" fill="rgba(255,241,214,.85)"/></g><g transform="translate(94 0)"><path d="M-7 112 h14 q0 13 -7 14 q-7 -1 -7 -14z" fill="rgba(255,241,214,.25)" stroke="rgba(255,241,214,.85)" stroke-width="1.2"/><path d="M-5.6 118 h11.2 q-1 7 -5.6 7.6 q-4.6 -.6 -5.6 -7.6z" fill="#b3120f"/><rect x="-.8" y="126" width="1.6" height="8" fill="rgba(255,241,214,.85)"/><ellipse cx="0" cy="134.5" rx="5" ry="1.4" fill="rgba(255,241,214,.85)"/></g><g transform="translate(204 0)"><path d="M-7 112 h14 q0 13 -7 14 q-7 -1 -7 -14z" fill="rgba(255,241,214,.25)" stroke="rgba(255,241,214,.85)" stroke-width="1.2"/><path d="M-5.6 118 h11.2 q-1 7 -5.6 7.6 q-4.6 -.6 -5.6 -7.6z" fill="#b3120f"/><rect x="-.8" y="126" width="1.6" height="8" fill="rgba(255,241,214,.85)"/><ellipse cx="0" cy="134.5" rx="5" ry="1.4" fill="rgba(255,241,214,.85)"/></g><g transform="translate(270 0)"><path d="M-7 112 h14 q0 13 -7 14 q-7 -1 -7 -14z" fill="rgba(255,241,214,.25)" stroke="rgba(255,241,214,.85)" stroke-width="1.2"/><path d="M-5.6 118 h11.2 q-1 7 -5.6 7.6 q-4.6 -.6 -5.6 -7.6z" fill="#b3120f"/><rect x="-.8" y="126" width="1.6" height="8" fill="rgba(255,241,214,.85)"/><ellipse cx="0" cy="134.5" rx="5" ry="1.4" fill="rgba(255,241,214,.85)"/></g><g transform="translate(316 0)"><path d="M-7 112 h14 q0 13 -7 14 q-7 -1 -7 -14z" fill="rgba(255,241,214,.25)" stroke="rgba(255,241,214,.85)" stroke-width="1.2"/><path d="M-5.6 118 h11.2 q-1 7 -5.6 7.6 q-4.6 -.6 -5.6 -7.6z" fill="#b3120f"/><rect x="-.8" y="126" width="1.6" height="8" fill="rgba(255,241,214,.85)"/><ellipse cx="0" cy="134.5" rx="5" ry="1.4" fill="rgba(255,241,214,.85)"/></g></g>
+            <!-- table -->
+            <rect x="0" y="192" width="400" height="12" fill="#1a0506"/><rect x="0" y="191" width="400" height="2" fill="#e2231a" opacity=".6"/>
+            <rect x="0" y="204" width="400" height="46" fill="#050101"/>
+            <!-- dessert -->
             <g class="cake">
-              <path d="M150 210 l100 0 l-50 -56z" fill="#f2d7b0"/>
-              <path d="M150 210 l100 0 v-14 l-100 0z" fill="#8a3a1e"/>
-              <path d="M154 186 l92 0" stroke="#fff" stroke-width="6"/>
-              <circle cx="200" cy="146" r="10" fill="#e2231a"/>
-              <path d="M200 136 q4 -10 10 -12" stroke="#2f6b2a" stroke-width="3" fill="none"/>
+              <path d="M178 191 h44 l-22 -24z" fill="#f2d7b0"/><path d="M178 191 h44 v-7 h-44z" fill="#8a3a1e"/><path d="M181 180 h38" stroke="#fff" stroke-width="3"/>
+              <circle cx="200" cy="166" r="5" fill="#e2231a"/>
+              <text x="200" y="224" text-anchor="middle" class="cake-tag">on the host</text>
             </g>
           </svg>
+          <ol class="steps" id="steps">
+            <li><b>Pick a side.</b> For on one side, against on the other, unsure in the middle.</li>
+            <li><b>Get moved, then move.</b> When an argument lands, stand up and cross the floor. No speech, no apology.</li>
+            <li><b>The table toasts you.</b> Changing your mind is the point of the night. It&rsquo;s never scored as a loss.</li>
+            <li><b>Dessert&rsquo;s on the host.</b> A changed mind is what the night is for, so it gets rewarded. Switch for real, not for the cake.</li>
+          </ol>
           <figcaption>
             <button class="btn act dark" type="button" id="overrule-btn">Change your mind</button>
           </figcaption>

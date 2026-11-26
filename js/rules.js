@@ -67,8 +67,10 @@
   var NS = "http://www.w3.org/2000/svg";
   var punchSvg = $("punch"), glove = punchSvg.querySelector(".glove"), bulb = punchSvg.querySelector(".bulb");
   var shards = punchSvg.querySelector(".shards"), noSign = punchSvg.querySelector(".no-sign");
+  var flash = punchSvg.querySelector(".flash");
   function smash() {
     bulb.classList.add("broken");
+    retrigger(flash, "pop");
     for (var k = 0; k < 10; k++) {
       var a = Math.PI * 2 * k / 10 + rand(-.2, .2), d = rand(60, 130);
       var p = document.createElementNS(NS, "polygon");
@@ -123,56 +125,92 @@
   $("forget-btn").addEventListener("click", slapNote);
   starters.r2 = slapNote;
 
-  /* ---------- rule three: raw thoughts out, borrowed ones binned ---------- */
-  var mind = $("mind"), bin = mind.querySelector(".bin"), binned = 0, thinking = null, quoting = null;
-  var raw = ["what if…", "hmm, no", "okay, hear me out", "wait.", "but why though?", "actually…", "I think…", "no, listen", "unless…", "here’s the thing", "gut says no", "flip it:", "from my own life…", "I used to think…"];
-  function think() {
-    var t = document.createElement("span");
-    t.className = "thought";
-    t.textContent = raw[Math.floor(Math.random() * raw.length)];
-    t.style.left = rand(4, 9) + "rem";
-    t.style.bottom = rand(10, 12) + "rem";
-    t.style.setProperty("--dx", rand(-1, 10).toFixed(1) + "rem");
-    t.addEventListener("animationend", function () { t.remove(); });
-    mind.appendChild(t);
+  /* ---------- rule three: the table leans in for raw thoughts ---------- */
+  var talk = $("talk"), bubble = $("bubble"), reacts = $("reacts"), talkTally = $("talk-tally");
+  var nBorrowed = 0, nRaw = 0, talkTimers = [];
+  var quotes = [
+    ["As Kant put it, the moral law within us…", "Kant, 1788"],
+    ["Studies show that people are mostly…", "a 2014 paper, probably"],
+    ["Well, Nietzsche would say that…", "Nietzsche"],
+    ["According to Aristotle, the virtuous man…", "Aristotle"],
+    ["There’s a Harvard study that proves…", "citation needed"],
+    ["Like Camus said, one must imagine…", "Camus"]
+  ];
+  var raws = ["From my own life, honestly…", "Gut says no. Here’s why.", "Half-formed, but hear me out…", "I used to think the opposite. Then…", "Okay, what if we flip it?", "This is going to sound weird, but…"];
+  var cold = ["…and?", "*checks phone*", "but what do YOU think?", "zzz", "cool quote", "okay, Wikipedia"];
+  var hot = ["ooh", "go on", "say more", "hold on…", "okay, that’s real", "hmm!", "keep going"];
+  var seats = [63, 77.5, 96], anchor = ["-50%", "-50%", "-100%"];
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function later(fn, ms) { talkTimers.push(setTimeout(fn, calm ? Math.min(ms, 300) : ms)); }
+  function resetTalk() { talkTimers.forEach(clearTimeout); talkTimers = []; reacts.innerHTML = ""; bubble.className = "bubble"; bubble.hidden = true; talk.classList.remove("raw", "borrowed"); }
+  function react(text, kind, seat, delay) {
+    later(function () {
+      var r = document.createElement("span");
+      r.className = "react " + kind; r.textContent = text;
+      r.style.left = seats[seat] + "%"; r.style.setProperty("--tx", anchor[seat]); r.style.top = [44, 31, 55][seat] + "%";
+      r.addEventListener("animationend", function () { r.remove(); });
+      reacts.appendChild(r);
+    }, delay);
   }
-  function quote() {
-    if (mind.querySelectorAll(".quote:not(.binned)").length >= 3) return;
-    var q = document.createElement("button");
-    q.type = "button"; q.className = "quote";
-    q.textContent = Math.random() < .5 ? "“" : "”";
-    q.setAttribute("aria-label", "A borrowed quote. Bin it.");
-    q.style.left = rand(40, 72) + "%";
-    q.style.top = rand(6, 50) + "%";
-    q.style.animationDelay = rand(0, 1) + "s";
-    q.addEventListener("click", function () {
-      var a = q.getBoundingClientRect(), b = bin.getBoundingClientRect();
-      q.style.transform = "translate(" + (b.left + b.width / 2 - a.left - a.width / 2) + "px," + (b.top + 10 - a.top - a.height / 2) + "px) scale(.25) rotate(180deg)";
-      q.classList.add("binned");
-      setTimeout(function () { q.remove(); retrigger(bin, "gulp"); }, 550);
-      binned++;
-      $("bin-tally").textContent = binned === 1 ? "One borrowed thought binned." : binned + " borrowed thoughts binned. Good.";
-    });
-    mind.appendChild(q);
+  function sayBorrowed() {
+    resetTalk(); var q = pick(quotes);
+    bubble.innerHTML = ""; bubble.appendChild(document.createTextNode("“" + q[0] + "”"));
+    var c = document.createElement("cite"); c.textContent = "— " + q[1]; bubble.appendChild(c);
+    bubble.className = "bubble borrowed"; bubble.hidden = false;
+    later(function () { talk.classList.add("borrowed"); }, 350);
+    var lines = cold.slice().sort(function () { return Math.random() - .5; });
+    react(lines[0], "cold", 0, 700); react(lines[1], "cold", 2, 1100);
+    later(function () { bubble.classList.add("stamped"); }, 1300);
+    later(function () { bubble.classList.add("dropped"); }, 2200);
+    later(function () { talk.classList.remove("borrowed"); }, 3000);
+    nBorrowed++; tallyTalk("borrowed");
   }
-  var mindIO = new IntersectionObserver(function (es) {
-    if (es[0].isIntersecting) {
-      if (!thinking) { think(); quote(); thinking = setInterval(think, calm ? 2200 : 950); quoting = setInterval(quote, 2400); }
-    } else { clearInterval(thinking); clearInterval(quoting); thinking = quoting = null; }
-  }, { threshold: 0.2 });
-  mindIO.observe(mind);
+  function sayRaw() {
+    resetTalk();
+    bubble.textContent = pick(raws); bubble.className = "bubble raw"; bubble.hidden = false;
+    later(function () { talk.classList.add("raw"); }, 250);
+    var lines = hot.slice().sort(function () { return Math.random() - .5; });
+    react(lines[0], "hot", 0, 600); react(lines[1], "hot", 1, 850); react(lines[2], "hot", 2, 1100);
+    later(function () { bubble.classList.add("fade"); }, 3200);
+    later(function () { talk.classList.remove("raw"); }, 3600);
+    nRaw++; tallyTalk("raw");
+  }
+  function tallyTalk(last) {
+    talkTally.textContent = last === "raw" ? "The table leans in. Raw thoughts: " + nRaw + "." : "Lost the table. Borrowed lines: " + nBorrowed + ".";
+  }
+  $("quote-btn").addEventListener("click", sayBorrowed);
+  $("raw-btn").addEventListener("click", sayRaw);
+  starters.r3 = function () { sayBorrowed(); setTimeout(function () { if (!nRaw) sayRaw(); }, calm ? 1200 : 3600); };
 
   /* ---------- rule four: the cards ---------- */
   var cards = document.querySelectorAll(".lose");
   cards.forEach(function (c) { c.addEventListener("click", function () { c.classList.toggle("flipped"); }); });
   starters.r4 = function () { cards.forEach(function (c, i) { setTimeout(function () { c.classList.add("flipped"); }, 900 + i * 650); }); };
 
-  /* ---------- the host ---------- */
-  var podium = $("podium"), over = $("overrule-btn");
-  over.addEventListener("click", function () {
-    var on = podium.classList.toggle("overruled");
-    over.textContent = on ? "Put the crown back" : "Change your mind";
-  });
+  /* ---------- the host: what happens when you change your mind ---------- */
+  var floor = $("floor"), you = floor.querySelector(".you"), over = $("overrule-btn");
+  var steps = $("steps").querySelectorAll("li"), hostTimers = [], played = false;
+  function step(n) { steps.forEach(function (li, i) { li.classList.toggle("on", i === n); li.classList.toggle("done", i < n); }); }
+  function hostLater(fn, ms) { hostTimers.push(setTimeout(fn, calm ? ms / 4 : ms)); }
+  function resetHost() {
+    hostTimers.forEach(clearTimeout); hostTimers = [];
+    floor.classList.remove("argued", "moved", "toasted", "dessert");
+    you.classList.remove("rise", "cross", "sat");
+    steps.forEach(function (li) { li.classList.remove("on", "done"); });
+  }
+  function runSwitch() {
+    resetHost(); played = true; over.disabled = true;
+    step(0);
+    hostLater(function () { step(1); floor.classList.add("argued"); }, 1300);
+    hostLater(function () { you.classList.add("rise"); }, 2300);
+    hostLater(function () { you.classList.remove("rise"); you.classList.add("cross"); floor.classList.add("moved"); }, 2650);
+    hostLater(function () { you.classList.remove("cross"); you.classList.add("sat"); }, 3600);
+    hostLater(function () { step(2); floor.classList.add("toasted"); }, 4100);
+    hostLater(function () { step(3); floor.classList.add("dessert"); }, 5600);
+    hostLater(function () { over.disabled = false; over.textContent = "Run it back"; }, 6300);
+  }
+  over.addEventListener("click", runSwitch);
+  starters.host = function () { if (!played) runSwitch(); };
 
   /* ---------- the oath ---------- */
   var hold = $("hold"), ring = $("ring"), holdText = $("hold-text"), sworn = $("sworn"), conf = $("confetti");

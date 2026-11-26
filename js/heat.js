@@ -9,14 +9,6 @@
   window.HJ = window.HJ || {};
   window.HJ.calm = reduce && !forced;   // true = keep motion gentle
 
-  // sworn jurors get a tick next to the rules
-  document.addEventListener("DOMContentLoaded", function () {
-    var sworn = null;
-    try { sworn = localStorage.getItem("hj-sworn"); } catch (e) {}
-    if (!sworn) return;
-    document.querySelectorAll('.nav a[href="rules.html"]').forEach(function (a) { a.classList.add("sworn"); a.title = "You\u2019re sworn in"; });
-  });
-
   // pause animations in sections that are off-screen
   document.addEventListener("DOMContentLoaded", function () {
     if (!("IntersectionObserver" in window)) return;
