@@ -58,9 +58,7 @@ window.EVENT = {
 
   unsealAt: "2026-12-10T21:00:00+08:00",
 
-  // Fill these in after the night. They show once the envelope opens.
-  // result: { count: "4\u20133", side: 1, note: "Two crossed the floor." }
-  result: null,
+  // The line at the very bottom once the envelope opens.
   next: "Session 02 is being drafted. Same table. New question.",
 
   reading: [
@@ -102,9 +100,20 @@ window.EVENT = {
     }
   ],
 
-  internetVerdict: [
-    "Most people online pick respected, especially when the question is about work. Their reasoning: likability fades, respect lasts, and chasing approval makes you a pushover.",
-    "The minority who pick liked argue it’s what actually moves people. We vote for, hire and stay loyal to people we like, and research on first impressions backs them up: warmth gets judged first and counts for more.",
-    "The most common answer of all is the one we banned tonight: “you don’t have to choose”. One thread in the research suggests why. Moral character, like being honest and fair, earns both at once."
-  ]
+  // What the internet thinks, shown after the seal breaks.
+  // `consensus` is the side most people pick and why. `against` is the best case for the other side.
+  consensus: {
+    side: 0,
+    points: [
+      "Most people online pick respected, especially when the question is about work.",
+      "Their reasoning: likability fades, respect lasts, and chasing approval turns you into a pushover. Machiavelli got there first. If you can\u2019t have both, pick the one that doesn\u2019t depend on other people\u2019s moods."
+    ]
+  },
+  against: {
+    side: 1,
+    points: [
+      "Being liked is what actually moves people. We vote for, hire and stay loyal to people we like.",
+      "First-impression research backs it: warmth gets judged before competence, and counts for more. Respect from people who can\u2019t stand you rarely survives your first bad day."
+    ]
+  }
 };

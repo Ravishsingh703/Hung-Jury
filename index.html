@@ -98,7 +98,7 @@
             </svg>
           </div>
           <div class="env" id="env">
-            <div class="letter"><b id="letter-h">Case closed.</b><span id="letter-p">The verdict is just below.</span><i>The court</i></div>
+            <div class="letter"><b id="letter-h">Case closed.</b><span id="letter-p"></span><span class="letter-body">The jury is dismissed. Nobody won. A few were less wrong.</span><span class="letter-body">Below is everything you weren&rsquo;t allowed to bring. Read it now it can&rsquo;t hurt you.</span><i>The court</i></div>
             <div class="flap"></div>
             <div class="seal-wax" aria-hidden="true"><span>HJ</span></div>
             <span class="addr" id="addr"></span>
@@ -219,7 +219,7 @@
     var fmt = new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Perth", weekday: "long", hour: "numeric", minute: "2-digit" });
     $("addr").textContent = "For the jury. Not before " + fmt.format(unseal).replace(":00", "") + ".";
     $("letter-h").textContent = "Case closed.";
-    $("letter-p").textContent = "Session " + String(E.session).padStart(2, "0") + ". The verdict is just below.";
+    $("letter-p").textContent = "Session " + String(E.session).padStart(2, "0") + ": " + E.topic;
     function isOpen() { return dev || Date.now() >= unseal; }
     if (dev) {
       var rib = el("div", "dev-pass", "Dev pass. Everyone else still sees the seal.");
@@ -278,7 +278,7 @@
     }
     function renderOpen() {
       $("sealed-h").textContent = "The verdict is in.";
-      $("sealed-say").textContent = "Case closed. Here’s what the room couldn’t tell you.";
+      $("sealed-say").textContent = "Here’s what the room couldn’t tell you.";
       $("clock").hidden = true;
       env.removeAttribute("role"); env.removeAttribute("tabindex"); env.removeAttribute("aria-label");
       if (seen) stampIt(crack);
@@ -286,44 +286,15 @@
 
     function showCase() {
       var box = $("opened"); box.hidden = false; box.innerHTML = "";
-      var v = window.HJ && window.HJ.vote && window.HJ.vote();
       var cases = el("div", "case");
-
-      var stamp, line, tone = "";
-      if (v && v.first !== undefined && v.first !== null) {
-        var now = (v.now === undefined || v.now === null) ? null : v.now;
-        if (now === null) { stamp = "Undecided"; line = "You walked in saying " + S[v.first] + ", then went back to the middle."; }
-        else if (now !== v.first) { stamp = "Mind changed"; tone = "warm"; line = "You walked in saying " + S[v.first] + ". You left saying " + S[now] + "."; }
-        else if (v.switches) { stamp = "Came back"; line = "You walked in saying " + S[v.first] + ", crossed the floor, and came home."; }
-        else { stamp = "Held the line"; line = "You walked in saying " + S[v.first] + ". You never moved."; }
-        if (v.switches > 1) line += " Crossed the floor " + v.switches + " times.";
-      } else { stamp = "No vote"; line = "You never took a seat at the table up there. Next time, sit down."; }
-      var f1 = el("article", "file");
-      f1.appendChild(el("span", "stamp " + tone, stamp));
-      f1.appendChild(el("h3", null, "Your verdict"));
-      f1.appendChild(el("p", null, line));
-      cases.appendChild(f1);
-
-      if (E.result) {
-        var f2 = el("article", "file");
-        f2.appendChild(el("h3", null, "The table"));
-        f2.appendChild(el("p", "count", E.result.count + " " + (S[E.result.side] || "")));
-        if (E.result.note) f2.appendChild(el("p", null, E.result.note));
-        cases.appendChild(f2);
-      } else if (dev) {
-        var f3 = el("article", "file ghost");
-        f3.appendChild(el("h3", null, "The table"));
-        f3.appendChild(el("p", "count", "4–3 " + S[1]));
-        f3.appendChild(el("p", null, "Placeholder. After the night, fill in result in event.js and the real count shows here."));
-        cases.appendChild(f3);
-      }
-
-      var f4 = el("article", "file wide");
-      f4.appendChild(el("h3", null, "What the internet thinks"));
-      var vt = el("div", "verdict-text");
-      E.internetVerdict.forEach(function (p) { vt.appendChild(el("p", null, p)); });
-      f4.appendChild(vt);
-      cases.appendChild(f4);
+      [["The common consensus", E.consensus, ""], ["The best argument against it", E.against, " against"]].forEach(function (c) {
+        if (!c[1]) return;
+        var f = el("article", "file" + c[2]);
+        f.appendChild(el("span", "side side-" + c[1].side, S[c[1].side]));
+        f.appendChild(el("h3", null, c[0]));
+        c[1].points.forEach(function (t) { f.appendChild(el("p", null, t)); });
+        cases.appendChild(f);
+      });
       box.appendChild(cases);
 
       box.appendChild(el("h3", "ev-h", "The evidence"));

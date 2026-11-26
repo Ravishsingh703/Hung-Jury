@@ -24,7 +24,7 @@ Nothing else needs touching.
 
 - **The repo is public.** Never put full names, ages, phone numbers or payment details in it.
 - **Hidden from search engines** via a `noindex` tag on every page. People only find it if they're given the link.
-- **The seal is a soft lock.** The reading list unlocks by the clock, but it's in `event.js`, so anyone who views the page source can read it early. If you want it truly hidden, leave `reading` and `internetVerdict` empty until after the night and add them then.
+- **The seal is a soft lock.** The reading list unlocks by the clock, but it's in `event.js`, so anyone who views the page source can read it early. If you want it truly hidden, leave `reading`, `consensus` and `against` empty until after the night and add them then.
 - **Fonts** (Archivo, Newsreader) are bundled in `/fonts` under the SIL Open Font License, so the site doesn't depend on Google.
 
 ## The laughing cat
@@ -33,7 +33,7 @@ The rejection screen on the donate page shows `laughing-cat.gif` if it exists in
 
 ## After the night
 
-Fill in `result` in `event.js` (for example `{ count: "4–3", side: 1, note: "Two crossed the floor." }`) and it shows in the case file once the envelope opens. `next` is the teaser line at the bottom.
+`consensus` is the side most people online pick and why, `against` is the best case for the other side. `next` is the teaser line at the bottom.
 
 ## Dev pass
 
