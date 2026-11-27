@@ -135,7 +135,7 @@ body.bare .single .phone{height:calc(100vh - 20px)}
 <script src="/case.js"></script>
 <script>
 {
-const TONES = {formal:["⚖️","Formal"], confident:["😏","Confident"], dismissive:["😒","Dismissive"], nervous:["😟","Nervous"], unsure:["🤔","Unsure"], probing:["🧐","Probing"], defensive:["😬","Defensive"], pressing:["😤","Pressing"], firm:["😠","Firm"], calm:["😌","Calm"], measured:["😐","Measured"], rattled:["😰","Rattled"], tearful:["🥺","Tearful"], cold:["🥶","Cold"], sarcastic:["🙄","Sarcastic"], angry:["😡","Angry"], gentle:["🙂","Gentle"]};
+const TONES = {formal:["⚖️","Formal"], confident:["😏","Confident"], dismissive:["😒","Dismissive"], nervous:["😟","Nervous"], unsure:["🤔","Unsure"], probing:["🧐","Probing"], defensive:["😬","Defensive"], pressing:["😤","Pressing"], firm:["😠","Firm"], calm:["😌","Calm"], measured:["😐","Measured"], rattled:["😰","Rattled"], tearful:["🥺","Tearful"], cold:["🥶","Cold"], sarcastic:["🙄","Sarcastic"], angry:["😡","Angry"], gentle:["🙂","Gentle"], cheeky:["😜","Cheeky"], deadpan:["😑","Deadpan"]};
 if (CASE.tones) Object.assign(TONES, CASE.tones);
 const toneChip = t => TONES[t] ? `<span class="tone"><span class="te">${TONES[t][0]}</span>${TONES[t][1]}</span>` : "";
 const SEGS = CASE.segs;
