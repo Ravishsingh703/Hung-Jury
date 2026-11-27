@@ -19,7 +19,9 @@
   $("poll-say").textContent = P.say || "";
 
   function keyFor(o) { return P.id + "-" + o.key; }
-  function mine() { try { return localStorage.getItem(STORE); } catch (e) { return null; } }
+  // Dev pass (?pass=juror8): unlimited test votes, nothing remembered.
+  var DEV = /[?&]pass=juror8(&|$)/.test(location.search);
+  function mine() { if (DEV) return null; try { return localStorage.getItem(STORE); } catch (e) { return null; } }
   function remember(k) { try { localStorage.setItem(STORE, k); } catch (e) {} }
 
   var cards = {};
@@ -48,7 +50,7 @@
   function show(counts) {
     var total = 0, top = 0;
     P.options.forEach(function (o) { total += counts[o.key] || 0; top = Math.max(top, counts[o.key] || 0); });
-    var pick = mine();
+    var pick = DEV ? lastPick : mine();
     grid.classList.add("voted");
     P.options.forEach(function (o) {
       var c = cards[o.key], n = counts[o.key] || 0;
@@ -73,7 +75,7 @@
     });
   }
 
-  var busy = false;
+  var busy = false, lastPick = null;
   function vote(o, card) {
     if (busy || mine() || P.open === false) return;
     busy = true;
@@ -82,9 +84,15 @@
     note.textContent = "Counting your vote…";
     fetch(API + "/hit/" + NS + "/" + keyFor(o))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function () { remember(o.key); return loadResults(); })
+      .then(function () { lastPick = o.key; if (DEV) { return loadResults().then(again); } remember(o.key); return loadResults(); })
       .catch(function () { note.textContent = "Couldn’t count that one. Give it another go in a minute."; })
       .then(function () { busy = false; grid.classList.remove("busy"); card.classList.remove("picking"); });
+  }
+
+  // Dev pass: after the results show, bring the vote buttons back.
+  function again() {
+    P.options.forEach(function (o) { cards[o.key].querySelector(".poll-vote").hidden = false; });
+    note.textContent += " Dev pass: vote again as much as you like.";
   }
 
   // Already voted, or voting closed: go straight to the results.
