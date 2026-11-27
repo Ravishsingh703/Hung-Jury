@@ -157,6 +157,7 @@
     document.title = "Hung Jury: " + E.topic;
     $("topic").textContent = "Session " + String(E.session).padStart(2, "0") + ": " + E.topic;
     $("headline").textContent = E.headline;
+    if (E.headline.length > 110) $("headline").classList.add("long");
     $("sess").textContent = E.session;
     $("sess").setAttribute("aria-label", "Session " + E.session);
     E.brief.forEach(function (p) { $("brief").appendChild(el("p", "say reveal", p)); });

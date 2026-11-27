@@ -105,6 +105,7 @@ a { color: inherit; }
 .question { background: radial-gradient(70% 60% at 20% 10%, #ff3a20, transparent 70%), var(--verdict); color: #fff; }
 .question .tag { font-weight: 750; font-stretch: 85%; color: #ffd59a; font-size: 1.15rem; margin: 0 0 1.25rem; }
 .question h2 { margin: 0; font-family: var(--serif); font-weight: 600; font-size: clamp(2.3rem, 5.4vw, 4.7rem); line-height: 1.04; letter-spacing: -.02em; max-width: 21ch; }
+.question h2.long { font-size: clamp(2rem, 3.5vw, 3.3rem); line-height: 1.08; max-width: 24ch; }
 .question .say { margin-top: 2rem; font-style: italic; color: rgba(255,255,255,.85); }
 
 /* 2. The table: see table.css */

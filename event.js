@@ -14,7 +14,7 @@ window.EVENT = {
   topic: "Respected or liked?",
 
   // The big question. Make it one that sticks in people's heads all week.
-  headline: "Would you rather be respected by people who can\u2019t stand you, or liked by people who think you\u2019re a joke?",
+  headline: "Your work earns everyone\u2019s respect, but nobody wants you at their table. Or you\u2019re invited everywhere, but you\u2019re always the butt of the joke. Pick one.",
 
   // Two short lines, shown under the table. Keep them punchy.
   brief: [
@@ -33,7 +33,7 @@ window.EVENT = {
     { j: 5, mood: "laugh",  say: "Pfft. Nobody listens to someone they can\u2019t stand." },
     { j: 3, mood: "slam",   say: "THAT\u2019S NOT THE POINT." },
     { j: 6, mood: "talk",   say: "Then what is the point?" },
-    { j: 1, mood: "talk",   say: "Would you rather be liked by people who think you\u2019re a joke?" },
+    { j: 1, mood: "talk",   say: "Would you rather be invited everywhere and laughed at?" },
     { j: 4, mood: "stand",  say: "Would you rather be right, and eat alone?" },
     { j: 3, mood: "hurt",   say: "\u2026" },
     { j: 5, mood: "laugh",  say: "HA. He felt that." },
