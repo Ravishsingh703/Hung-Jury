@@ -196,47 +196,6 @@ a { color: inherit; }
 
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---------- The thermometer: the room heats up as you scroll ---------- */
-.thermo { position: fixed; right: 1.25rem; bottom: 1.5rem; height: min(46vh, 22rem); width: 2rem; z-index: 15; pointer-events: none; }
-.thermo .temp {
-  position: absolute; top: -2.2rem; left: 50%; transform: translateX(-50%);
-  background: var(--night); color: #fff; border: 1.5px solid rgba(255,255,255,.5);
-  border-radius: 999px; padding: .15rem .55rem; font-weight: 800; font-stretch: 80%; font-size: .9rem;
-  font-variant-numeric: tabular-nums; white-space: nowrap;
-}
-.thermo .tube {
-  position: absolute; top: 0; bottom: 1.2rem; left: 50%; width: 14px; transform: translateX(-50%);
-  border: 2px solid rgba(255,255,255,.75); border-bottom: 0; border-radius: 9px 9px 0 0;
-  background: rgba(34,6,10,.6); overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.25);
-}
-.thermo .tube::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to top, transparent 0 14px, rgba(255,255,255,.35) 14px 15.5px); }
-.thermo .merc { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; transform: scaleY(var(--f, .06)); transform-origin: 50% 100%; background: linear-gradient(to top, var(--verdict), var(--heat)); transition: transform .2s linear; will-change: transform; }
-.thermo .bulb {
-  position: absolute; bottom: 0; left: 50%; width: 30px; height: 30px; transform: translateX(-50%);
-  border-radius: 50%; border: 2px solid rgba(255,255,255,.75);
-  background: radial-gradient(circle at 35% 35%, #ff6a5a, var(--verdict) 60%);
-  box-shadow: 0 0 calc(var(--glow, 0) * 26px) rgba(255,90,40,.8), 0 0 0 1px rgba(0,0,0,.25);
-}
-.thermo.hot .tube, .thermo.hot .bulb { animation: tremble .12s infinite; }
-@keyframes tremble { 50% { transform: translateX(calc(-50% + 1.5px)); } }
-.thermo.boom .tube, .thermo.boom .bulb { visibility: hidden; animation: none; }
-.thermo .bits { position: absolute; left: 50%; bottom: 30%; }
-.thermo .bit {
-  position: absolute; width: var(--s); height: var(--s); left: 0; top: 0;
-  background: var(--c); border-radius: var(--r);
-  animation: fly 1.1s cubic-bezier(.15,.7,.3,1) forwards;
-}
-@keyframes fly { 0% { transform: translate(0,0) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; } }
-.thermo .bang {
-  position: absolute; right: 120%; bottom: 35%; white-space: nowrap;
-  font-weight: 900; font-stretch: 68%; font-size: 2.2rem; line-height: 1; color: var(--verdict);
-  -webkit-text-stroke: 5px #fff; paint-order: stroke fill;
-  animation: bangIn .5s cubic-bezier(.2,1.6,.4,1) both;
-}
-@keyframes bangIn { from { transform: scale(.2) rotate(-10deg); opacity: 0; } to { transform: rotate(-6deg); opacity: 1; } }
-@media (max-width: 40rem) { .thermo { right: .2rem; bottom: 1rem; height: 24vh; width: 1.1rem; } .thermo .tube { width: 8px; bottom: .8rem; } .thermo .bulb { width: 18px; height: 18px; } .thermo .temp { font-size: .7rem; padding: .1rem .4rem; } .thermo .bang { font-size: 1.5rem; } }
-
 /* ---------- Less motion, unless they turn the heat up ---------- */
 @media (prefers-reduced-motion: reduce) {
   html:not(.heat-on) { scroll-behavior: auto; }
@@ -244,9 +203,6 @@ a { color: inherit; }
   html:not(.heat-on) .seal-wax, html:not(.heat-on) .cue i::after { animation: none !important; }
   html:not(.heat-on) .reveal { transform: none; }
   html:not(.heat-on) .digits.flip span { animation: fade .4s both; }
-  html:not(.heat-on) .thermo.hot .tube, html:not(.heat-on) .thermo.hot .bulb { animation: none; }
-  html:not(.heat-on) .thermo .bit { display: none; }
-  html:not(.heat-on) .thermo .bang { animation: fade .3s both; }
 }
 
 /* the switch that offers the full heat */
