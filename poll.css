@@ -1,0 +1,33 @@
+/* 5. The poll: next session's question */
+.poll { color: #fff; background: radial-gradient(60% 50% at 80% 0%, rgba(245,165,36,.18), transparent 70%), linear-gradient(180deg, #2a0609, #3d070b 55%, #2a0609); }
+.poll .big { max-width: 12ch; }
+.poll .say { margin-top: 1.25rem; color: rgba(255,255,255,.8); }
+
+.poll-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 3.5rem; }
+@media (max-width: 760px) { .poll-grid { grid-template-columns: 1fr; } }
+
+.poll-card {
+  display: flex; flex-direction: column;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 1rem; padding: 1rem 1rem 1.5rem;
+  transition: border-color .3s var(--ease), background .3s var(--ease), opacity .3s var(--ease);
+}
+.poll-art { margin: 0 0 1.25rem; box-shadow: 0 0 0 1px rgba(255,255,255,.06); }
+.poll-name { margin: 0 .5rem; color: var(--heat); font-weight: 800; font-stretch: 80%; font-size: 1.05rem; letter-spacing: .01em; white-space: pre; }
+.poll-q { margin: .6rem .5rem 1.5rem; flex: 1; font-family: var(--serif); font-size: 1.2rem; line-height: 1.38; color: rgba(255,255,255,.9); }
+
+.poll-vote { align-self: flex-start; margin: 0 .5rem; background: #fff; color: var(--night); padding: .7rem 1.5rem; font-size: 1.05rem; }
+.poll-vote:hover { box-shadow: 0 0 0 4px rgba(245,165,36,.45); }
+.poll-grid.busy .poll-vote { pointer-events: none; opacity: .5; }
+.poll-card.picking { border-color: var(--heat); }
+
+.poll-result { margin: 0 .5rem; }
+.poll-bar { height: .7rem; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+.poll-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: rgba(255,255,255,.55); transition: width 1.1s var(--ease); }
+.poll-pct { display: block; margin-top: .6rem; font-weight: 750; font-stretch: 88%; font-size: 1.05rem; white-space: pre; }
+
+.poll-card.lead .poll-bar i { background: var(--verdict); }
+.poll-card.mine { border-color: var(--heat); background: rgba(245,165,36,.08); }
+.poll-card.mine .poll-name::after { content: "  \00b7  Your pick"; color: #fff; }
+
+.poll-note { margin: 2rem 0 0; min-height: 1.6em; font-weight: 650; font-stretch: 90%; color: rgba(255,255,255,.7); }

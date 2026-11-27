@@ -9,6 +9,7 @@
   <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css?v=4">
   <link rel="stylesheet" href="table.css?v=4">
+  <link rel="stylesheet" href="poll.css?v=1">
   <script src="js/heat.js?v=4"></script>
 </head>
 <body>
@@ -113,7 +114,17 @@
       </div>
     </section>
 
-    <!-- 5. The ask -->
+    <!-- 5. The poll: next session's question -->
+    <section class="chapter poll" id="poll" aria-labelledby="poll-h" hidden>
+      <div class="wrap">
+        <h2 class="big reveal" id="poll-h"></h2>
+        <p class="say reveal" id="poll-say"></p>
+        <div class="poll-grid" id="poll-grid"></div>
+        <p class="poll-note" id="poll-note" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- 6. The ask -->
     <section class="chapter give" aria-labelledby="give-h">
       <div class="wrap give-grid">
         <div class="give-text">
@@ -143,6 +154,8 @@
   <script src="event.js?v=4"></script>
   <script src="js/table.js?v=4"></script>
   <script src="js/noir.js?v=4"></script>
+  <script src="js/poll-art.js?v=1"></script>
+  <script src="js/poll.js?v=1"></script>
   <script>
   (function () {
     var E = window.EVENT;

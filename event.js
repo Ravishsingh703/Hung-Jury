@@ -58,6 +58,38 @@ window.EVENT = {
 
   unsealAt: "2026-12-10T21:00:00+08:00",
 
+  // Next session's topic poll. Votes are counted by Abacus (free, no account).
+  // Change `id` for every new poll so the counts start from zero.
+  // Set `open: false` to close voting and just show the results.
+  poll: {
+    id: "s02",
+    open: true,
+    title: "You pick session 02.",
+    say: "Four questions. One vote each. The table goes with the winner.",
+    options: [
+      {
+        key: "safe",
+        name: "The safe life",
+        q: "You’re 30 with a good job, a good partner and a life that’s fine. You can chase the life you actually want. If it fails, your skills get you back to a job like this one, but your partner won’t wait. Do you go?"
+      },
+      {
+        key: "lie",
+        name: "The perfect lie",
+        q: "Your partner acts like you’re the love of their life, so convincingly you’ll never feel the difference, but you know they don’t love you. Or a partner who’s honestly stuck with you and doesn’t love you much. Who do you choose?"
+      },
+      {
+        key: "good",
+        name: "Good, or seen as good",
+        q: "Everyone believes you’re a good person, but you know you’re not. Or you are genuinely good, and everyone believes you’re not. Which one do you live with?"
+      },
+      {
+        key: "kid",
+        name: "Your kid",
+        q: "Your kid is about to be born. You choose: simple and happy, easily pleased, never questioning much. Or sharp and aware, seeing everything clearly, including what’s wrong, and never fully at peace. Which one do you give them?"
+      }
+    ]
+  },
+
   // The line at the very bottom once the envelope opens.
   next: "Session 02 is being drafted. Same table. New question.",
 
