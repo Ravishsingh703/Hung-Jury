@@ -62,7 +62,7 @@ window.EVENT = {
   // Change `id` for every new poll so the counts start from zero.
   // Set `open: false` to close voting and just show the results.
   poll: {
-    id: "s02",
+    id: "s02-live",
     open: true,
     title: "You pick session 02.",
     say: "Four questions. One vote each. The table goes with the winner.",
