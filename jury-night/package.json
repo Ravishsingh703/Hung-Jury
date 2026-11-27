@@ -1,0 +1,9 @@
+{
+  "name": "jury-night",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hung Jury trial night: synced phone scripts, TV courtroom and jury room, served from one Mac.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "qrcode": "1.5.4" }
+}
