@@ -1,4 +1,23 @@
 [
-  {"id": "lot14", "title": "Lot 14", "charge": "Arson", "roles": 10, "teaser": "A restaurant burns down at 2am. The owner had just raised the insurance. Easy, right? Wait till you hear about the chef."},
-  {"id": "locked-office", "title": "The Locked Office", "charge": "Murder, or manslaughter", "roles": 9, "teaser": "One building. Two badges. A man at the bottom of the stairs, and a door nobody was watching."}
+ {
+  "id": "lot14",
+  "title": "Lot 14",
+  "charge": "Arson",
+  "roles": 10,
+  "teaser": "A restaurant burns down at 2am. The owner had just raised the insurance. Easy, right? Wait till you hear about the chef."
+ },
+ {
+  "id": "locked-office",
+  "title": "The Locked Office",
+  "charge": "Murder, or manslaughter",
+  "roles": 9,
+  "teaser": "One building. Two badges. A man at the bottom of the stairs, and a door nobody was watching."
+ },
+ {
+  "id": "bellmont",
+  "title": "The Bellmont Wedding",
+  "charge": "Stealing",
+  "roles": 10,
+  "teaser": "A best man, a bridal suite and $48,000 of sapphires. He googled what it was worth an hour before it vanished. Then he lied about the stairs."
+ }
 ]

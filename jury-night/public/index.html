@@ -128,6 +128,25 @@ button:disabled{opacity:.4;cursor:default}
 @media(prefers-reduced-motion:reduce){.flick,.gav,.hit,.walk,.walk2,.talk{animation:none}.hit{opacity:0}.cam{transition:none}}
 .sndchip{position:absolute;top:14px;right:16px;font-size:12px;color:#d9dde1;background:rgba(229,72,77,.85);padding:6px 12px;border-radius:999px;animation:flick 2.4s infinite}
 .wait{margin:auto;color:var(--muted);text-align:center;font-size:14px}
+.sndbtn{position:absolute;top:12px;right:14px;z-index:3;font-size:12px;min-height:32px;padding:4px 12px;border-radius:999px;background:rgba(0,0,0,.55);color:#d9dde1;border:1px solid #3a3f45}
+.specbtn{margin-top:4px;border-style:dashed}
+.spec .ln{color:var(--ink);font-size:15px}
+.spec .ln.past{opacity:.5}
+.spec .ln.now{font-size:20px;line-height:1.4;border-color:var(--cue);background:var(--cue-soft)}
+.spec .notes{margin-top:6px;padding-top:0}
+.spec .note{background:light-dark(#f5f6f7,#202428);color:var(--muted);border-left-color:var(--cue);font-size:13px}
+.spec .note b{color:var(--ink);font-size:13px}
+.act2{position:relative;display:grid;gap:12px}
+.a2h{background:var(--tv);color:var(--tvink);border-radius:12px;padding:16px 22px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between;border-left:4px solid var(--cue);padding-right:150px}
+.a2h h2{font-size:clamp(22px,3vw,34px)}
+.a2h .case{font-size:13px;color:#8d949b}
+.a2h .a2r{color:#b9bec4;font-size:clamp(14px,1.4vw,17px);max-width:520px}
+.a2p{margin:auto;text-align:center;display:grid;gap:10px;padding:10px}
+.a2p .k{font-size:12px;font-weight:600;color:var(--cue);letter-spacing:.06em;text-transform:uppercase}
+.a2p h3{font-size:24px}
+.a2p p{margin:0;color:var(--muted)}
+body.bare .act2 .jury{min-height:calc(100vh - 140px)}
+body.bare .act2 .jmain{max-height:calc(100vh - 140px)}
 /* control */
 .control{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .control .lbl{font-weight:600;margin-right:auto}
@@ -212,6 +231,9 @@ const roleName = id => (CASE.roles.find(r => r.id === id) || {}).name || id;
 let me; try { me = sessionStorage.getItem("hj-me"); } catch (e) {}
 if (!me) { me = "p-" + Math.random().toString(36).slice(2, 8); try { sessionStorage.setItem("hj-me", me); } catch (e) {} }
 let S = {v:0, line:-1, roles:{}};
+const ENDED = () => S.line >= CASE.lines.length;
+const specs = new Set(); try { if (sessionStorage.getItem("hj-spec") === "1") specs.add(me); } catch (e) {}
+const setSpec = (c, on) => { on ? specs.add(c) : specs.delete(c); if (c === me) try { sessionStorage.setItem("hj-spec", on ? "1" : "0"); } catch (e) {} render(); };
 let online = false;
 const act = a => fetch("/action", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(a)}).catch(() => {});
 const connect = () => {
@@ -230,6 +252,8 @@ const reset = () => act({type:"reset"});
 
 /* ---- sound (TV only), all synthesised ---- */
 let ac = null, master = null, ambOn = false;
+let muted = false; try { muted = localStorage.getItem("hj-mute") === "1"; } catch (e) {}
+const setMute = m => { muted = m; try { localStorage.setItem("hj-mute", m ? "1" : "0"); } catch (e) {} if (master) master.gain.setTargetAtTime(m ? 0 : .9, ac.currentTime, .05); render(); };
 const noise = sec => { const b = ac.createBuffer(1, ac.sampleRate * sec, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; };
 const env = (g, t, peak, a, r) => { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + r); };
 const gavel = () => {
@@ -288,12 +312,12 @@ const startAmbience = () => { // quiet room tone and a faint gallery murmur, loo
 };
 const enableSound = () => {
   try {
-    if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination); }
+    if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.gain.value = muted ? 0 : .9; master.connect(ac.destination); }
     ac.resume(); startAmbience();
   } catch (e) {}
 };
 const playCue = l => {
-  if (!ac || !l) return;
+  if (!ac || !l || muted) return;
   if (l.sfx === "gavel") gavel();
   if (l.sfx === "sting") sting();
   if (l.sfx === "tension") tension();
@@ -381,8 +405,9 @@ const moveCam = () => {
   requestAnimationFrame(() => requestAnimationFrame(() => { g.style.transform = g.dataset.to; }));
 };
 
-const soundChip = () => ac ? "" : `<div class="sndchip">Click anywhere for sound</div>`;
+const soundChip = () => ac ? `<button class="sndbtn" data-mute="1">${muted ? "🔇 Sound off" : "🔊 Sound on"}</button>` : `<div class="sndchip">Click anywhere for sound</div>`;
 const tvHTML = () => {
+  if (ENDED()) return `<div class="act2"><div class="a2h"><div><div class="case">${CASE.title} · Act 2</div><h2>Deliberation</h2></div><div class="a2r">The trial is over. Phones down. Go through the evidence and the record below, and reach a unanimous verdict. Then open the envelope.</div></div>${juryHTML()}${soundChip()}</div>`;
   const l = CASE.lines[S.line];
   if (!l) return `<div class="tv tv-join"><div class="join"><div class="case">${CASE.title}</div><img class="qr" src="/qr.svg" alt="QR code to join"><div class="case jurl">${joinURL}</div><div class="said" style="font-size:clamp(16px,2.4vw,26px)">Scan to take your role</div><div class="case">${Object.keys(S.roles).length} of ${CASE.roles.length} roles taken</div></div>${keyTermsHTML()}${soundChip()}</div>`;
   const ex = l.ex ? CASE.exhibits[l.ex] : null;
@@ -393,23 +418,30 @@ const tvHTML = () => {
 
 const phoneHTML = (client, label) => {
   const mine = Object.keys(S.roles).find(r => S.roles[r] === client);
+  if (ENDED()) return `<div class="phone" data-c="${client}"><div class="a2p"><div class="k">Act 2 · Deliberation</div><h3>The trial is over</h3><p>Phones down. Head to the jury room. Everything you need is on the TV.</p></div><div class="flash"></div></div>`;
+  if (!mine && specs.has(client)) {
+    const body = S.line < 0
+      ? `<div class="wait">Waiting for the trial to start.<br>You'll see each line here as it's said.</div>`
+      : `<div class="script">${CASE.lines.slice(0, S.line + 1).map((l, i) => `<div class="ln ${i < S.line ? "past" : "now"}" ${i === S.line ? 'data-now="1"' : ""}><b style="color:${roleCol(l.who)}">${roleName(l.who)}</b>${l.text}${l.ex ? `<span class="exref">Exhibit ${l.ex} on screen</span>` : ""}${i === S.line ? notesHTML(i) : ""}</div>`).join("")}</div>`;
+    return `<div class="phone spec" data-c="${client}"><div class="bar"><h3>Reading along</h3><button data-unspec="${client}" style="min-height:32px;padding:4px 10px;font-size:12px">Take a role</button></div>${body}<div class="flash"></div></div>`;
+  }
   if (!mine) {
     return `<div class="phone" data-c="${client}"><div class="bar"><h3>Pick your role</h3><small>${label}</small></div><div class="roles">${CASE.roles.map(r => {
       const taken = S.roles[r.id];
       return `<button data-claim="${r.id}" data-c="${client}" ${taken ? "disabled" : ""}><span>${r.name}</span><small>${taken ? "taken" : ""}</small></button>`;
-    }).join("")}</div><div class="flash"></div></div>`;
+    }).join("")}<button class="specbtn" data-spec="${client}"><span>Just watching · read along</span><small>spectator</small></button></div><div class="flash"></div></div>`;
   }
   const cur = CASE.lines[S.line];
   const body = S.line < 0
     ? `<div class="wait">Waiting for the trial to start.<br>You are the ${roleName(mine)}.</div>`
     : `<div class="script">${CASE.lines.map((l, i) => `<div class="ln ${i < S.line ? "past" : ""} ${i === S.line ? "now" : ""} ${l.who === mine ? "mine" : ""}" ${i === S.line ? 'data-now="1"' : ""}><b style="color:${roleCol(l.who)}">${roleName(l.who)}</b>${l.who === mine ? toneChip(l.tone) : ""}${l.who === mine || i <= S.line ? l.text : "…"}${l.ex && i <= S.line ? `<span class="exref">Exhibit ${l.ex} on screen</span>` : ""}${l.note && l.who === mine ? `<i>${l.note}</i>` : ""}</div>`).join("")}</div>`;
   const myTurn = cur && cur.who === mine;
-  return `<div class="phone" data-c="${client}"><div class="bar"><h3>${roleName(mine)}</h3><button data-leave="${client}" style="min-height:32px;padding:4px 10px;font-size:12px">Change</button></div>${body}${myTurn ? `<button class="primary done" data-next="${client}">Done, next line</button>` : ""}<div class="flash"></div></div>`;
+  return `<div class="phone" data-c="${client}"><div class="bar"><h3>${roleName(mine)}</h3><button data-leave="${client}" style="min-height:32px;padding:4px 10px;font-size:12px">Change</button></div>${body}${myTurn ? `<button class="primary done" data-next="${client}">${S.line === CASE.lines.length - 1 ? "Done. End the trial" : "Done, next line"}</button>` : ""}<div class="flash"></div></div>`;
 };
 
-const controlHTML = () => `<div class="control"><span class="lbl">Control · ${S.line < 0 ? "not started" : `line ${S.line + 1} of ${CASE.lines.length}`}</span>
-  ${S.line < 0 ? `<button class="primary" data-step="1">Start trial</button>` : `<button data-step="-1">Back a line</button><button data-step="1" ${S.line >= CASE.lines.length - 1 ? "disabled" : ""}>Next line</button>`}
-  <button data-reset="1">Reset</button><button data-sound="1">${ac ? "TV sound on" : "Turn on TV sound"}</button>
+const controlHTML = () => `<div class="control"><span class="lbl">Control · ${S.line < 0 ? "not started" : ENDED() ? "trial over · Act 2" : `line ${S.line + 1} of ${CASE.lines.length}`}</span>
+  ${S.line < 0 ? `<button class="primary" data-step="1">Start trial</button>` : `<button data-step="-1">Back a line</button><button data-step="1" ${ENDED() ? "disabled" : ""}>${S.line === CASE.lines.length - 1 ? "End trial, go to Act 2" : "Next line"}</button>`}
+  <button data-reset="1">Reset</button><button data-sound="1">${!ac ? "Turn on TV sound" : muted ? "🔇 Sound off · turn on" : "🔊 Sound on · turn off"}</button>
   <div class="free">${CASE.roles.map(r => S.roles[r.id] ? `<button data-free="${r.id}">Free ${r.name}</button>` : "").join("")}</div></div>`;
 
 const segBlocks = (segs, focus) => segs.map(s => `<section class="jseg" id="seg-${s}"><div class="jsh">${SEGS[s]}</div>${CASE.lines.map((l, i) => [l, i]).filter(([, i]) => SEG_OF[i] === s).map(([l, i]) => `<button class="jline ${focus && l.who === focus ? "me" : ""} ${focus ? "" : (i === hl ? "hl" : "")}" data-jump="${i}" data-line="${i}"><span class="jw">${roleName(l.who)} <em>line ${i + 1}</em></span>${l.text}${l.ex ? `<span class="exref">Exhibit ${l.ex}</span>` : ""}</button>`).join("")}</section>`).join("");
@@ -463,13 +495,19 @@ const cues = prevLine => {
     if (msg && f) { f.innerHTML = `<div style="text-align:center">${msg}${tl && TONES[tl.tone] ? `<div class="ft">${TONES[tl.tone][0]} ${TONES[tl.tone][1]}</div>` : ""}</div>`; f.classList.remove("go"); void f.offsetWidth; f.classList.add("go"); try { navigator.vibrate && navigator.vibrate(msg === "Your line" ? [120, 80, 120] : 200); } catch (e) {} }
   });
   const v = view(), l = CASE.lines[S.line];
+  if (ENDED() && prevLine < S.line) {
+    document.querySelectorAll(".phone[data-c] .flash").forEach(f => { f.innerHTML = "Trial over"; f.classList.remove("go"); void f.offsetWidth; f.classList.add("go"); });
+    try { navigator.vibrate && navigator.vibrate([200, 100, 200, 100, 400]); } catch (e) {}
+    if ((v === "tv" || v === "demo") && ac && !muted) { gavel(); setTimeout(sting, 450); }
+    return;
+  }
   if (v === "tv" || v === "demo") playCue(l);
 };
 
 function adopt(n) { const prev = S.line; S = n; render(); cues(prev); }
 
 document.addEventListener("click", e => {
-  if (!ac && ["tv", "demo"].includes(view())) { enableSound(); render(); }
+  if (!ac && ["tv", "demo"].includes(view())) { enableSound(); render(); if (!e.target.closest("button") || e.target.closest("[data-mute],[data-sound]")) return; }
   const b = e.target.closest("button"); if (!b) return;
   const d = b.dataset;
   if (d.pick) { pick = d.pick; hl = -1; render(); }
@@ -485,7 +523,10 @@ document.addEventListener("click", e => {
   else if (d.step) go(+d.step);
   else if (d.free) freeRole(d.free);
   else if (d.reset) reset();
-  else if (d.sound) { enableSound(); gavel(); render(); }
+  else if (d.mute) setMute(!muted);
+  else if (d.sound) { if (!ac) { enableSound(); gavel(); render(); } else setMute(!muted); }
+  else if (d.spec) setSpec(d.spec, true);
+  else if (d.unspec) setSpec(d.unspec, false);
 });
 window.addEventListener("hashchange", render);
 render();

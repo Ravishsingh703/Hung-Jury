@@ -26,6 +26,7 @@ const loadCase = () => {
 const CASE = loadCase();
 const ROLE_IDS = new Set(CASE.roles.map(r => r.id));
 const LAST = CASE.lines.length - 1;
+const END = CASE.lines.length; // line == END means the trial is over: Act 2
 
 // ---- state (saved to disk so a restart resumes on the same line) ----
 let S = { v: 1, line: -1, roles: {}, caseTitle: CASE.title };
@@ -62,13 +63,13 @@ const apply = a => {
       delete S.roles[a.role];
       return true;
     case "step": {
-      const next = Math.max(-1, Math.min(LAST, S.line + (a.d > 0 ? 1 : -1)));
+      const next = Math.max(-1, Math.min(END, S.line + (a.d > 0 ? 1 : -1)));
       if (next === S.line) return false;
       S.line = next;
       return true;
     }
     case "done": // only the current speaker can move the trial on
-      if (S.line < 0 || S.line >= LAST) return false;
+      if (S.line < 0 || S.line > LAST) return false;
       if (CASE.lines[S.line].who !== roleOf(a.client)) return false;
       S.line += 1;
       return true;
