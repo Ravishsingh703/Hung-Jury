@@ -13,26 +13,22 @@ fi
 
 [ -d node_modules ] || npm install --silent
 
-# Pick a case. Private cases live in cases/private (never uploaded to GitHub).
+# Pick a case: the public ones in cases/ plus private ones in cases/private (never uploaded to GitHub).
 shopt -s nullglob
-PRIVATE=( cases/private/*.js )
-if [ ${#PRIVATE[@]} -eq 1 ]; then
-  export CASE="private/$(basename "${PRIVATE[0]}")"
-elif [ ${#PRIVATE[@]} -gt 1 ]; then
-  echo ""
-  echo "  Which case tonight?"
-  echo "    0) Dummy test case"
-  i=1
-  for f in "${PRIVATE[@]}"; do
-    title=$(grep -m1 -o 'title: "[^"]*"' "$f" | sed 's/title: "//; s/"$//')
-    echo "    $i) ${title:-$(basename "$f")}"
-    i=$((i+1))
-  done
-  echo ""
-  read -r -p "  Type a number and press Enter: " pick
-  if [[ "$pick" =~ ^[0-9]+$ ]] && [ "$pick" -ge 1 ] && [ "$pick" -le ${#PRIVATE[@]} ]; then
-    export CASE="private/$(basename "${PRIVATE[$((pick-1))]}")"
-  fi
+ALL=( cases/*.js cases/private/*.js )
+echo ""
+echo "  Which case tonight?"
+i=1
+for f in "${ALL[@]}"; do
+  title=$(grep -m1 -o 'title: "[^"]*"' "$f" | sed 's/title: "//; s/"$//')
+  echo "    $i) ${title:-$(basename "$f")}"
+  i=$((i+1))
+done
+echo ""
+read -r -p "  Type a number and press Enter: " pick
+if [[ "$pick" =~ ^[0-9]+$ ]] && [ "$pick" -ge 1 ] && [ "$pick" -le ${#ALL[@]} ]; then
+  f="${ALL[$((pick-1))]}"
+  export CASE="${f#cases/}"
 fi
 
 (sleep 2; open "http://localhost:3000/#tv") &

@@ -109,6 +109,24 @@ button:disabled{opacity:.4;cursor:default}
 .tv .main{justify-content:center}
 @media(max-width:820px){.tv.tv-join{grid-template-columns:minmax(0,1fr)}}
 .jterms{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tv.has-art{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+.artbox{align-self:center;border-radius:8px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:in .35s ease}
+.art{display:block;width:100%;height:auto}
+.flick{animation:flick 4s infinite}
+@keyframes flick{0%,100%{opacity:1}47%{opacity:1}48%{opacity:.75}50%{opacity:1}72%{opacity:.9}}
+.gav{animation:gav .7s ease-in 2}
+@keyframes gav{0%{transform:rotate(-38deg)}70%{transform:rotate(8deg)}100%{transform:rotate(0)}}
+.hit{opacity:0;animation:hit .7s ease-in 2}
+@keyframes hit{0%,65%{opacity:0}75%{opacity:1}100%{opacity:0}}
+.cam{transform-origin:0 0;transition:transform 1.1s cubic-bezier(.45,0,.2,1)}
+.walk2{animation:walk2 1.8s ease-out both}
+@keyframes walk2{from{transform:translateX(160px)}to{transform:translateX(0)}}
+.walk{animation:walk 1.6s ease-out both}
+@keyframes walk{from{transform:translateX(-140px)}to{transform:translateX(0)}}
+.talk{animation:talk 1.2s infinite}
+@keyframes talk{0%,100%{opacity:.2}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.flick,.gav,.hit,.walk,.walk2,.talk{animation:none}.hit{opacity:0}.cam{transition:none}}
+.sndchip{position:absolute;top:14px;right:16px;font-size:12px;color:#d9dde1;background:rgba(229,72,77,.85);padding:6px 12px;border-radius:999px;animation:flick 2.4s infinite}
 .wait{margin:auto;color:var(--muted);text-align:center;font-size:14px}
 /* control */
 .control{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -210,16 +228,78 @@ const go = d => act({type:"step", d});
 const done = client => act({type:"done", client});
 const reset = () => act({type:"reset"});
 
-/* ---- sound (TV only) ---- */
-let ac = null;
+/* ---- sound (TV only), all synthesised ---- */
+let ac = null, master = null, ambOn = false;
+const noise = sec => { const b = ac.createBuffer(1, ac.sampleRate * sec, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; };
+const env = (g, t, peak, a, r) => { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + r); };
 const gavel = () => {
   if (!ac) return;
   [0, .18].forEach(d => {
     const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + d;
     o.type = "triangle"; o.frequency.setValueAtTime(180, t); o.frequency.exponentialRampToValueAtTime(55, t + .15);
     g.gain.setValueAtTime(.9, t); g.gain.exponentialRampToValueAtTime(.001, t + .22);
-    o.connect(g).connect(ac.destination); o.start(t); o.stop(t + .25);
+    o.connect(g).connect(master); o.start(t); o.stop(t + .25);
   });
+};
+const sting = () => { // dramatic low brass hit
+  if (!ac) return; const t = ac.currentTime;
+  [55, 82.4, 110, 164.8].forEach((f, i) => {
+    const o = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter();
+    o.type = "sawtooth"; o.frequency.value = f; lp.type = "lowpass"; lp.frequency.setValueAtTime(900, t); lp.frequency.exponentialRampToValueAtTime(200, t + 2.4);
+    env(g, t, .22 / (i + 1), .05, 2.4); o.connect(lp).connect(g).connect(master); o.start(t); o.stop(t + 2.6);
+  });
+};
+const tension = () => { // rising drone, about 5 seconds
+  if (!ac) return; const t = ac.currentTime;
+  [[73.4, 1], [77.8, .8], [146.8, .35]].forEach(([f, k]) => {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 1.5, t + 5);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.18 * k, t + 3.5); g.gain.exponentialRampToValueAtTime(0.0001, t + 5.2);
+    o.connect(g).connect(master); o.start(t); o.stop(t + 5.3);
+  });
+};
+const murmur = () => { // the room reacts
+  if (!ac) return; const t = ac.currentTime, src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain();
+  src.buffer = noise(3.2); bp.type = "bandpass"; bp.frequency.value = 700; bp.Q.value = 1.4;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.32, t + .6); g.gain.exponentialRampToValueAtTime(.08, t + 1.8); g.gain.exponentialRampToValueAtTime(0.0001, t + 3.1);
+  src.connect(bp).connect(g).connect(master); src.start(t);
+};
+const objHit = () => { // sharp crack when someone objects
+  if (!ac) return; const t = ac.currentTime, src = ac.createBufferSource(), hp = ac.createBiquadFilter(), g = ac.createGain();
+  src.buffer = noise(.3); hp.type = "highpass"; hp.frequency.value = 1800; env(g, t, .5, .005, .18);
+  src.connect(hp).connect(g).connect(master); src.start(t);
+  const o = ac.createOscillator(), g2 = ac.createGain(); o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(60, t + .2);
+  env(g2, t, .45, .005, .25); o.connect(g2).connect(master); o.start(t); o.stop(t + .3);
+};
+const whoosh = () => { // evidence slides onto the screen
+  if (!ac) return; const t = ac.currentTime, src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain();
+  src.buffer = noise(.7); bp.type = "bandpass"; bp.Q.value = .9; bp.frequency.setValueAtTime(350, t); bp.frequency.exponentialRampToValueAtTime(3200, t + .55);
+  env(g, t, .3, .18, .45); src.connect(bp).connect(g).connect(master); src.start(t);
+};
+const startAmbience = () => { // quiet room tone and a faint gallery murmur, looping
+  if (ambOn) return; ambOn = true;
+  const room = ac.createBufferSource(), lp = ac.createBiquadFilter(), g = ac.createGain();
+  room.buffer = noise(6); room.loop = true; lp.type = "lowpass"; lp.frequency.value = 260; g.gain.value = .05;
+  room.connect(lp).connect(g).connect(master); room.start();
+  const crowd = ac.createBufferSource(), bp = ac.createBiquadFilter(), cg = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
+  crowd.buffer = noise(7); crowd.loop = true; bp.type = "bandpass"; bp.frequency.value = 600; bp.Q.value = 2; cg.gain.value = .02;
+  lfo.frequency.value = .13; lg.gain.value = .012; lfo.connect(lg).connect(cg.gain); lfo.start();
+  crowd.connect(bp).connect(cg).connect(master); crowd.start();
+};
+const enableSound = () => {
+  try {
+    if (!ac) { ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination); }
+    ac.resume(); startAmbience();
+  } catch (e) {}
+};
+const playCue = l => {
+  if (!ac || !l) return;
+  if (l.sfx === "gavel") gavel();
+  if (l.sfx === "sting") sting();
+  if (l.sfx === "tension") tension();
+  if (l.sfx === "murmur") murmur();
+  if (/^objection/i.test(l.text)) objHit();
+  if (l.ex) whoosh();
 };
 
 /* ---- views ---- */
@@ -230,12 +310,85 @@ const view = () => VIEWS.some(v => v[0] === location.hash.slice(1)) ? location.h
 let lastLine = {}, joinURL = "";
 fetch("/info").then(r => r.json()).then(i => { joinURL = i.joinURL; render(); }).catch(() => {});
 
+/* ---- noir courtroom with a moving camera ---- */
+const SIL = "#07080a", RIM = "var(--cue)", EDGE = "#f1d9b5", WOOD = "#4a3426", LIP = "#6b4a33";
+const WIT_COLS = ["#f5a524", "#2bb3a3", "#a78bfa", "#f472b6", "#84cc16", "#fb923c", "#22d3ee"];
+const roleCol = id => id === "judge" ? "#a3a9b0" : id === "pros" ? "#e5484d" : id === "def" ? "#3e8ed0"
+  : WIT_COLS.at(CASE.roles.filter(r => !["judge", "pros", "def"].includes(r.id)).findIndex(r => r.id === id) % WIT_COLS.length) || EDGE;
+const fig = (x, y, k = 1, o = {}) => {
+  const f = o.face || 1, s = v => v * k;
+  const arm = o.arm === "raise" ? `<path d="M${x + f*s(14)} ${y - s(92)} L${x + f*s(30)} ${y - s(150)}" stroke="${SIL}" stroke-width="${s(9)}" stroke-linecap="round"/>`
+    : o.arm === "point" ? `<path d="M${x + f*s(14)} ${y - s(92)} L${x + f*s(52)} ${y - s(100)}" stroke="${SIL}" stroke-width="${s(9)}" stroke-linecap="round"/>` : "";
+  return `<g>${arm}<circle cx="${x}" cy="${y - s(128)}" r="${s(15)}" fill="${SIL}" stroke="${o.c || EDGE}" stroke-opacity=".9" stroke-width="${o.c ? 2.2 : 1.4}"/><path d="M${x - s(24)} ${y - s(100)} Q${x} ${y - s(112)} ${x + s(24)} ${y - s(100)} L${x + s(19)} ${y - s(46)} L${x - s(19)} ${y - s(46)} Z" fill="${SIL}" stroke="${o.c || EDGE}" stroke-opacity=".8" stroke-width="${o.c ? 2 : 1.2}"/><rect x="${x - s(16)}" y="${y - s(48)}" width="${s(13)}" height="${s(48)}" fill="${SIL}"/><rect x="${x + s(3)}" y="${y - s(48)}" width="${s(13)}" height="${s(48)}" fill="${SIL}"/></g>`;
+};
+const seat = (x, y, r = 14, c) => `<g><circle cx="${x}" cy="${y}" r="${r}" fill="${SIL}" stroke="${c || EDGE}" stroke-opacity="${c ? .95 : .7}" stroke-width="${c ? 2.2 : 1.3}"/><path d="M${x - r*1.7} ${y + r*2.4} Q${x} ${y + r*0.7} ${x + r*1.7} ${y + r*2.4} Z" fill="${SIL}" stroke="${c || EDGE}" stroke-opacity="${c ? .8 : .5}" stroke-width="${c ? 2 : 1.1}"/></g>`;
+const box = (x0, y0, x1, y1) => `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="${WOOD}"/><rect x="${x0 - 6}" y="${y0 - 6}" width="${x1 - x0 + 12}" height="8" fill="${LIP}"/>`;
+const talk = (x, y, c = RIM) => `<g class="talk" fill="none" stroke="${c}" stroke-width="2.4"><path d="M${x} ${y - 9} q10 9 0 18"/><path d="M${x + 9} ${y - 16} q17 16 0 32"/></g>`;
+// where the camera looks: [centre x, centre y, zoom]
+const CAMS = {judge: [420, 175, 1.7], witness: [530, 210, 1.85], pros: [270, 285, 1.6], def: [530, 285, 1.6], jury: [160, 230, 1.75], walk: [580, 215, 1.4], wide: [400, 225, 1]};
+const camT = ([cx, cy, z]) => `translate(${400 - cx * z}px, ${225 - cy * z}px) scale(${z})`;
+let lastCam = CAMS.wide;
+const court = (i) => {
+  const l = CASE.lines[i], t = l.text.toLowerCase(), seg = SEG_OF[i] || "";
+  let shot = "witness", act = {};
+  if (l.who === "judge") shot = /retire|deliberate/.test(t) ? "jury" : "judge";
+  else if (/\bcalls\b/.test(t)) { shot = "walk"; act.walk = true; act.speaker = l.who; }
+  else if (l.who === "pros") shot = "pros";
+  else if (l.who === "def") shot = "def";
+  const standing = w => l.who === w || (act.speaker === w);
+  const arm = /^objection/.test(t) ? "raise" : /\?$/.test(l.text) ? "point" : null;
+  const isWit = id => !["judge", "pros", "def"].includes(id);
+  let boxWit = null; for (let k = i; k >= 0; k--) if (isWit(CASE.lines[k].who)) { boxWit = CASE.lines[k].who; break; }
+  const wc = boxWit ? roleCol(boxWit) : EDGE, J = roleCol("judge"), P = roleCol("pros"), D = roleCol("def");
+  const focus = CAMS[shot];
+  const world = `
+    <rect width="800" height="270" fill="#2a2522"/>
+    ${Array.from({length: 17}, (_, k) => `<line x1="${k * 50}" y1="0" x2="${k * 50}" y2="270" stroke="#3a332e" stroke-width="3"/>`).join("")}
+    <circle cx="400" cy="62" r="26" fill="none" stroke="${LIP}" stroke-width="3"/><circle cx="400" cy="62" r="15" fill="none" stroke="${LIP}" stroke-width="2"/>
+    <rect x="705" y="140" width="60" height="130" fill="#1c1714" stroke="${LIP}" stroke-width="2"/>
+    <rect y="270" width="800" height="180" fill="url(#floor)"/>
+    <ellipse cx="${focus[0]}" cy="${focus[1] + 20}" rx="${170 / focus[2] + 40}" ry="${120 / focus[2] + 30}" fill="url(#pool)" class="flick"/>
+    ${seat(400, 132, 17, J)}${box(300, 170, 500, 268)}<rect x="388" y="196" width="24" height="24" rx="12" fill="none" stroke="${RIM}" stroke-width="1.5" opacity=".8"/>
+    ${l.sfx === "gavel" ? `<g class="gav" style="transform-origin:452px 158px"><rect x="448" y="128" width="6" height="32" fill="#7a5638"/><rect x="437" y="122" width="28" height="12" rx="3" fill="#8c6440"/></g><g class="hit" stroke="${RIM}" stroke-width="2"><line x1="474" y1="160" x2="488" y2="152"/><line x1="476" y1="168" x2="492" y2="168"/></g>` : `<rect x="438" y="158" width="28" height="9" rx="3" fill="#8c6440"/>`}
+    ${l.who === "judge" ? talk(424, 132, J) : ""}
+    ${act.walk ? `<g class="walk2">${fig(565, 262, 0.62, {face: -1, c: EDGE})}</g>` : boxWit ? seat(565, 183, 13, wc) : ""}
+    ${box(522, 205, 608, 268)}
+    ${!act.walk && isWit(l.who) ? talk(584, 183, wc) : ""}
+    ${[0,1,2,3,4,5].map(k => seat(52 + k * 33, 197, 10)).join("")}${[0,1,2,3,4,5].map(k => seat(68 + k * 33, 216, 10)).join("")}
+    ${box(32, 236, 238, 292)}
+    ${standing("pros") ? fig(240, 380, 0.85, {face: 1, c: P, arm: l.who === "pros" ? arm : null}) : seat(240, 318, 15, P)}
+    ${seat(300, 320, 14)}
+    ${box(170, 340, 340, 392)}
+    ${l.who === "pros" ? talk(260, 270, P) : ""}
+    ${standing("def") ? fig(530, 380, 0.85, {face: -1, c: D, arm: l.who === "def" ? arm : null}) : seat(530, 318, 15, D)}
+    ${seat(595, 320, 14)}
+    ${box(460, 340, 630, 392)}
+    ${l.who === "def" ? talk(548, 270, D) : ""}`;
+  const from = camT(lastCam), to = camT(focus);
+  lastCam = focus;
+  return `<svg viewBox="0 0 800 450" class="art" role="img" aria-hidden="true">
+    <defs><linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3430"/><stop offset="1" stop-color="#1c1a19"/></linearGradient>
+    <radialGradient id="pool"><stop offset="0" stop-color="#ffe9c7" stop-opacity=".45"/><stop offset="1" stop-color="#ffe9c7" stop-opacity="0"/></radialGradient>
+    <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient></defs>
+    <rect width="800" height="450" fill="#1c1714"/>
+    <g class="cam" style="transform:${from}" data-to="${to}">${world}</g>
+    <rect width="800" height="450" fill="url(#vig)"/>
+  </svg>`;
+};
+const sceneFor = i => CASE.lines[i] ? court(i) : "";
+const moveCam = () => {
+  const g = document.querySelector(".tv .cam[data-to]"); if (!g) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => { g.style.transform = g.dataset.to; }));
+};
+
+const soundChip = () => ac ? "" : `<div class="sndchip">Click anywhere for sound</div>`;
 const tvHTML = () => {
   const l = CASE.lines[S.line];
-  if (!l) return `<div class="tv tv-join"><div class="join"><div class="case">${CASE.title}</div><img class="qr" src="/qr.svg" alt="QR code to join"><div class="case jurl">${joinURL}</div><div class="said" style="font-size:clamp(16px,2.4vw,26px)">Scan to take your role</div><div class="case">${Object.keys(S.roles).length} of ${CASE.roles.length} roles taken</div></div>${keyTermsHTML()}</div>`;
+  if (!l) return `<div class="tv tv-join"><div class="join"><div class="case">${CASE.title}</div><img class="qr" src="/qr.svg" alt="QR code to join"><div class="case jurl">${joinURL}</div><div class="said" style="font-size:clamp(16px,2.4vw,26px)">Scan to take your role</div><div class="case">${Object.keys(S.roles).length} of ${CASE.roles.length} roles taken</div></div>${keyTermsHTML()}${soundChip()}</div>`;
   const ex = l.ex ? CASE.exhibits[l.ex] : null;
   const pct = ((S.line + 1) / CASE.lines.length) * 100;
-  return `<div class="tv ${ex ? "has-ex" : ""}"><div class="main"><div class="case">${CASE.title} · line ${S.line + 1} of ${CASE.lines.length}</div><div class="who">${roleName(l.who)}</div><div class="said">${l.text}</div>${notesHTML(S.line)}</div>${ex ? `<div class="exhibit"><div class="tag">${ex.tag}</div>${ex.html}</div>` : ""}<div class="prog" style="width:${pct}%"></div></div>`;
+  const art = ex ? "" : sceneFor(S.line);
+  return `<div class="tv ${ex ? "has-ex" : "has-art"}"><div class="main"><div class="case">${CASE.title} · line ${S.line + 1} of ${CASE.lines.length}</div><div class="who" style="color:${roleCol(l.who)}">${roleName(l.who)}</div><div class="said">${l.text}</div>${notesHTML(S.line)}</div>${ex ? `<div class="exhibit"><div class="tag">${ex.tag}</div>${ex.html}</div>` : `<div class="artbox">${art}</div>`}<div class="prog" style="width:${pct}%"></div>${soundChip()}</div>`;
 };
 
 const phoneHTML = (client, label) => {
@@ -249,7 +402,7 @@ const phoneHTML = (client, label) => {
   const cur = CASE.lines[S.line];
   const body = S.line < 0
     ? `<div class="wait">Waiting for the trial to start.<br>You are the ${roleName(mine)}.</div>`
-    : `<div class="script">${CASE.lines.map((l, i) => `<div class="ln ${i < S.line ? "past" : ""} ${i === S.line ? "now" : ""} ${l.who === mine ? "mine" : ""}" ${i === S.line ? 'data-now="1"' : ""}><b>${roleName(l.who)}</b>${l.who === mine ? toneChip(l.tone) : ""}${l.who === mine || i <= S.line ? l.text : "…"}${l.ex && i <= S.line ? `<span class="exref">Exhibit ${l.ex} on screen</span>` : ""}${l.note && l.who === mine ? `<i>${l.note}</i>` : ""}</div>`).join("")}</div>`;
+    : `<div class="script">${CASE.lines.map((l, i) => `<div class="ln ${i < S.line ? "past" : ""} ${i === S.line ? "now" : ""} ${l.who === mine ? "mine" : ""}" ${i === S.line ? 'data-now="1"' : ""}><b style="color:${roleCol(l.who)}">${roleName(l.who)}</b>${l.who === mine ? toneChip(l.tone) : ""}${l.who === mine || i <= S.line ? l.text : "…"}${l.ex && i <= S.line ? `<span class="exref">Exhibit ${l.ex} on screen</span>` : ""}${l.note && l.who === mine ? `<i>${l.note}</i>` : ""}</div>`).join("")}</div>`;
   const myTurn = cur && cur.who === mine;
   return `<div class="phone" data-c="${client}"><div class="bar"><h3>${roleName(mine)}</h3><button data-leave="${client}" style="min-height:32px;padding:4px 10px;font-size:12px">Change</button></div>${body}${myTurn ? `<button class="primary done" data-next="${client}">Done, next line</button>` : ""}<div class="flash"></div></div>`;
 };
@@ -294,6 +447,7 @@ const render = () => {
   if (v === "control") app.innerHTML = controlHTML();
   if (v === "jury") app.innerHTML = juryHTML();
   document.querySelectorAll("[data-now]").forEach(n => n.scrollIntoView({block:"center"}));
+  moveCam();
 };
 
 /* cues: buzz the phone whose line is next, flash on your line */
@@ -309,12 +463,13 @@ const cues = prevLine => {
     if (msg && f) { f.innerHTML = `<div style="text-align:center">${msg}${tl && TONES[tl.tone] ? `<div class="ft">${TONES[tl.tone][0]} ${TONES[tl.tone][1]}</div>` : ""}</div>`; f.classList.remove("go"); void f.offsetWidth; f.classList.add("go"); try { navigator.vibrate && navigator.vibrate(msg === "Your line" ? [120, 80, 120] : 200); } catch (e) {} }
   });
   const v = view(), l = CASE.lines[S.line];
-  if ((v === "tv" || v === "demo") && l && l.sfx === "gavel") gavel();
+  if (v === "tv" || v === "demo") playCue(l);
 };
 
 function adopt(n) { const prev = S.line; S = n; render(); cues(prev); }
 
 document.addEventListener("click", e => {
+  if (!ac && ["tv", "demo"].includes(view())) { enableSound(); render(); }
   const b = e.target.closest("button"); if (!b) return;
   const d = b.dataset;
   if (d.pick) { pick = d.pick; hl = -1; render(); }
@@ -330,7 +485,7 @@ document.addEventListener("click", e => {
   else if (d.step) go(+d.step);
   else if (d.free) freeRole(d.free);
   else if (d.reset) reset();
-  else if (d.sound) { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); gavel(); } catch (err) {} render(); }
+  else if (d.sound) { enableSound(); gavel(); render(); }
 });
 window.addEventListener("hashchange", render);
 render();
